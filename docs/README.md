@@ -22,7 +22,7 @@ The documentation follows a **sequential, dependency-aware structure**. Each pha
 |---|-------|-------|--------|------|
 | 01 | [**PRD — Product Requirements**](./01-PRD/README.md) | ماذا نبني ولماذا؟ What are we building and why? | ✅ Complete | `docs/01-PRD/` |
 | 02 | [**Architecture**](./02-Architecture/README.md) | كيف سنبنيه؟ How will we build it? | ✅ Complete | `docs/02-Architecture/` |
-| 03 | [**System Design**](./03-System-Design/README.md) | ما هو شكل النظام؟ What does the system look like? | 🔲 Not Started | `docs/03-System-Design/` |
+| 03 | [**System Design**](./03-System-Design/README.md) | ما هو شكل النظام؟ What does the system look like? | ✅ Complete | `docs/03-System-Design/` |
 | 04 | [**Database**](./04-Database/README.md) | كيف ننظّم البيانات؟ How do we organize data? | 🔲 Not Started | `docs/04-Database/` |
 | 05 | [**API Design**](./05-API/README.md) | ما هي نقاط الوصول؟ What are the endpoints? | 🔲 Not Started | `docs/05-API/` |
 | 06 | [**UI/UX**](./06-UI-UX/README.md) | كيف ستبدو الواجهات؟ What will the interfaces look like? | 🔲 Not Started | `docs/06-UI-UX/` |

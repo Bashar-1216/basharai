@@ -7,8 +7,8 @@
 
 | Field | Value |
 |-------|-------|
-| **Status** | 🔲 **Not Started** |
-| **Dependencies** | Phase 01 (PRD) — ✅ Complete, Phase 02 (Architecture) — 🔲 Not Started |
+| **Status** | ✅ **Complete** |
+| **Dependencies** | Phase 01 (PRD) — ✅ Complete, Phase 02 (Architecture) — ✅ Complete |
 | **Blocks** | Implementation phase |
 | **Estimated Sub-documents** | 6 |
 | **When to Start** | After Phase 02 (Architecture) is substantially complete |
@@ -29,12 +29,13 @@ System Design translates architectural decisions into **visual diagrams and flow
 
 | # | Document | Description | الوصف | Status |
 |---|----------|-------------|-------|--------|
-| 03.1 | **High-Level-Architecture.md** | System overview diagram — shows all major components (frontend, backend, database, vector store, external APIs) and how they connect at the highest level | رسم عام للنظام — جميع المكونات الرئيسية وكيف تتصل ببعضها | 🔲 Not Started |
-| 03.2 | **RAG-Flow.md** | RAG pipeline flow — step-by-step visualization of how a user query enters the system, gets embedded, retrieves relevant chunks, and generates a response | تدفق خط أنابيب RAG — من استعلام المستخدم إلى الاستجابة النهائية | 🔲 Not Started |
-| 03.3 | **Authentication-Flow.md** | Auth flows — login, registration, OAuth callback, session refresh, and logout sequences as sequence diagrams | تدفقات المصادقة — تسجيل الدخول، التسجيل، OAuth كرسوم تسلسلية | 🔲 Not Started |
-| 03.4 | **Deployment-Flow.md** | CI/CD pipeline — from code push to production deployment, including build, test, preview, and promote stages | خط أنابيب CI/CD — من دفع الكود إلى النشر في الإنتاج | 🔲 Not Started |
-| 03.5 | **Data-Flow.md** | Data flow diagrams — how data moves through the system: user input → API → processing → storage → response, including caching layers | رسوم تدفق البيانات — كيف تتحرك البيانات عبر النظام | 🔲 Not Started |
-| 03.6 | **Component-Diagram.md** | Component interactions — detailed view of frontend components, backend services, and their communication patterns (REST, WebSocket, etc.) | تفاعلات المكونات — عرض تفصيلي للمكونات الأمامية والخلفية وأنماط تواصلها | 🔲 Not Started |
+| 03.1 | [**High-Level-Architecture.md**](./03.1-High-Level-Architecture.md) | System overview diagram — shows all major components (frontend, backend, database, vector store, external APIs) and how they connect at the highest level | رسم عام للنظام — جميع المكونات الرئيسية وكيف تتصل ببعضها | ✅ Complete |
+| 03.2 | [**RAG-Flow.md**](./03.2-RAG-Flow.md) | RAG pipeline flow — step-by-step visualization of how a user query enters the system, gets embedded, retrieves relevant chunks, and generates a response | تدفق خط أنابيب RAG — من استعلام المستخدم إلى الاستجابة النهائية | ✅ Complete |
+| 03.3 | [**Authentication-Flow.md**](./03.3-Authentication-Flow.md) | Auth flows — login, registration, OAuth callback, session refresh, and logout sequences as sequence diagrams | تدفقات المصادقة — تسجيل الدخول، التسجيل، OAuth كرسوم تسلسلية | ✅ Complete |
+| 03.4 | [**Deployment-Flow.md**](./03.4-Deployment-Flow.md) | CI/CD pipeline — from code push to production deployment, including build, test, preview, and promote stages | خط أنابيب CI/CD — من دفع الكود إلى النشر في الإنتاج | ✅ Complete |
+| 03.5 | [**Data-Flow.md**](./03.5-Data-Flow.md) | Data flow diagrams — how data moves through the system: user input → API → processing → storage → response, including caching layers | رسوم تدفق البيانات — كيف تتحرك البيانات عبر النظام | ✅ Complete |
+| 03.6 | [**Component-Diagram.md**](./03.6-Component-Diagram.md) | Component interactions — detailed view of frontend components, backend services, and their communication patterns (REST, WebSocket, etc.) | تفاعلات المكونات — عرض تفصيلي للمكونات الأمامية والخلفية وأنماط تواصلها | ✅ Complete |
+
 
 ---
 
