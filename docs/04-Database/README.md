@@ -7,8 +7,8 @@
 
 | Field | Value |
 |-------|-------|
-| **Status** | 🔲 **Not Started** |
-| **Dependencies** | Phase 01 (PRD) — ✅ Complete, Phase 02 (Architecture) — 🔲 Not Started |
+| **Status** | ✅ **Complete** |
+| **Dependencies** | Phase 01 (PRD) — ✅ Complete, Phase 02 (Architecture) — ✅ Complete |
 | **Blocks** | Implementation phase |
 | **Estimated Sub-documents** | 5 |
 | **When to Start** | After Phase 02 (Architecture) is substantially complete — can run in parallel with Phase 03 |
@@ -29,11 +29,12 @@ Database Design translates the data requirements from the PRD and the technology
 
 | # | Document | Description | الوصف | Status |
 |---|----------|-------------|-------|--------|
-| 04.1 | **ERD.md** | Entity Relationship Diagram — visual representation of all entities (users, projects, case studies, blog posts, conversations, etc.) and their relationships | رسم العلاقات بين الكيانات — عرض مرئي لجميع الكيانات وعلاقاتها | 🔲 Not Started |
-| 04.2 | **Schema.md** | Full schema definitions — complete SQL/ORM schema for every table, including column types, constraints, indexes, and comments | تعريفات المخطط الكاملة — كل جدول بأعمدته وقيوده وفهارسه | 🔲 Not Started |
-| 04.3 | **Migrations-Strategy.md** | Migration approach — tooling (Alembic/Prisma), versioning strategy, rollback procedures, zero-downtime migration patterns | استراتيجية الترحيل — الأدوات، إصدار المخططات، إجراءات التراجع | 🔲 Not Started |
-| 04.4 | **Seed-Data.md** | Initial data — what data ships with a fresh deployment: default content, sample case studies, configuration records, and admin user setup | البيانات الأولية — ما يُشحن مع كل نشر جديد | 🔲 Not Started |
-| 04.5 | **Vector-Store.md** | Embeddings storage — vector database design for the RAG pipeline: embedding dimensions, indexing strategy (HNSW/IVF), metadata schema, and query patterns | تصميم تخزين المتجهات لخط أنابيب RAG — الأبعاد، الفهرسة، المخطط | 🔲 Not Started |
+| 04.1 | [**ERD.md**](./04.1-ERD.md) | Entity Relationship Diagram — visual representation of all entities (users, projects, case studies, blog posts, conversations, etc.) and their relationships | رسم العلاقات بين الكيانات — عرض مرئي لجميع الكيانات وعلاقاتها | ✅ Complete |
+| 04.2 | [**Schema.md**](./04.2-Schema.md) | Full schema definitions — complete SQL/ORM schema for every table, including column types, constraints, indexes, and comments | تعريفات المخطط الكاملة — كل جدول بأعمدته وقيوده وفهارسه | ✅ Complete |
+| 04.3 | [**Migrations-Strategy.md**](./04.3-Migrations-Strategy.md) | Migration approach — tooling (Alembic/Prisma), versioning strategy, rollback procedures, zero-downtime migration patterns | استراتيجية الترحيل — الأدوات، إصدار المخططات، إجراءات التراجع | ✅ Complete |
+| 04.4 | [**Seed-Data.md**](./04.4-Seed-Data.md) | Initial data — what data ships with a fresh deployment: default content, sample case studies, configuration records, and admin user setup | البيانات الأولية — ما يُشحن مع كل نشر جديد | ✅ Complete |
+| 04.5 | [**Vector-Store.md**](./04.5-Vector-Store.md) | Embeddings storage — vector database design for the RAG pipeline: embedding dimensions, indexing strategy (HNSW/IVF), metadata schema, and query patterns | تصميم تخزين المتجهات لخط أنابيب RAG — الأبعاد، الفهرسة، المخطط | ✅ Complete |
+
 
 ---
 
