@@ -7,7 +7,7 @@
 
 | Field | Value |
 |-------|-------|
-| **Status** | 🔲 **Not Started** |
+| **Status** | ✅ **Complete** |
 | **Dependencies** | Phase 01 (PRD) — ✅ Complete |
 | **Blocks** | Phase 03 (System Design), Phase 04 (Database) |
 | **Estimated Sub-documents** | 10 |
@@ -29,16 +29,17 @@ The Architecture phase translates the PRD's *what* into concrete technical decis
 
 | # | Document | Description | الوصف | Status |
 |---|----------|-------------|-------|--------|
-| 02.1 | **Technology-Stack.md** | Why Next.js for frontend, FastAPI for backend, PostgreSQL for data, and every other technology choice — with alternatives considered and rejected | لماذا اخترنا كل تقنية وما البدائل التي تم رفضها | 🔲 Not Started |
-| 02.2 | **Infrastructure.md** | Hosting platform selection, CDN strategy, DNS configuration, and deployment regions (GCC-optimized) | استضافة، شبكة توصيل محتوى، DNS، ومناطق النشر المحسّنة للخليج | 🔲 Not Started |
-| 02.3 | **Authentication.md** | Auth strategy — OAuth providers, session management, JWT vs cookie decisions, role-based access | استراتيجية المصادقة والتحكم في الوصول | 🔲 Not Started |
-| 02.4 | **Internationalization.md** | i18n/l10n strategy for genuine EN/AR bilingual support — RTL layout, content translation approach, locale routing, date/number formatting | استراتيجية التعريب الحقيقي ثنائي اللغة (عربي/إنجليزي) | 🔲 Not Started |
-| 02.5 | **RAG-Architecture.md** | RAG pipeline design — embedding model selection, vector store, chunking strategy, retrieval approach, prompt engineering, and evaluation methodology | تصميم خط أنابيب RAG — النماذج، التخزين المتجهي، استراتيجية التقطيع | 🔲 Not Started |
-| 02.6 | **Logging-Monitoring.md** | Observability strategy — structured logging, APM, error tracking, metrics collection, alerting, and the eval/observability dashboard architecture | استراتيجية المراقبة — سجلات منظمة، تتبع أخطاء، مقاييس أداء | 🔲 Not Started |
-| 02.7 | **Security.md** | Security architecture — OWASP considerations, input sanitization, rate limiting, CORS, CSP headers, data encryption, and NDA-compliance safeguards | العمارة الأمنية وحماية البيانات | 🔲 Not Started |
-| 02.8 | **Performance.md** | Caching strategy (CDN, application, database), image optimization, bundle size management, Core Web Vitals targets, and GCC-region latency optimization | استراتيجية الأداء والتخزين المؤقت وتحسين السرعة في منطقة الخليج | 🔲 Not Started |
-| 02.9 | **Error-Handling.md** | Error handling strategy — error boundaries, graceful degradation, user-facing error messages (bilingual), retry policies, and fallback behaviors | استراتيجية معالجة الأخطاء ورسائل المستخدم ثنائية اللغة | 🔲 Not Started |
-| 02.10 | **Configuration-Management.md** | Environment variables, secrets management, feature flags, configuration per environment (dev/staging/prod), and twelve-factor app compliance | إدارة المتغيرات البيئية والأسرار والتهيئة لكل بيئة | 🔲 Not Started |
+| 02.1 | [**Technology-Stack.md**](./02.1-Technology-Stack.md) | Why Next.js for frontend, FastAPI for backend, PostgreSQL for data, and every other technology choice — with alternatives considered and rejected | لماذا اخترنا كل تقنية وما البدائل التي تم رفضها | ✅ Complete |
+| 02.2 | [**Infrastructure.md**](./02.2-Infrastructure.md) | Hosting platform selection, CDN strategy, DNS configuration, and deployment regions (GCC-optimized) | استضافة، شبكة توصيل محتوى، DNS، ومناطق النشر المحسّنة للخليج | ✅ Complete |
+| 02.3 | [**Authentication.md**](./02.3-Authentication.md) | Auth strategy — OAuth providers, session management, JWT vs cookie decisions, role-based access | استراتيجية المصادقة والتحكم في الوصول | ✅ Complete |
+| 02.4 | [**Internationalization.md**](./02.4-Internationalization.md) | i18n/l10n strategy for genuine EN/AR bilingual support — RTL layout, content translation approach, locale routing, date/number formatting | استراتيجية التعريب الحقيقي ثنائي اللغة (عربي/إنجليزي) | ✅ Complete |
+| 02.5 | [**RAG-Architecture.md**](./02.5-RAG-Architecture.md) | RAG pipeline design — embedding model selection, vector store, chunking strategy, retrieval approach, prompt engineering, and evaluation methodology | تصميم خط أنابيب RAG — النماذج، التخزين المتجهي، استراتيجية التقطيع | ✅ Complete |
+| 02.6 | [**Logging-Monitoring.md**](./02.6-Logging-Monitoring.md) | Observability strategy — structured logging, APM, error tracking, metrics collection, alerting, and the eval/observability dashboard architecture | استراتيجية المراقبة — سجلات منظمة، تتبع أخطاء، مقاييس أداء | ✅ Complete |
+| 02.7 | [**Security.md**](./02.7-Security.md) | Security architecture — OWASP considerations, input sanitization, rate limiting, CORS, CSP headers, data encryption, and NDA-compliance safeguards | العمارة الأمنية وحماية البيانات | ✅ Complete |
+| 02.8 | [**Performance.md**](./02.8-Performance.md) | Caching strategy (CDN, application, database), image optimization, bundle size management, Core Web Vitals targets, and GCC-region latency optimization | استراتيجية الأداء والتخزين المؤقت وتحسين السرعة في منطقة الخليج | ✅ Complete |
+| 02.9 | [**Error-Handling.md**](./02.9-Error-Handling.md) | Error handling strategy — error boundaries, graceful degradation, user-facing error messages (bilingual), retry policies, and fallback behaviors | استراتيجية معالجة الأخطاء ورسائل المستخدم ثنائية اللغة | ✅ Complete |
+| 02.10 | [**Configuration-Management.md**](./02.10-Configuration-Management.md) | Environment variables, secrets management, feature flags, configuration per environment (dev/staging/prod), and twelve-factor app compliance | إدارة المتغيرات البيئية والأسرار والتهيئة لكل بيئة | ✅ Complete |
+
 
 ---
 

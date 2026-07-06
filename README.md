@@ -2,7 +2,7 @@
 
 > **"المقر الرقمي" — Digital Headquarters**
 
-[![Phase](https://img.shields.io/badge/Current_Phase-02_Architecture-blue)]()
+[![Phase](https://img.shields.io/badge/Current_Phase-03_System_Design-blue)]()
 [![PRD](https://img.shields.io/badge/PRD-v2.0_Complete-green)]()
 [![Status](https://img.shields.io/badge/Status-Planning-orange)]()
 
@@ -21,7 +21,7 @@ A bilingual (EN/AR) engineering platform that reads, within 60 seconds, as unmis
 | # | Phase | المرحلة | Status | Progress |
 |---|-------|---------|--------|----------|
 | 01 | [PRD](./docs/01-PRD/) | متطلبات المنتج | ✅ Complete | █████████░ 100% |
-| 02 | [Architecture](./docs/02-Architecture/) | هندسة البنية | ⬜ Not Started | ░░░░░░░░░░ 0% |
+| 02 | [Architecture](./docs/02-Architecture/) | هندسة البنية | ✅ Complete | █████████░ 100% |
 | 03 | [System Design](./docs/03-System-Design/) | تصميم النظام | ⬜ Not Started | ░░░░░░░░░░ 0% |
 | 04 | [Database Design](./docs/04-Database/) | تصميم قواعد البيانات | ⬜ Not Started | ░░░░░░░░░░ 0% |
 | 05 | [API Design](./docs/05-API/) | تصميم الواجهات البرمجية | ⬜ Not Started | ░░░░░░░░░░ 0% |
