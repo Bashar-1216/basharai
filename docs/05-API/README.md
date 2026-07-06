@@ -1,7 +1,7 @@
 # 📡 05 - API Specification | مواصفات واجهة برمجة التطبيقات
 
 > **المشروع**: basharai — Personal AI Engineering Platform
-> **الحالة**: 🔴 لم يبدأ بعد | Not Started
+> **الحالة**: ✅ مكتمل | Complete
 > **آخر تحديث**: 2026-07-06
 
 ---
@@ -18,14 +18,15 @@ This folder contains the **complete API specification** for the basharai platfor
 
 | # | الملف | الوصف | الحالة |
 |---|-------|-------|--------|
-| 05.1 | `05.1-API-Overview.md` | مبادئ تصميم RESTful API، استراتيجية الإصدارات (versioning)، base URL structure، وقواعد التسمية العامة. | 🔴 Not Started |
-| 05.2 | `05.2-Authentication-Endpoints.md` | واجهات المصادقة والتفويض — registration, login, token refresh, OAuth flows, password reset. | 🔴 Not Started |
-| 05.3 | `05.3-Content-Endpoints.md` | واجهات إدارة المحتوى — Projects CRUD, Experience/Resume data, Blog posts, Skills taxonomy. | 🔴 Not Started |
-| 05.4 | `05.4-AI-Endpoints.md` | واجهات خدمات الذكاء الاصطناعي — Chat completions, RAG-powered Q&A, LLM evaluation triggers, streaming responses. | 🔴 Not Started |
-| 05.5 | `05.5-Admin-Endpoints.md` | واجهات لوحة الإدارة — CMS operations, analytics dashboards, content moderation, user management. | 🔴 Not Started |
-| 05.6 | `05.6-Error-Codes.md` | نظام أكواد الأخطاء الموحد — standardized error response format, error code registry, localized error messages (EN/AR). | 🔴 Not Started |
-| 05.7 | `05.7-Rate-Limiting.md` | استراتيجية تحديد معدل الطلبات — rate limiting tiers, throttling policy, burst handling, per-endpoint limits. | 🔴 Not Started |
-| 05.8 | `05.8-OpenAPI-Spec.yaml` | ملف المواصفات القابل للقراءة آلياً — machine-readable OpenAPI 3.1 specification for automated tooling, SDK generation, and Swagger UI. | 🔴 Not Started |
+| 05.1 | [`05.1-API-Overview.md`](./05.1-API-Overview.md) | مبادئ تصميم RESTful API، استراتيجية الإصدارات (versioning)، base URL structure، وقواعد التسمية العامة. | ✅ Complete |
+| 05.2 | [`05.2-Authentication-Endpoints.md`](./05.2-Authentication-Endpoints.md) | واجهات المصادقة والتفويض — registration, login, token refresh, OAuth flows, password reset. | ✅ Complete |
+| 05.3 | [`05.3-Content-Endpoints.md`](./05.3-Content-Endpoints.md) | واجهات إدارة المحتوى — Projects CRUD, Experience/Resume data, Blog posts, Skills taxonomy. | ✅ Complete |
+| 05.4 | [`05.4-AI-Endpoints.md`](./05.4-AI-Endpoints.md) | واجهات خدمات الذكاء الاصطناعي — Chat completions, RAG-powered Q&A, LLM evaluation triggers, streaming responses. | ✅ Complete |
+| 05.5 | [`05.5-Admin-Endpoints.md`](./05.5-Admin-Endpoints.md) | واجهات لوحة الإدارة — CMS operations, analytics dashboards, content moderation, user management. | ✅ Complete |
+| 05.6 | [`05.6-Error-Codes.md`](./05.6-Error-Codes.md) | نظام أكواد الأخطاء الموحد — standardized error response format, error code registry, localized error messages (EN/AR). | ✅ Complete |
+| 05.7 | [`05.7-Rate-Limiting.md`](./05.7-Rate-Limiting.md) | استراتيجية تحديد معدل الطلبات — rate limiting tiers, throttling policy, burst handling, per-endpoint limits. | ✅ Complete |
+| 05.8 | [`05.8-OpenAPI-Spec.yaml`](./05.8-OpenAPI-Spec.yaml) | ملف المواصفات القابل للقراءة آلياً — machine-readable OpenAPI 3.1 specification for automated tooling, SDK generation, and Swagger UI. | ✅ Complete |
+
 
 ---
 

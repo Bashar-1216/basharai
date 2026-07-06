@@ -2,7 +2,7 @@
 
 > **"المقر الرقمي" — Digital Headquarters**
 
-[![Phase](https://img.shields.io/badge/Current_Phase-05_API_Design-blue)]()
+[![Phase](https://img.shields.io/badge/Current_Phase-06_UI_UX-blue)]()
 [![PRD](https://img.shields.io/badge/PRD-v2.0_Complete-green)]()
 [![Status](https://img.shields.io/badge/Status-Planning-orange)]()
 
@@ -24,7 +24,7 @@ A bilingual (EN/AR) engineering platform that reads, within 60 seconds, as unmis
 | 02 | [Architecture](./docs/02-Architecture/) | هندسة البنية | ✅ Complete | █████████░ 100% |
 | 03 | [System Design](./docs/03-System-Design/) | تصميم النظام | ✅ Complete | █████████░ 100% |
 | 04 | [Database Design](./docs/04-Database/) | تصميم قواعد البيانات | ✅ Complete | █████████░ 100% |
-| 05 | [API Design](./docs/05-API/) | تصميم الواجهات البرمجية | ⬜ Not Started | ░░░░░░░░░░ 0% |
+| 05 | [API Design](./docs/05-API/) | تصميم الواجهات البرمجية | ✅ Complete | █████████░ 100% |
 | 06 | [UI/UX](./docs/06-UI-UX/) | تصميم واجهة المستخدم | ⬜ Not Started | ░░░░░░░░░░ 0% |
 | 07 | [Development](./docs/07-Development/) | خطة التطوير | ⬜ Not Started | ░░░░░░░░░░ 0% |
 | 08 | [Testing](./docs/08-Testing/) | الاختبارات | ⬜ Not Started | ░░░░░░░░░░ 0% |
