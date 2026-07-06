@@ -28,7 +28,7 @@ The documentation follows a **sequential, dependency-aware structure**. Each pha
 | 06 | [**UI/UX**](./06-UI-UX/README.md) | كيف ستبدو الواجهات؟ What will the interfaces look like? | ✅ Complete | `docs/06-UI-UX/` |
 | 07 | [**Development**](./07-Development/README.md) | كيف ننظّم التطوير؟ How do we organize development? | ✅ Complete | `docs/07-Development/` |
 | 08 | [**Testing**](./08-Testing/README.md) | كيف نضمن الجودة؟ How do we ensure quality? | ✅ Complete | `docs/08-Testing/` |
-| 09 | [**Deployment**](./09-Deployment/README.md) | كيف ننشر المشروع؟ How do we deploy? | 🔲 Not Started | `docs/09-Deployment/` |
+| 09 | [**Deployment**](./09-Deployment/README.md) | كيف ننشر المشروع؟ How do we deploy? | ✅ Complete | `docs/09-Deployment/` |
 | 10 | [**Operations**](./10-Operations/README.md) | كيف نشغّل ونراقب؟ How do we operate and monitor? | 🔲 Not Started | `docs/10-Operations/` |
 
 ---
