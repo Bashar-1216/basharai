@@ -1,0 +1,358 @@
+openapi: 3.1.0
+info:
+  title: bashar.ai API Spec | مواصفات واجهات برمجة تطبيقات بشار.اي
+  description: |
+    Bilingual RESTful API specification for the Personal AI Engineering Platform.
+    Powers the frontend BFF, AI RAG assistant, automated evaluations, and observability dashboards.
+  version: 1.0.0
+servers:
+  - url: https://api.bashar.ai/api/v1
+    description: Production API Server
+  - url: http://localhost:8000/api/v1
+    description: Local Development Server
+
+security:
+  - InternalApiKey: []
+  - AdminCookieSession: []
+
+paths:
+  /auth/session:
+    get:
+      summary: Get current active session status | جلب حالة الجلسة الحالية
+      security:
+        - AdminCookieSession: []
+      responses:
+        '200':
+          description: Session details retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionResponse'
+
+  /projects:
+    get:
+      summary: Retrieve all projects | جلب كافة المشاريع
+      parameters:
+        - name: isFeatured
+          in: query
+          required: false
+          schema:
+            type: boolean
+          description: Filter by featured status.
+      responses:
+        '200':
+          description: List of projects retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Project'
+    post:
+      summary: Create a new project | إنشاء مشروع جديد
+      security:
+        - AdminCookieSession: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectCreateInput'
+      responses:
+        '201':
+          description: Project created successfully.
+
+  /projects/{slug}:
+    get:
+      summary: Retrieve single project details | جلب تفاصيل مشروع معين
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Project details retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '404':
+          description: Project not found.
+    put:
+      summary: Update a project | تحديث مشروع قائم
+      security:
+        - AdminCookieSession: []
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectUpdateInput'
+      responses:
+        '200':
+          description: Project updated successfully.
+    delete:
+      summary: Delete a project | حذف مشروع
+      security:
+        - AdminCookieSession: []
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Project deleted successfully.
+
+  /chat:
+    post:
+      summary: Send query to RAG AI Assistant | إرسال استعلام لمساعد الذكاء الاصطناعي
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatRequest'
+      responses:
+        '200':
+          description: SSE text stream chunks started.
+          content:
+            text/event-stream:
+              schema:
+                type: string
+        '429':
+          description: Rate limit exceeded.
+
+  /eval:
+    post:
+      summary: Trigger manual evaluation run | إطلاق اختبار تقييم يدوي
+      security:
+        - AdminCookieSession: []
+      responses:
+        '202':
+          description: Evaluation run triggered.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EvalTriggerResponse'
+
+  /eval/{runId}:
+    get:
+      summary: Get evaluation batch results | جلب نتائج دفعة تقييم معينة
+      security:
+        - AdminCookieSession: []
+      parameters:
+        - name: runId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Evaluation results retrieved.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EvalResultBatch'
+
+  /admin/metrics:
+    get:
+      summary: Retrieve observability stats | جلب إحصائيات لوحة المراقبة
+      security:
+        - AdminCookieSession: []
+      parameters:
+        - name: range
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [7d, 30d, all]
+      responses:
+        '200':
+          description: Metrics dataset retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetricsResponse'
+
+components:
+  securitySchemes:
+    InternalApiKey:
+      type: apiKey
+      in: header
+      name: X-Internal-Key
+    AdminCookieSession:
+      type: apiKey
+      in: cookie
+      name: __Secure-next-auth.session-token
+
+  schemas:
+    SessionResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            user:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                role:
+                  type: string
+            expires:
+              type: string
+              format: date-time
+
+    Project:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        slug:
+          type: string
+        titleEn:
+          type: string
+        titleAr:
+          type: string
+        descriptionEn:
+          type: string
+        descriptionAr:
+          type: string
+        githubUrl:
+          type: string
+        liveUrl:
+          type: string
+        featured:
+          type: boolean
+
+    ProjectCreateInput:
+      type: object
+      required:
+        - slug
+        - titleEn
+        - titleAr
+        - descriptionEn
+        - descriptionAr
+      properties:
+        slug:
+          type: string
+        titleEn:
+          type: string
+        titleAr:
+          type: string
+        descriptionEn:
+          type: string
+        descriptionAr:
+          type: string
+        githubUrl:
+          type: string
+        liveUrl:
+          type: string
+
+    ProjectUpdateInput:
+      type: object
+      properties:
+        titleEn:
+          type: string
+        titleAr:
+          type: string
+        descriptionEn:
+          type: string
+        descriptionAr:
+          type: string
+
+    ChatRequest:
+      type: object
+      required:
+        - message
+        - sessionId
+      properties:
+        message:
+          type: string
+        sessionId:
+          type: string
+        history:
+          type: array
+          items:
+            type: object
+            properties:
+              role:
+                type: string
+                enum: [user, assistant]
+              content:
+                type: string
+
+    EvalTriggerResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            runId:
+              type: string
+              format: uuid
+            status:
+              type: string
+            totalQuestions:
+              type: integer
+
+    EvalResultBatch:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            runId:
+              type: string
+              format: uuid
+            status:
+              type: string
+            metrics:
+              type: object
+              properties:
+                averageContextRelevance:
+                  type: number
+                averageGroundedness:
+                  type: number
+                averageAnswerRelevance:
+                  type: number
+                passRate:
+                  type: number
+
+    MetricsResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            summary:
+              type: object
+              properties:
+                totalRequests:
+                  type: integer
+                totalCostUSD:
+                  type: number
+                averageLatencyMS:
+                  type: integer
