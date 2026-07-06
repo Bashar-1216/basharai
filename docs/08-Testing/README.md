@@ -1,7 +1,7 @@
 # 🧪 08 - Testing Strategy | استراتيجية الاختبار
 
 > **المشروع**: basharai — Personal AI Engineering Platform
-> **الحالة**: 🔴 لم يبدأ بعد | Not Started
+> **الحالة**: ✅ مكتمل | Complete
 > **آخر تحديث**: 2026-07-06
 
 ---
@@ -18,13 +18,14 @@ This folder contains the **comprehensive testing strategy** for the basharai pla
 
 | # | الملف | الوصف | الحالة |
 |---|-------|-------|--------|
-| 08.1 | `08.1-Testing-Strategy.md` | الاستراتيجية العامة للاختبار — testing pyramid, coverage targets, testing tools (Jest/Vitest, Pytest, Playwright), CI integration, definition of "done". | 🔴 Not Started |
-| 08.2 | `08.2-Unit-Tests.md` | خطة اختبارات الوحدة — unit test plan for frontend components, backend services, utility functions, mocking strategy, coverage requirements. | 🔴 Not Started |
-| 08.3 | `08.3-Integration-Tests.md` | خطة اختبارات التكامل — API integration tests, database integration, third-party service mocking, test data management. | 🔴 Not Started |
-| 08.4 | `08.4-E2E-Tests.md` | خطة اختبارات شاملة من البداية للنهاية — end-to-end test scenarios using Playwright/Cypress, critical user journeys, cross-browser testing, RTL layout testing. | 🔴 Not Started |
-| 08.5 | `08.5-Performance-Tests.md` | اختبارات الأداء والحمل — load testing with k6/Artillery, performance budgets, Core Web Vitals targets, API response time benchmarks, concurrent user simulations. | 🔴 Not Started |
-| 08.6 | `08.6-LLM-Evaluation.md` | تقييم مكونات الذكاء الاصطناعي — golden test sets, RAG retrieval quality metrics (precision, recall, MRR), response quality evaluation, hallucination detection, prompt regression testing, A/B evaluation frameworks. | 🔴 Not Started |
-| 08.7 | `08.7-Accessibility-Tests.md` | اختبارات الوصولية — automated a11y testing (axe-core), manual testing checklist, screen reader testing (NVDA/VoiceOver), keyboard navigation tests, Arabic content accessibility. | 🔴 Not Started |
+| 08.1 | [`08.1-Testing-Strategy.md`](./08.1-Testing-Strategy.md) | الاستراتيجية العامة للاختبار — testing pyramid, coverage targets, testing tools (Jest/Vitest, Pytest, Playwright), CI integration, definition of "done". | ✅ Complete |
+| 08.2 | [`08.2-Unit-Tests.md`](./08.2-Unit-Tests.md) | خطة اختبارات الوحدة — unit test plan for frontend components, backend services, utility functions, mocking strategy, coverage requirements. | ✅ Complete |
+| 08.3 | [`08.3-Integration-Tests.md`](./08.3-Integration-Tests.md) | خطة اختبارات التكامل — API integration tests, database integration, third-party service mocking, test data management. | ✅ Complete |
+| 08.4 | [`08.4-E2E-Tests.md`](./08.4-E2E-Tests.md) | خطة اختبارات شاملة من البداية للنهاية — end-to-end test scenarios using Playwright/Cypress, critical user journeys, cross-browser testing, RTL layout testing. | ✅ Complete |
+| 08.5 | [`08.5-Performance-Tests.md`](./08.5-Performance-Tests.md) | اختبارات الأداء والحمل — load testing with k6/Artillery, performance budgets, Core Web Vitals targets, API response time benchmarks, concurrent user simulations. | ✅ Complete |
+| 08.6 | [`08.6-LLM-Evaluation.md`](./08.6-LLM-Evaluation.md) | تقييم مكونات الذكاء الاصطناعي — golden test sets, RAG retrieval quality metrics (precision, recall, MRR), response quality evaluation, hallucination detection, prompt regression testing, A/B evaluation frameworks. | ✅ Complete |
+| 08.7 | [`08.7-Accessibility-Tests.md`](./08.7-Accessibility-Tests.md) | اختبارات الوصولية — automated a11y testing (axe-core), manual testing checklist, screen reader testing (NVDA/VoiceOver), keyboard navigation tests, Arabic content accessibility. | ✅ Complete |
+
 
 ---
 
