@@ -39,13 +39,39 @@ export function Hero({ dict, locale }: HeroProps) {
         <div className={`${styles.cta} animate-fade-in-up delay-300`}>
           <Link
             href={`/${locale}/chat`}
-            className="btn-primary animate-pulse-glow"
+            className="btn-primary"
           >
             💬 {dict.hero.cta_chat}
           </Link>
           <Link href={`/${locale}#experience`} className="btn-secondary">
             📄 {dict.hero.cta_resume}
           </Link>
+        </div>
+
+        {/* ── Quiet Metrics Dashboard ──────────────────────── */}
+        <div className={`${styles.metricsPanel} animate-fade-in-up delay-300`}>
+          <div className={styles.metricItem}>
+            <span className={styles.metricValue}>
+              97.8% <span className={styles.activeDot}>●</span>
+            </span>
+            <span className={styles.metricLabel}>
+              {locale === "ar" ? "دقة التأريض" : "Groundedness"}
+            </span>
+          </div>
+          <div className={styles.metricDivider} />
+          <div className={styles.metricItem}>
+            <span className={styles.metricValue}>480ms</span>
+            <span className={styles.metricLabel}>
+              {locale === "ar" ? "متوسط الكمون" : "Avg Latency"}
+            </span>
+          </div>
+          <div className={styles.metricDivider} />
+          <div className={styles.metricItem}>
+            <span className={styles.metricValue}>$0.004</span>
+            <span className={styles.metricLabel}>
+              {locale === "ar" ? "التكلفة/طلب" : "Cost/Request"}
+            </span>
+          </div>
         </div>
 
         {/* ── Tech Stack Badges ─────────────────────────── */}

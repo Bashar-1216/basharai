@@ -4,6 +4,7 @@ import { Navbar } from "@/components/navbar";
 import { Hero } from "@/components/hero";
 import { Experience } from "@/components/experience";
 import { Projects } from "@/components/projects";
+import { EvaluationDashboard } from "@/components/evaluation-dashboard";
 import { Footer } from "@/components/footer";
 
 /**
@@ -25,6 +26,7 @@ export default async function HomePage({
         <Hero dict={dict} locale={locale as Locale} />
         <Experience dict={dict} locale={locale as Locale} />
         <Projects dict={dict} locale={locale as Locale} />
+        <EvaluationDashboard dict={dict} locale={locale as Locale} />
       </main>
       <Footer dict={dict} />
     </>

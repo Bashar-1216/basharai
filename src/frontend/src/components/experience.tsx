@@ -87,31 +87,30 @@ export function Experience({ dict, locale }: ExperienceProps) {
           <span className="gradient-text">{dict.experience.title}</span>
         </h2>
 
-        <div className={styles.timeline}>
+        <div className={styles.resumeList}>
           {data.map((exp, index) => (
             <article
               key={exp.id}
-              className={`glass-card ${styles.card} animate-fade-in-up`}
-              style={{ animationDelay: `${(index + 1) * 150}ms` }}
+              className={`${styles.resumeItem} animate-fade-in-up`}
+              style={{ animationDelay: `${(index + 1) * 120}ms` }}
             >
-              {/* ── Card Header ─────────────────────────────── */}
-              <div className={styles.cardHeader}>
-                <span className={styles.logo}>{exp.logo}</span>
-                <div className={styles.headerText}>
-                  <h3 className={styles.company}>{exp.company}</h3>
+              {/* ── Resume Item Header ─────────────────────── */}
+              <div className={styles.resumeHeader}>
+                <div>
+                  <h3 className={styles.company}>
+                    {exp.company}{" "}
+                    <span className={styles.period}>({exp.period})</span>
+                  </h3>
                   <p className={styles.role}>{exp.role}</p>
                 </div>
-                <div className={styles.meta}>
-                  <span className={styles.period}>{exp.period}</span>
-                  <span className={styles.location}>{exp.location}</span>
-                </div>
+                <div className={styles.location}>{exp.location}</div>
               </div>
 
               {/* ── Highlights ──────────────────────────────── */}
               <ul className={styles.highlights}>
                 {exp.highlights.map((item, i) => (
                   <li key={i} className={styles.highlight}>
-                    <span className={styles.bulletIcon}>▸</span>
+                    <span className={styles.bulletIcon}>-</span>
                     {item}
                   </li>
                 ))}
@@ -119,6 +118,9 @@ export function Experience({ dict, locale }: ExperienceProps) {
 
               {/* ── Tech Stack ──────────────────────────────── */}
               <div className={styles.techStack}>
+                <span className={styles.techLabel}>
+                  {locale === "ar" ? "التقنيات:" : "Tech Stack:"}
+                </span>
                 {exp.tech.map((t) => (
                   <span key={t} className={styles.techBadge}>
                     {t}

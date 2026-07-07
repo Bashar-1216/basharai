@@ -12,8 +12,8 @@
   },
   "hero": {
     "greeting": "Hi, I'm Bashar",
-    "title": "AI Engineer",
-    "subtitle": "I build and evaluate production LLM systems.",
+    "title": "LLM Application Engineer",
+    "subtitle": "Production AI systems at Amazon & Grammarly. Building bilingual LLM platforms for GCC and global teams.",
     "cta_chat": "Ask My AI Assistant",
     "cta_resume": "View Resume"
   },
