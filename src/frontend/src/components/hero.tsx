@@ -17,7 +17,6 @@ export function Hero({ dict, locale }: HeroProps) {
     <section className={styles.hero}>
       {/* ── Background Glow Effects ─────────────────────── */}
       <div className={styles.glowOrb1} aria-hidden="true" />
-      <div className={styles.glowOrb2} aria-hidden="true" />
 
       <div className={`container ${styles.content}`}>
         {/* ── Greeting Badge ────────────────────────────── */}

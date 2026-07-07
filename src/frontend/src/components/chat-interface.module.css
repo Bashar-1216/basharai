@@ -27,9 +27,8 @@
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background: hsl(var(--color-primary) / 0.1);
-  border: 1px solid hsl(var(--color-primary) / 0.3);
-  animation: pulse-glow 3s ease-in-out infinite;
+  background: hsl(var(--color-primary) / 0.05);
+  border: 1px solid hsl(var(--color-primary) / 0.2);
 }
 
 .avatar {
@@ -145,14 +144,14 @@
 
 .userMsg .msgBubble {
   background: hsl(var(--color-primary));
-  color: white;
+  color: #F8FAFC;
   border-end-end-radius: var(--radius-sm);
 }
 
 .assistantMsg .msgBubble {
   background: hsl(var(--color-bg-card));
-  border: 1px solid hsl(var(--color-border));
-  color: hsl(var(--color-text));
+  border: 1px solid hsl(var(--color-text-muted) / 0.15);
+  color: hsl(var(--color-text-body));
   border-end-start-radius: var(--radius-sm);
 }
 

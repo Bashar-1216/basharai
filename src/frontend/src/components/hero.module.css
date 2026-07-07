@@ -8,32 +8,16 @@
   padding-top: 4rem; /* account for fixed navbar */
 }
 
-/* ── Ambient Glow Orbs ─────────────────────────────────────── */
+/* ── Ambient Glow Orbs (Layer 3) ───────────────────────────── */
 .glowOrb1 {
   position: absolute;
-  top: -10%;
-  inset-inline-start: -5%;
-  width: 500px;
-  height: 500px;
+  top: 5%;
+  inset-inline-start: 15%;
+  width: 700px;
+  height: 700px;
   background: radial-gradient(
     circle,
-    hsl(var(--color-primary) / 0.12) 0%,
-    transparent 70%
-  );
-  border-radius: 50%;
-  filter: blur(80px);
-  pointer-events: none;
-}
-
-.glowOrb2 {
-  position: absolute;
-  bottom: -15%;
-  inset-inline-end: -10%;
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(
-    circle,
-    hsl(var(--color-accent) / 0.08) 0%,
+    hsl(var(--color-primary) / 0.08) 0%,
     transparent 70%
   );
   border-radius: 50%;
