@@ -1,0 +1,176 @@
+.section {
+  background: linear-gradient(
+    180deg,
+    hsl(var(--color-bg)) 0%,
+    hsl(222 47% 8%) 100%
+  );
+}
+
+.heading {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 3rem;
+  letter-spacing: -0.02em;
+}
+
+/* ── Timeline ──────────────────────────────────────────────── */
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 800px;
+  margin-inline: auto;
+  position: relative;
+}
+
+.timeline::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 24px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(
+    180deg,
+    hsl(var(--color-primary) / 0.4),
+    hsl(var(--color-accent) / 0.2),
+    transparent
+  );
+}
+
+/* ── Card ──────────────────────────────────────────────────── */
+.card {
+  padding: 1.75rem;
+  margin-inline-start: 48px;
+  position: relative;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: -36px;
+  top: 2rem;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: hsl(var(--color-primary));
+  box-shadow: 0 0 12px hsl(var(--color-primary) / 0.4);
+}
+
+/* ── Card Header ───────────────────────────────────────────── */
+.cardHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.logo {
+  font-size: 2rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.headerText {
+  flex: 1;
+}
+
+.company {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: hsl(var(--color-text));
+  margin-bottom: 0.125rem;
+}
+
+.role {
+  font-size: 0.9375rem;
+  color: hsl(var(--color-primary));
+  font-weight: 500;
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.125rem;
+  flex-shrink: 0;
+}
+
+.period {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: hsl(var(--color-text-muted));
+  font-family: var(--font-mono);
+}
+
+.location {
+  font-size: 0.75rem;
+  color: hsl(var(--color-text-muted) / 0.6);
+}
+
+/* ── Highlights ────────────────────────────────────────────── */
+.highlights {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  margin-bottom: 1.25rem;
+}
+
+.highlight {
+  display: flex;
+  gap: 0.625rem;
+  font-size: 0.9375rem;
+  color: hsl(var(--color-text) / 0.85);
+  line-height: 1.6;
+}
+
+.bulletIcon {
+  color: hsl(var(--color-secondary));
+  flex-shrink: 0;
+  font-weight: 700;
+}
+
+/* ── Tech Stack ────────────────────────────────────────────── */
+.techStack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.techBadge {
+  padding: 0.1875rem 0.625rem;
+  background: hsl(var(--color-primary) / 0.08);
+  border: 1px solid hsl(var(--color-primary) / 0.2);
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: hsl(var(--color-primary));
+  font-family: var(--font-mono);
+}
+
+/* ── Responsive ────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .timeline::before {
+    display: none;
+  }
+
+  .card {
+    margin-inline-start: 0;
+  }
+
+  .card::before {
+    display: none;
+  }
+
+  .cardHeader {
+    flex-direction: column;
+  }
+
+  .meta {
+    align-items: flex-start;
+    flex-direction: row;
+    gap: 0.75rem;
+  }
+}
