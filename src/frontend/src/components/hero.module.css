@@ -1,0 +1,126 @@
+.hero {
+  position: relative;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding-top: 4rem; /* account for fixed navbar */
+}
+
+/* ── Ambient Glow Orbs ─────────────────────────────────────── */
+.glowOrb1 {
+  position: absolute;
+  top: -10%;
+  inset-inline-start: -5%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(
+    circle,
+    hsl(var(--color-primary) / 0.12) 0%,
+    transparent 70%
+  );
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+}
+
+.glowOrb2 {
+  position: absolute;
+  bottom: -15%;
+  inset-inline-end: -10%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(
+    circle,
+    hsl(var(--color-accent) / 0.08) 0%,
+    transparent 70%
+  );
+  border-radius: 50%;
+  filter: blur(100px);
+  pointer-events: none;
+}
+
+/* ── Content ───────────────────────────────────────────────── */
+.content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.75rem;
+}
+
+/* ── Badge ─────────────────────────────────────────────────── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.375rem 1rem;
+  background: hsl(var(--color-bg-card) / 0.6);
+  border: 1px solid hsl(var(--color-border));
+  border-radius: 999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: hsl(var(--color-text-muted));
+}
+
+.badgeDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: hsl(130 60% 50%);
+  box-shadow: 0 0 8px hsl(130 60% 50% / 0.5);
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* ── Title ─────────────────────────────────────────────────── */
+.title {
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+/* ── Subtitle ──────────────────────────────────────────────── */
+.subtitle {
+  font-size: clamp(1.0625rem, 2vw, 1.25rem);
+  color: hsl(var(--color-text-muted));
+  max-width: 540px;
+  line-height: 1.7;
+}
+
+/* ── CTA ───────────────────────────────────────────────────── */
+.cta {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* ── Tech Stack ────────────────────────────────────────────── */
+.techStack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.625rem;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.techBadge {
+  padding: 0.25rem 0.75rem;
+  background: hsl(var(--color-bg-card) / 0.5);
+  border: 1px solid hsl(var(--color-border));
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: hsl(var(--color-text-muted));
+  font-family: var(--font-mono);
+  transition: all var(--transition-fast);
+}
+
+.techBadge:hover {
+  border-color: hsl(var(--color-primary) / 0.5);
+  color: hsl(var(--color-primary));
+}

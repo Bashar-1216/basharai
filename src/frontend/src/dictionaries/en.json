@@ -1,0 +1,39 @@
+{
+  "meta": {
+    "title": "bashar.ai — AI Engineering Platform",
+    "description": "Evidence-based AI engineering portfolio with an interactive RAG assistant. Built by an engineer who shipped production AI systems."
+  },
+  "nav": {
+    "home": "Home",
+    "projects": "Projects",
+    "experience": "Experience",
+    "assistant": "AI Assistant",
+    "language": "العربية"
+  },
+  "hero": {
+    "greeting": "Hi, I'm Bashar",
+    "title": "AI Engineer",
+    "subtitle": "I build and evaluate production LLM systems.",
+    "cta_chat": "Ask My AI Assistant",
+    "cta_resume": "View Resume"
+  },
+  "experience": {
+    "title": "Experience",
+    "present": "Present"
+  },
+  "projects": {
+    "title": "Case Studies",
+    "view_details": "View Details"
+  },
+  "assistant": {
+    "title": "AI Assistant",
+    "placeholder": "Ask me about Bashar's experience, skills, or projects...",
+    "send": "Send",
+    "thinking": "Thinking...",
+    "disclaimer": "Powered by RAG — answers are grounded in verified portfolio data."
+  },
+  "footer": {
+    "built_with": "Built with Next.js, FastAPI, LangChain & pgvector",
+    "copyright": "© 2026 bashar.ai — All rights reserved."
+  }
+}

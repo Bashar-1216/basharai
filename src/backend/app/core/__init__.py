@@ -1,0 +1,1 @@
+# bashar.ai core package

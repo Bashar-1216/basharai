@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  database:
+    image: ankane/pgvector:v0.5.1
+    container_name: bashar_postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: local_developer
+      POSTGRES_PASSWORD: local_secure_password
+      POSTGRES_DB: bashar_db
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  redis:
+    image: redis:7.2-alpine
+    container_name: bashar_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  redisdata:
