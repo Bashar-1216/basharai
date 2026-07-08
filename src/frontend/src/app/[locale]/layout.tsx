@@ -10,6 +10,8 @@ export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
 }
 
+import { FloatingChat } from "@/components/floating-chat";
+
 /**
  * Locale-aware layout — sets HTML dir/lang attributes dynamically.
  * Arabic pages get RTL direction and IBM Plex Sans Arabic font.
@@ -44,7 +46,10 @@ export default async function LocaleLayout({
           rel="stylesheet"
         />
       </head>
-      <body className={fontClass}>{children}</body>
+      <body className={fontClass}>
+        {children}
+        <FloatingChat locale={locale as Locale} />
+      </body>
     </html>
   );
 }

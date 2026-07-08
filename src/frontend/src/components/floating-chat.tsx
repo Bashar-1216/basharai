@@ -1,0 +1,238 @@
+"use client";
+
+import { useState, useRef, useEffect } from "react";
+import type { Locale } from "@/lib/i18n";
+import styles from "./floating-chat.module.css";
+import Link from "next/link";
+
+interface Message {
+  id: string;
+  role: "user" | "assistant";
+  content: string;
+  timestamp: Date;
+}
+
+interface FloatingChatProps {
+  locale: Locale;
+}
+
+export function FloatingChat({ locale }: FloatingChatProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [isDevView, setIsDevView] = useState(false);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    const handleOpenChat = () => setIsOpen(true);
+    window.addEventListener("open-chat", handleOpenChat);
+    return () => window.removeEventListener("open-chat", handleOpenChat);
+  }, []);
+
+  useEffect(() => {
+    if (isOpen) {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages, isOpen]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setInput(e.target.value);
+    e.target.style.height = "auto";
+    e.target.style.height = `${Math.min(e.target.scrollHeight, 80)}px`;
+  };
+
+  const handleSubmit = async (e?: React.FormEvent) => {
+    e?.preventDefault();
+    const query = input.trim();
+    if (!query || isLoading) return;
+
+    const userMsg: Message = {
+      id: crypto.randomUUID(),
+      role: "user",
+      content: query,
+      timestamp: new Date(),
+    };
+    setMessages((prev) => [...prev, userMsg]);
+    setInput("");
+    setIsLoading(true);
+
+    if (inputRef.current) {
+      inputRef.current.style.height = "auto";
+    }
+
+    setTimeout(() => {
+      const mockResponse =
+        locale === "ar"
+          ? "هذا رد تجريبي من المساعد الذكي. سيتم ربطه بخادم FastAPI RAG قريباً لتقديم إجابات حقيقية مبنية على بيانات المحفظة الموثقة."
+          : "This is a mock response from the AI assistant. It will be connected to the FastAPI RAG backend soon to provide real answers grounded in verified portfolio data.";
+
+      const assistantMsg: Message = {
+        id: crypto.randomUUID(),
+        role: "assistant",
+        content: mockResponse,
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, assistantMsg]);
+      setIsLoading(false);
+    }, 1200);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmit();
+    }
+  };
+
+  const isAr = locale === "ar";
+
+  return (
+    <div className={`${styles.chatWidget} no-print`}>
+      {/* ── Level 1: Floating Action Button ──────────────── */}
+      {!isOpen && (
+        <button
+          type="button"
+          className={styles.fab}
+          onClick={() => setIsOpen(true)}
+          aria-label="Open AI Assistant"
+        >
+          💬
+        </button>
+      )}
+
+      {/* ── Level 2 & 3: Chat Popup Window ──────────────── */}
+      {isOpen && (
+        <div className={`${styles.popup} ${isDevView ? styles.splitPopup : ""}`}>
+          {/* Header */}
+          <div className={styles.popupHeader}>
+            <div className={styles.headerInfo}>
+              <span className={styles.avatar}>🤖</span>
+              <div>
+                <h4 className={styles.title}>
+                  {isAr ? "مساعد بشار الذكي" : "Bashar AI Assistant"}
+                </h4>
+                <span className={styles.status}>🟢 {isAr ? "نشط" : "Online"}</span>
+              </div>
+            </div>
+            <div className={styles.headerActions}>
+              <button
+                type="button"
+                onClick={() => setIsDevView(!isDevView)}
+                className={`${styles.devToggle} ${isDevView ? styles.devActive : ""}`}
+                title={isAr ? "بيانات المطور" : "Developer Logs"}
+              >
+                ⚙️
+              </button>
+              <Link
+                href={`/${locale}/assistant`}
+                className={styles.expandBtn}
+                title={isAr ? "تكبير الصفحة" : "Expand to Full Page"}
+                onClick={() => setIsOpen(false)}
+              >
+                🗖
+              </Link>
+              <button
+                type="button"
+                className={styles.closeBtn}
+                onClick={() => setIsOpen(false)}
+                title={isAr ? "إغلاق" : "Close"}
+              >
+                ✕
+              </button>
+            </div>
+          </div>
+
+          <div className={styles.popupBody}>
+            {/* Left Pane: Chat messages */}
+            <div className={styles.chatPane}>
+              <div className={styles.messagesArea}>
+                {messages.length === 0 ? (
+                  <div className={styles.emptyState}>
+                    <p>👋 {isAr ? "مرحباً! اسألني أي شيء عن خبرات بشار وماريعه." : "Hello! Ask me anything about Bashar's experience and projects."}</p>
+                    <div className={styles.chips}>
+                      <button type="button" onClick={() => { setInput(isAr ? "ما هي مشاريع بشار؟" : "What are Bashar's projects?"); }} className={styles.chip}>
+                        {isAr ? "المشاريع" : "Projects"}
+                      </button>
+                      <button type="button" onClick={() => { setInput(isAr ? "أخبرني عن خبرة أمازون" : "Tell me about Amazon experience"); }} className={styles.chip}>
+                        {isAr ? "خبرة أمازون" : "Amazon Exp"}
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className={styles.messagesList}>
+                    {messages.map((msg) => (
+                      <div
+                        key={msg.id}
+                        className={`${styles.message} ${
+                          msg.role === "user" ? styles.userMsg : styles.assistantMsg
+                        }`}
+                      >
+                        <div className={styles.msgBubble}>
+                          <p className={styles.msgContent}>{msg.content}</p>
+                        </div>
+                      </div>
+                    ))}
+                    {isLoading && (
+                      <div className={`${styles.message} ${styles.assistantMsg}`}>
+                        <div className={styles.msgBubble}>
+                          <div className={styles.typing}>
+                            <span />
+                            <span />
+                            <span />
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    <div ref={messagesEndRef} />
+                  </div>
+                )}
+              </div>
+
+              {/* Input Form */}
+              <form className={styles.inputForm} onSubmit={handleSubmit}>
+                <textarea
+                  ref={inputRef}
+                  value={input}
+                  onChange={handleInputChange}
+                  onKeyDown={handleKeyDown}
+                  placeholder={isAr ? "اسأل هنا..." : "Ask a question..."}
+                  rows={1}
+                />
+                <button type="submit" disabled={!input.trim() || isLoading}>
+                  ➔
+                </button>
+              </form>
+            </div>
+
+            {/* Right Pane: Developer telemetry overlay */}
+            {isDevView && (
+              <aside className={styles.devPane}>
+                <h5 className={styles.devTitle}>{isAr ? "سجل التشغيل" : "Telemetry logs"}</h5>
+                <div className={styles.metrics}>
+                  <div className={styles.metric}>
+                    <span>Latency</span>
+                    <strong>420ms</strong>
+                  </div>
+                  <div className={styles.metric}>
+                    <span>Cost</span>
+                    <strong>$0.003</strong>
+                  </div>
+                  <div className={styles.metric}>
+                    <span>Tokens</span>
+                    <strong>600 total</strong>
+                  </div>
+                  <div className={styles.metric}>
+                    <span>Confidence</span>
+                    <strong>94.2%</strong>
+                  </div>
+                </div>
+              </aside>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
