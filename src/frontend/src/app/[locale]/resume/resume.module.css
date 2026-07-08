@@ -1,0 +1,238 @@
+.resumePage {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: hsl(var(--color-bg));
+  color: hsl(var(--color-text-body));
+}
+
+/* ── Action Header ─────────────────────────────────────────── */
+.actionHeader {
+  background: hsl(var(--color-bg-card));
+  border-bottom: 1px solid hsl(var(--color-text-muted) / 0.15);
+  padding: 1rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: var(--shadow-card);
+}
+
+.headerWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.backLink {
+  color: hsl(var(--color-text-muted));
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: color var(--transition-fast);
+}
+
+.backLink:hover {
+  color: hsl(var(--color-secondary));
+}
+
+/* ── CV Sheet Document ─────────────────────────────────────── */
+.cvSheet {
+  background: hsl(var(--color-bg-card));
+  border: 1px solid hsl(var(--color-text-muted) / 0.15);
+  border-radius: var(--radius-lg);
+  padding: 3rem;
+  margin-top: 2rem;
+  margin-bottom: 3rem;
+  max-width: 800px;
+  width: 100%;
+  box-shadow: var(--shadow-card);
+}
+
+.cvHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 2px solid hsl(var(--color-text-muted) / 0.2);
+  padding-bottom: 1.5rem;
+  margin-bottom: 2rem;
+  gap: 1.5rem;
+}
+
+.name {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: hsl(var(--color-text));
+  letter-spacing: -0.03em;
+}
+
+.title {
+  font-size: 1.125rem;
+  color: hsl(var(--color-secondary));
+  font-weight: 600;
+  margin-top: 0.25rem;
+}
+
+.contactInfo {
+  text-align: right;
+  font-size: 0.875rem;
+  color: hsl(var(--color-text-muted));
+  line-height: 1.5;
+}
+
+[dir="rtl"] .contactInfo {
+  text-align: left;
+}
+
+/* ── Sections ──────────────────────────────────────────────── */
+.section {
+  margin-bottom: 2rem;
+}
+
+.sectionTitle {
+  font-size: 1.125rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: hsl(var(--color-text));
+  border-bottom: 1px solid hsl(var(--color-text-muted) / 0.15);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.summaryText {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: hsl(var(--color-text-body));
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.itemHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.itemTitle {
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: hsl(var(--color-text));
+}
+
+.period {
+  font-size: 0.8125rem;
+  font-family: var(--font-mono);
+  color: hsl(var(--color-text-muted));
+}
+
+.itemSummary {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: hsl(var(--color-text-body));
+}
+
+.githubLink {
+  font-size: 0.8125rem;
+  color: hsl(var(--color-secondary));
+  text-decoration: none;
+  font-weight: 600;
+  transition: color var(--transition-fast);
+}
+
+.githubLink:hover {
+  color: hsl(var(--color-secondary-hover));
+}
+
+/* ── Skills Layout ─────────────────────────────────────────── */
+.skillsGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.skillCategory {
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: hsl(var(--color-text-body));
+}
+
+.skillCategory strong {
+  color: hsl(var(--color-text));
+}
+
+/* ── Printing CSS Rules ────────────────────────────────────── */
+@media print {
+  :global(.no-print) {
+    display: none !important;
+  }
+
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  .cvSheet {
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .name, .sectionTitle, .itemTitle, .skillCategory strong {
+    color: #000000 !important;
+  }
+
+  .title, .githubLink {
+    color: #1a56db !important; /* Standard high-contrast print blue */
+  }
+
+  .contactInfo, .period, .backLink {
+    color: #4b5563 !important;
+  }
+}
+
+/* ── Responsive ────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .cvHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .contactInfo {
+    text-align: left;
+  }
+
+  [dir="rtl"] .contactInfo {
+    text-align: right;
+  }
+
+  .cvSheet {
+    padding: 1.5rem;
+    margin-top: 1rem;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+  }
+
+  .itemHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+}

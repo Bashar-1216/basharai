@@ -1,0 +1,172 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// ==========================================
+// 1. Auth Domain (NextAuth.js v5 compatible)
+// ==========================================
+
+model User {
+  id            String    @id @default(uuid()) @db.Uuid
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  role          String    @default("VISITOR") // ADMIN or VISITOR
+  createdAt     DateTime  @default(now())
+  accounts      Account[]
+  sessions      Session[]
+}
+
+model Account {
+  id                String  @id @default(uuid()) @db.Uuid
+  userId            String  @db.Uuid
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(uuid()) @db.Uuid
+  sessionToken String   @unique
+  userId       String   @db.Uuid
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ==========================================
+// 2. Content Domain (Bilingual Portfolio)
+// ==========================================
+
+model Project {
+  id             String    @id @default(uuid()) @db.Uuid
+  slug           String    @unique
+  titleEn        String    @map("title_en")
+  titleAr        String    @map("title_ar")
+  descriptionEn  String    @db.Text @map("description_en")
+  descriptionAr  String    @db.Text @map("description_ar")
+  githubUrl      String?   @map("github_url")
+  liveUrl        String?   @map("live_url")
+  publishedAt    DateTime  @default(now()) @map("published_at")
+  featured       Boolean   @default(false)
+}
+
+model Experience {
+  id          String    @id @default(uuid()) @db.Uuid
+  company     String    @unique
+  logoUrl     String?   @map("logo_url")
+  titleEn     String    @map("title_en")
+  titleAr     String    @map("title_ar")
+  startDate   DateTime  @map("start_date")
+  endDate     DateTime? @map("end_date")
+  summaryEn   String    @db.Text @map("summary_en")
+  summaryAr   String    @db.Text @map("summary_ar")
+  isCurrent   Boolean   @default(false) @map("is_current")
+}
+
+model BlogPost {
+  id          String   @id @default(uuid()) @db.Uuid
+  slug        String   @unique
+  titleEn     String   @map("title_en")
+  titleAr     String   @map("title_ar")
+  contentEn   String   @db.Text @map("content_en")
+  contentAr   String   @db.Text @map("content_ar")
+  publishedAt DateTime @default(now()) @map("published_at")
+  published   Boolean  @default(false)
+}
+
+// ==========================================
+// 3. AI / RAG Domain
+// ==========================================
+
+model Document {
+  id         String   @id @default(uuid()) @db.Uuid
+  sourceUrl  String   @map("source_url")
+  titleEn    String   @map("title_en")
+  titleAr    String   @map("title_ar")
+  docType    String   @default("PROJECT") @map("doc_type") // EXPERIENCE, PROJECT, BLOG
+  fileHash   String   @map("file_hash")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+  chunks     Chunk[]
+}
+
+// Note: Vector fields (embedding_en/ar) are created via custom migration SQL (pgvector)
+model Chunk {
+  id          String   @id @default(uuid()) @db.Uuid
+  documentId  String   @db.Uuid @map("document_id")
+  contentEn   String   @db.Text @map("content_en")
+  contentAr   String   @db.Text @map("content_ar")
+  chunkHash   String   @map("chunk_hash")
+  
+  document    Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+}
+
+model Conversation {
+  id           String    @id @default(uuid()) @db.Uuid
+  sessionId    String    @unique @map("session_id") // Fingerprint SHA-256
+  userLanguage String    @default("en") @map("user_language")
+  createdAt    DateTime  @default(now()) @map("createdAt")
+  updatedAt    DateTime  @updatedAt @map("updatedAt")
+  messages     Message[]
+  llmLogs      LLMLog[]
+}
+
+model Message {
+  id             String       @id @default(uuid()) @db.Uuid
+  conversationId String       @db.Uuid @map("conversation_id")
+  role           String       // USER or ASSISTANT
+  content        String       @db.Text
+  createdAt      DateTime     @default(now()) @map("created_at")
+  
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+}
+
+// ==========================================
+// 4. Observability & Eval Domain
+// ==========================================
+
+model LLMLog {
+  id             String       @id @default(uuid()) @db.Uuid
+  conversationId String       @db.Uuid @map("conversation_id")
+  queryText      String       @db.Text @map("query_text")
+  responseText   String       @db.Text @map("response_text")
+  tokensInput    Int          @map("tokens_input")
+  tokensOutput   Int          @map("tokens_output")
+  costUsd        Float        @map("cost_usd")
+  latencyMs      Int          @map("latency_ms")
+  languageCode   String       @default("en") @map("language_code")
+  createdAt      DateTime     @default(now()) @map("created_at")
+
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  evaluations    EvaluationResult[]
+}
+
+model EvaluationResult {
+  id             String   @id @default(uuid()) @db.Uuid
+  llmLogId       String   @db.Uuid @map("llm_log_id")
+  runId          String   @map("run_id") // UUID of evaluation batch
+  contextRelevance Float  @map("context_relevance") // 0.0 to 1.0
+  groundedness     Float  @map("groundedness") // 0.0 to 1.0
+  answerRelevance  Float  @map("answer_relevance") // 0.0 to 1.0
+  passed         Boolean  @default(true)
+  feedbackReason String?  @db.Text @map("feedback_reason")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  llmLog         LLMLog   @relation(fields: [llmLogId], references: [id], onDelete: Cascade)
+}
