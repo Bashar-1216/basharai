@@ -1,0 +1,116 @@
+BASHAR ALMUNTASER  
+AI Engineer | Machine Learning Engineer
+almuntaserbashar@gmail.com
+linkedin.com/in/bashar-almuntaser-
+4b367027b
+773771175
+github.com/Bashar-1216
+Professional Summary
+AI Engineer with hands-on experience building and deploying production-grade machine learning systems, LLM pipelines, 
+NLP models, and computer vision applications. Skilled in end-to-end ML engineering — from fine-tuning transformer 
+models (BERT, RoBERTa) to deploying containerized microservices on Linux servers. Experienced in multi-model LLM 
+orchestration, bilingual Arabic/English NLP, AI agent development using LangChain, and real-time data pipelines. Strong 
+focus on Arabic and Gulf market AI applications.
+Education
+2022 – 2026
+Sana'a, Yemen
+Bachelor of Science in Artificial Intelligence
+Emirates International  University
+Skills
+Programming Languages
+Python, TypeScript, SQL, Java
+Natural Language Processing
+Arabic NLP, CAMeL-BERT, BiLSTM, pyarabic, Unicode 
+Normalization, Named Entity Recognition (NER), 
+Sentiment Analysis, Text Classification, Domain-
+Adversarial Training
+Data Engineering
+PySpark, Apache Kafka, Pandas, NumPy, TimescaleDB, 
+Elasticsearch
+Frontend Development
+React, Next.js, TypeScript
+DevOps & Infrastructure
+Docker, Docker Compose, Linux Server Administration, 
+Git, GitHub, Langfuse, Prisma ORM
+Machine Learning & AI
+PyTorch, TensorFlow, Scikit-learn, Hugging Face 
+Transformers, BERT, RoBERTa, Fine-tuning, Transfer 
+Learning, RAG (Retrieval-Augmented Generation), LLM 
+APIs (OpenAI GPT-4, Anthropic Claude, Google Gemini, 
+Perplexity), LangChain, AI Agents, Prompt Engineering
+Computer Vision
+OpenCV, MediaPipe, Facial Landmark Detection, Eye 
+Aspect Ratio (EAR), 3D Pose Estimation, Real-Time 
+Inference
+Backend Development
+FastAPI, NestJS, REST APIs, Celery, BullMQ, Python 
+Workers
+Databases
+PostgreSQL, MongoDB, Redis
+Languages
+Arabic
+Native
+English
+Professional Working Proficiency
+Projects
+2025 – 2026 AI Discovery Monitor — Generative Engine Optimization (GEO) Platform
+Solo ML Engineer | Stack: Python, NestJS, Next.js, PostgreSQL, Redis, Docker, OpenAI API, 
+Claude API, Gemini API, Perplexity API, LangChain, Langfuse
+•Designed and implemented an 8-stage asynchronous AI analysis pipeline executing structured 
+prompt workflows across GPT-4, Claude, Gemini, and Perplexity using a Python worker 
+architecture with BullMQ/Redis task queues and Pydantic schema validation.
+•Built a bilingual Arabic/English entity resolution engine using Unicode normalization, ALA-
+LC transliteration, legal suffix stripping, Jaro-Winkler fuzzy matching, and PostgreSQL 
+trigram (pg_trgm) indexing — achieving 70–80% accuracy on Arabic-only Gulf market 
+entities.
+•Engineered a hallucination detection and claim verification layer that cross-references LLM-
+extracted brand claims against live web content, Wikidata SPARQL endpoints, and Google 
+Knowledge Graph API using multi-signal confidence scoring.
+•Designed a data-driven recommendation engine performing competitive feature gap analysis 
+across Wikipedia presence, Schema.org markup, Wikidata entries, and press citation signals 
+— scoring recommendations by Spearman rank correlation against brand mention frequency.
+•Architected production observability infrastructure including SHA-256 prompt version 
+control, model drift detection via canary entity monitoring, LLM cost and latency tracking 
+with Langfuse, and statistical significance enforcement using McNemar's test (minimum 50 
+runs per entity per model).
+2025 – 2026 SAPA — Smart Amazon Product Analyzer
+Solo Full-Stack ML Engineer | Stack: Python, FastAPI, React, TypeScript, PostgreSQL, 
+TimescaleDB, Elasticsearch, Redis, Celery, Docker, LightGBM, BERT, LLaMA-3, Ollama
+•Engineered a five-indicator product scoring engine combining LightGBM demand forecasting 
+with a hybrid BERT and LLaMA-3 NLP pipeline (via Ollama) for review toxicity detection 
+and competitive market analysis using the Herfindahl-Hirschman Index (HHI).
+•Designed a Margin Kill-Switch automation that rejects investment opportunities when net 
+ROI falls below configurable thresholds based on real-time Amazon FBA fee calculations.
+•Deployed an 8-container Docker Compose microservices architecture (FastAPI, React 19, 
+TimescaleDB, Elasticsearch, Celery, Redis, Ollama, Nginx) on Linux servers with health-
+check-ordered startup sequencing.
+•Built an executive analytics dashboard with radar charts and time-series visualizations 
+classifying products as RECOMMENDED, MONITOR, or REJECT based on institutional 
+investment thresholds.
+2024 – 2025 Real-Time Driver Drowsiness Detection System
+Solo ML Engineer | Stack: Python, OpenCV, MediaPipe, SpeechRecognition, pyttsx3, 
+Multithreading
+•Built a real-time drowsiness detection pipeline using OpenCV and MediaPipe FaceMesh to 
+analyze Eye Aspect Ratio (EAR) and facial landmark geometry for driver alertness 
+classification.
+•Implemented head posture monitoring through 3D pose estimation and angular deviation 
+analysis to detect fatigue-related positional drift before critical impairment occurs.
+•Developed an AI-powered voice assistant using SpeechRecognition and pyttsx3 for hands-
+free driver interaction and proactive safety alerts.
+•Architected a multi-threaded event-driven system handling concurrent video processing, 
+audio notifications, and voice responses without blocking the core inference loop — with 
+temporal state tracking to reduce false alarms.
+2024 – 2024 Financial Fraud Detection Platform
+ML Engineer | Stack: Python, PySpark, Apache Kafka, MongoDB, Scikit-learn
+•Built an end-to-end fraud detection pipeline using PySpark and ensemble machine learning 
+models to classify anomalous financial transactions at scale.
+•Simulated real-time transaction streaming using Apache Kafka, engineering fraud-signal 
+features and storing model predictions in MongoDB for downstream tracking and analysis.
+2024 – 2024 Arabic Sentiment Analysis and Fake Review Detection
+ML Engineer | Stack: Python, CAMeL-BERT, BiLSTM, Hugging Face Transformers, FastAPI, 
+Domain-Adversarial Training
+•Fine-tuned CAMeL-BERT and BiLSTM architectures for domain-specific Arabic sentiment 
+classification, building custom Arabic text preprocessing pipelines to handle social media 
+dialects and cross-domain generalization.
+•Developed a domain-adversarial transformer-based NLP system for cross-category fake 
+review detection, deployed as a real-time inference service using FastAPI.

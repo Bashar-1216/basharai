@@ -23,7 +23,7 @@ export default async function HomePage({ params }: HomePageProps) {
   });
 
   const featuredProject = await db.project.findFirst({
-    where: { slug: "bashar-ai" },
+    where: { slug: "geo-platform" },
   });
 
   const isAr = locale === "ar";
