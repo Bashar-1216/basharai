@@ -28,8 +28,31 @@ export function AssistantConsole({ locale }: AssistantConsoleProps) {
     groundedness: "100% 🟢",
     relevance: "100% 🟢"
   });
+  const [selectedProject, setSelectedProject] = useState("geo-platform");
+  const [linkedinDraft, setLinkedinDraft] = useState("");
+  const [isGenerating, setIsGenerating] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  const generateLinkedInDraft = async () => {
+    setIsGenerating(true);
+    setLinkedinDraft("");
+    try {
+      const res = await fetch("/api/linkedin/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ project_slug: selectedProject, locale }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setLinkedinDraft(data.draft);
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsGenerating(false);
+    }
+  };
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -283,6 +306,35 @@ export function AssistantConsole({ locale }: AssistantConsoleProps) {
                 <li><span>Context Relevance:</span> <strong>{telemetry.relevance}</strong></li>
                 <li><span>Latency:</span> <strong>{telemetry.latency}</strong></li>
               </ul>
+            </div>
+
+            <div className={styles.section}>
+              <h4>{isAr ? "4. مولد منشورات LinkedIn" : "4. LinkedIn Post Generator"}</h4>
+              <select
+                value={selectedProject}
+                onChange={(e) => setSelectedProject(e.target.value)}
+                style={{ width: "100%", padding: "0.375rem", fontSize: "0.75rem", background: "hsl(var(--color-bg))", border: "1px solid hsl(var(--color-text-muted)/0.2)", borderRadius: "var(--radius-xs)", color: "hsl(var(--color-text-body))", outline: "none", marginBottom: "0.5rem" }}
+              >
+                <option value="geo-platform">GEO Platform</option>
+                <option value="sapa">SAPA Amazon Analyzer</option>
+                <option value="drowsiness-detection">Drowsiness Detection</option>
+              </select>
+              <button
+                type="button"
+                onClick={generateLinkedInDraft}
+                disabled={isGenerating}
+                className="btn-primary"
+                style={{ width: "100%", padding: "0.375rem", fontSize: "0.75rem", justifyContent: "center" }}
+              >
+                {isGenerating ? (isAr ? "جاري الإنشاء..." : "Generating...") : (isAr ? "توليد منشور LinkedIn" : "Generate Draft")}
+              </button>
+              {linkedinDraft && (
+                <textarea
+                  readOnly
+                  value={linkedinDraft}
+                  style={{ width: "100%", height: "120px", marginTop: "0.5rem", padding: "0.5rem", fontSize: "0.75rem", background: "hsl(var(--color-bg))", border: "1px solid hsl(var(--color-text-muted)/0.2)", borderRadius: "var(--radius-xs)", color: "hsl(var(--color-text-body))", outline: "none", resize: "none" }}
+                />
+              )}
             </div>
           </div>
         </aside>
