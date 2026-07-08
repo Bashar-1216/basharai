@@ -22,6 +22,12 @@ export function FloatingChat({ locale }: FloatingChatProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [telemetry, setTelemetry] = useState({
+    latency: "0ms",
+    cost: "$0.00000",
+    tokens: "0 total",
+    confidence: "100%"
+  });
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -62,21 +68,52 @@ export function FloatingChat({ locale }: FloatingChatProps) {
       inputRef.current.style.height = "auto";
     }
 
-    setTimeout(() => {
-      const mockResponse =
-        locale === "ar"
-          ? "هذا رد تجريبي من المساعد الذكي. سيتم ربطه بخادم FastAPI RAG قريباً لتقديم إجابات حقيقية مبنية على بيانات المحفظة الموثقة."
-          : "This is a mock response from the AI assistant. It will be connected to the FastAPI RAG backend soon to provide real answers grounded in verified portfolio data.";
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: query,
+          locale: locale,
+        }),
+      });
 
+      if (!response.ok) {
+        throw new Error("RAG connection failed");
+      }
+
+      const data = await response.json();
+      
       const assistantMsg: Message = {
         id: crypto.randomUUID(),
         role: "assistant",
-        content: mockResponse,
+        content: data.message,
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, assistantMsg]);
+      
+      if (data.telemetry) {
+        setTelemetry({
+          latency: data.telemetry.latency,
+          cost: data.telemetry.cost,
+          tokens: data.telemetry.tokens,
+          confidence: data.telemetry.groundedness
+        });
+      }
+    } catch (err) {
+      console.error(err);
+      const errorMsg: Message = {
+        id: crypto.randomUUID(),
+        role: "assistant",
+        content: locale === "ar" ? "تعذر الاتصال بالمساعد الذكي حالياً." : "Could not connect to the AI assistant at the moment.",
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, errorMsg]);
+    } finally {
       setIsLoading(false);
-    }, 1200);
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -213,19 +250,19 @@ export function FloatingChat({ locale }: FloatingChatProps) {
                 <div className={styles.metrics}>
                   <div className={styles.metric}>
                     <span>Latency</span>
-                    <strong>420ms</strong>
+                    <strong>{telemetry.latency}</strong>
                   </div>
                   <div className={styles.metric}>
                     <span>Cost</span>
-                    <strong>$0.003</strong>
+                    <strong>{telemetry.cost}</strong>
                   </div>
                   <div className={styles.metric}>
                     <span>Tokens</span>
-                    <strong>600 total</strong>
+                    <strong>{telemetry.tokens}</strong>
                   </div>
                   <div className={styles.metric}>
                     <span>Confidence</span>
-                    <strong>94.2%</strong>
+                    <strong>{telemetry.confidence}</strong>
                   </div>
                 </div>
               </aside>

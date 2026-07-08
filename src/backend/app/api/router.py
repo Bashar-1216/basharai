@@ -2,9 +2,12 @@
 
 from fastapi import APIRouter
 
-from app.api.endpoints import health
+from app.api.endpoints import health, chat
 
 api_router = APIRouter()
 
 # ── Health Check ─────────────────────────────────────────────────
 api_router.include_router(health.router, tags=["Health"])
+
+# ── Chat Assistant ────────────────────────────────────────────────
+api_router.include_router(chat.router, tags=["Chat"])

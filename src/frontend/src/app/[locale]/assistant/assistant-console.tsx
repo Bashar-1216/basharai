@@ -21,6 +21,13 @@ export function AssistantConsole({ locale }: AssistantConsoleProps) {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isDevView, setIsDevView] = useState(true); // Default open in full page console!
+  const [telemetry, setTelemetry] = useState({
+    latency: "0ms",
+    cost: "$0.00000",
+    tokens: "0 In / 0 Out",
+    groundedness: "100% 🟢",
+    relevance: "100% 🟢"
+  });
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -53,21 +60,53 @@ export function AssistantConsole({ locale }: AssistantConsoleProps) {
       inputRef.current.style.height = "auto";
     }
 
-    setTimeout(() => {
-      const mockResponse =
-        locale === "ar"
-          ? "أهلاً بك في الكونسول البرمجي! تم بناء نظام الـ Reranking الهجين وبوابات الفلترة بنجاح، وربط قاعدة البيانات pgvector جاهز للاستخدام. اسألني عن دراسات الحالة للمشاريع للاطلاع على الكود المصدري وقرارات التصميم."
-          : "Welcome to the engineer console! The hybrid reranking pipelines and validation gateways are online. Database connectors are ready for search operations. Ask me about project case studies for code references and architectural decisions.";
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: query,
+          locale: locale,
+        }),
+      });
 
+      if (!response.ok) {
+        throw new Error("RAG connection failed");
+      }
+
+      const data = await response.json();
+      
       const assistantMsg: Message = {
         id: crypto.randomUUID(),
         role: "assistant",
-        content: mockResponse,
+        content: data.message,
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, assistantMsg]);
+      
+      if (data.telemetry) {
+        setTelemetry({
+          latency: data.telemetry.latency,
+          cost: data.telemetry.cost,
+          tokens: data.telemetry.tokens,
+          groundedness: data.telemetry.groundedness,
+          relevance: data.telemetry.context_relevance
+        });
+      }
+    } catch (err) {
+      console.error(err);
+      const errorMsg: Message = {
+        id: crypto.randomUUID(),
+        role: "assistant",
+        content: locale === "ar" ? "تعذر الاتصال بالمساعد الذكي حالياً." : "Could not connect to the AI assistant at the moment.",
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, errorMsg]);
+    } finally {
       setIsLoading(false);
-    }, 1000);
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -193,25 +232,25 @@ export function AssistantConsole({ locale }: AssistantConsoleProps) {
               <h4>{isAr ? "1. معلومات النموذج" : "1. Model Metadata"}</h4>
               <ul className={styles.metricsList}>
                 <li><span>LLM Router:</span> <strong>gpt-4o-mini</strong></li>
-                <li><span>Tokens:</span> <strong>480 In / 120 Out</strong></li>
-                <li><span>API Cost:</span> <strong>$0.003</strong></li>
+                <li><span>Tokens:</span> <strong>{telemetry.tokens}</strong></li>
+                <li><span>API Cost:</span> <strong>{telemetry.cost}</strong></li>
               </ul>
             </div>
 
             <div className={styles.section}>
               <h4>{isAr ? "2. سجل استرجاع المتجهات" : "2. Retrieval Chunks"}</h4>
               <div className={styles.chunkCard}>
-                <span>Source: docs/projects/basharai.md</span>
-                <p>...bashar.ai Platform Engine is a bilingual AI engineering portfolio with RAG-powered assistant. Groundedness evaluations scored 97.8%...</p>
+                <span>Source: postgres.Experience & Project</span>
+                <p>{isAr ? "تم استرجاع ومطابقة تفاصيل دراسات الحالة وخبرات العمل للرد على الاستفسار." : "Retrieved relevant project summaries and career credentials to form grounding context."}</p>
               </div>
             </div>
 
             <div className={styles.section}>
               <h4>{isAr ? "3. مقاييس دقة الاستجابة" : "3. Evaluation Gates"}</h4>
               <ul className={styles.metricsList}>
-                <li><span>Groundedness:</span> <strong>97.8% 🟢</strong></li>
-                <li><span>Context Relevance:</span> <strong>95.4% 🟢</strong></li>
-                <li><span>Latency:</span> <strong>480ms</strong></li>
+                <li><span>Groundedness:</span> <strong>{telemetry.groundedness}</strong></li>
+                <li><span>Context Relevance:</span> <strong>{telemetry.relevance}</strong></li>
+                <li><span>Latency:</span> <strong>{telemetry.latency}</strong></li>
               </ul>
             </div>
           </div>
