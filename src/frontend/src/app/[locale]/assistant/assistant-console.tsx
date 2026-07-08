@@ -76,24 +76,55 @@ export function AssistantConsole({ locale }: AssistantConsoleProps) {
         throw new Error("RAG connection failed");
       }
 
-      const data = await response.json();
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
+      if (!reader) throw new Error("No reader");
+
+      let assistantResponse = "";
+      const tempId = crypto.randomUUID();
       
-      const assistantMsg: Message = {
-        id: crypto.randomUUID(),
-        role: "assistant",
-        content: data.message,
-        timestamp: new Date(),
-      };
-      setMessages((prev) => [...prev, assistantMsg]);
-      
-      if (data.telemetry) {
-        setTelemetry({
-          latency: data.telemetry.latency,
-          cost: data.telemetry.cost,
-          tokens: data.telemetry.tokens,
-          groundedness: data.telemetry.groundedness,
-          relevance: data.telemetry.context_relevance
-        });
+      // Insert empty assistant response to update in real-time
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: tempId,
+          role: "assistant",
+          content: "",
+          timestamp: new Date(),
+        },
+      ]);
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value);
+        const lines = chunk.split("\n");
+        for (const line of lines) {
+          if (line.startsWith("data: ")) {
+            try {
+              const data = JSON.parse(line.slice(6));
+              if (data.token) {
+                assistantResponse += data.token;
+                setMessages((prev) =>
+                  prev.map((msg) =>
+                    msg.id === tempId ? { ...msg, content: assistantResponse } : msg
+                  )
+                );
+              } else if (data.done && data.telemetry) {
+                setTelemetry({
+                  latency: data.telemetry.latency,
+                  cost: data.telemetry.cost,
+                  tokens: data.telemetry.tokens,
+                  groundedness: data.telemetry.groundedness,
+                  relevance: data.telemetry.context_relevance,
+                });
+              }
+            } catch (e) {
+              // Ignore partial JSON chunks
+            }
+          }
+        }
       }
     } catch (err) {
       console.error(err);
