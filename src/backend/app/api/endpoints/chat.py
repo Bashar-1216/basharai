@@ -171,6 +171,12 @@ async def chat_handler(req: ChatRequest, db: AsyncSession = Depends(get_db)):
                     stream=True
                 )
                 async for event in response_stream:
+                    # Capture stream error events (such as 429 quota or 500 spikes) yielded without raising exceptions
+                    if hasattr(event, "error") and event.error:
+                        print(f"Gemini Interactions stream error event: {event.error.message}")
+                        gemini_active = False
+                        break
+                        
                     if hasattr(event, "delta") and hasattr(event.delta, "text") and event.delta.text:
                         token = event.delta.text
                         response_text += token
@@ -178,7 +184,7 @@ async def chat_handler(req: ChatRequest, db: AsyncSession = Depends(get_db)):
                 
                 # Verify we received content, otherwise fallback
                 if not response_text.strip():
-                    print("Gemini stream returned empty response, triggering fallback.")
+                    print("Gemini stream finished with no content, triggering fallback.")
                     gemini_active = False
                 else:
                     input_tokens = len(system_prompt.split()) + len(req.message.split())
