@@ -23,7 +23,9 @@ class ChatRequest(BaseModel):
 
 async def run_llm_judge(context: str, response: str, query: str) -> tuple[float, float, float]:
     """LLM-as-a-Judge evaluation of Groundedness, Context Relevance, and Answer Relevance using Gemini."""
-    gemini_active = settings.GEMINI_API_KEY and not settings.GEMINI_API_KEY.startswith("sk-")
+    import os
+    api_key = settings.GEMINI_API_KEY or os.environ.get("GEMINI_API_KEY")
+    gemini_active = api_key and not api_key.startswith("sk-")
     if not gemini_active:
         return 0.98, 0.95, 0.96 # Offline static fallback
         
@@ -152,32 +154,31 @@ async def chat_handler(req: ChatRequest, db: AsyncSession = Depends(get_db)):
         input_tokens = 0
         output_tokens = 0
         cost = 0.0
-        model_name = "gemini-2.0-flash"
+        model_name = "gemini-3.5-flash"
         
-        gemini_active = settings.GEMINI_API_KEY and not settings.GEMINI_API_KEY.startswith("sk-")
+        import os
+        api_key = settings.GEMINI_API_KEY or os.environ.get("GEMINI_API_KEY")
+        gemini_active = api_key and not api_key.startswith("sk-")
         
         if gemini_active:
             try:
-                # 3. LLM GENERATION WITH STREAMING (Gemini)
+                # 3. LLM GENERATION WITH STREAMING (Gemini Interactions API)
                 client = get_gemini_client()
-                config = types.GenerateContentConfig(
-                    systemInstruction=system_prompt,
-                    temperature=0.2
+                response_stream = await client.aio.interactions.create(
+                    model="gemini-3.5-flash",
+                    system_instruction=system_prompt,
+                    input=req.message,
+                    stream=True
                 )
-                response_stream = await client.aio.models.generate_content_stream(
-                    model="gemini-2.0-flash",
-                    contents=req.message,
-                    config=config
-                )
-                async for chunk in response_stream:
-                    token = chunk.text or ""
-                    if token:
+                async for event in response_stream:
+                    if hasattr(event, "delta") and hasattr(event.delta, "text") and event.delta.text:
+                        token = event.delta.text
                         response_text += token
                         yield f"data: {json.dumps({'token': token})}\n\n"
                 
                 input_tokens = len(system_prompt.split()) + len(req.message.split())
                 output_tokens = len(response_text.split())
-                cost = 0.0 # Gemini free tier cost is $0.00
+                cost = 0.0
             except Exception as e:
                 print(f"Streaming Gemini execution error: {e}")
                 gemini_active = False

@@ -15,21 +15,15 @@ def get_gemini_client():
     return _client
 
 async def generate_gemini_content(prompt: str, system_instruction: str = None) -> str:
-    """Generate complete text content using Gemini 2.0 Flash."""
+    """Generate complete text content using the new Interactions API and gemini-3.5-flash."""
     client = get_gemini_client()
-    config = None
-    if system_instruction:
-        config = types.GenerateContentConfig(
-            systemInstruction=system_instruction,
-            temperature=0.2
-        )
     try:
-        res = await client.aio.models.generate_content(
-            model="gemini-2.0-flash",
-            contents=prompt,
-            config=config
+        interaction = await client.aio.interactions.create(
+            model="gemini-3.5-flash",
+            system_instruction=system_instruction,
+            input=prompt
         )
-        return res.text or ""
+        return interaction.output_text or ""
     except Exception as e:
         print(f"Gemini content generation failed: {e}")
         return ""
