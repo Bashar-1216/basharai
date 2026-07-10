@@ -2,25 +2,19 @@ import asyncio
 import uuid
 import hashlib
 from sqlalchemy import text
-from openai import AsyncOpenAI
 
 from app.core.db import engine
 from app.core.config import settings
+from app.core.gemini import get_gemini_embedding
 
-# We use 1536 dimensions (matching text-embedding-3-small)
+# We use 1536 dimensions (matching text-embedding-004 config)
 DIMENSIONS = 1536
 
-async def get_embedding(client, text_content: str) -> list[float]:
-    """Fetch real embedding from OpenAI, fallback to dummy vector on failure/offline."""
-    if client:
-        try:
-            res = await client.embeddings.create(
-                input=[text_content],
-                model="text-embedding-3-small"
-            )
-            return res.data[0].embedding
-        except Exception as e:
-            print(f"OpenAI embedding call failed, using dummy vector. Error: {e}")
+async def get_embedding(text_content: str) -> list[float]:
+    """Fetch real embedding from Google Gemini, fallback to dummy vector on failure/offline."""
+    gemini_active = settings.GEMINI_API_KEY and not settings.GEMINI_API_KEY.startswith("sk-")
+    if gemini_active:
+        return await get_gemini_embedding(text_content)
             
     # Dummy deterministic vector matching hash of the text (so we can test similarity deterministically)
     h = hashlib.sha256(text_content.encode("utf-8")).digest()
@@ -50,10 +44,6 @@ def split_text_into_chunks(text_data: str, chunk_size: int = 400, overlap: int =
 
 async def index_portfolio():
     print("Initializing portfolio indexing pipeline...")
-    
-    client = None
-    if settings.OPENAI_API_KEY and not settings.OPENAI_API_KEY.startswith("sk-your-openai"):
-        client = AsyncOpenAI(api_key=settings.OPENAI_API_KEY)
         
     async with engine.connect() as conn:
         # Wipe old chunks and documents
@@ -88,8 +78,8 @@ async def index_portfolio():
                 ch_en = chunks_en[idx] if idx < len(chunks_en) else chunks_en[-1]
                 ch_ar = chunks_ar[idx] if idx < len(chunks_ar) else chunks_ar[-1]
                 
-                v_en = await get_embedding(client, ch_en)
-                v_ar = await get_embedding(client, ch_ar)
+                v_en = await get_embedding(ch_en)
+                v_ar = await get_embedding(ch_ar)
                 
                 chunk_id = uuid.uuid4()
                 chunk_hash = hashlib.sha256(f"{ch_en}{ch_ar}".encode("utf-8")).hexdigest()
@@ -134,8 +124,8 @@ async def index_portfolio():
                 ch_en = chunks_en[idx] if idx < len(chunks_en) else chunks_en[-1]
                 ch_ar = chunks_ar[idx] if idx < len(chunks_ar) else chunks_ar[-1]
                 
-                v_en = await get_embedding(client, ch_en)
-                v_ar = await get_embedding(client, ch_ar)
+                v_en = await get_embedding(ch_en)
+                v_ar = await get_embedding(ch_ar)
                 
                 chunk_id = uuid.uuid4()
                 chunk_hash = hashlib.sha256(f"{ch_en}{ch_ar}".encode("utf-8")).hexdigest()

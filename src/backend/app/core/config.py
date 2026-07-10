@@ -20,6 +20,9 @@ class Settings(BaseSettings):
     # ── OpenAI ───────────────────────────────────────────────────
     OPENAI_API_KEY: str = ""
 
+    # ── Gemini ───────────────────────────────────────────────────
+    GEMINI_API_KEY: str = "AQ.Ab8RN6IPEzQ7HoLJWSgSCaqZqf9QNa9EJkq42-Tkb4TP0D8j2w"
+
     # ── Security ─────────────────────────────────────────────────
     INTERNAL_API_KEY: str = "dev-internal-key-change-me"
     CORS_ORIGINS: list[str] = ["http://localhost:3000"]

@@ -1,11 +1,12 @@
+import uuid
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import text
-from openai import AsyncOpenAI
 
 from app.core.db import get_db
 from app.core.config import settings
+from app.core.gemini import generate_gemini_content
 
 router = APIRouter()
 
@@ -37,7 +38,6 @@ async def generate_linkedin_post(req: LinkedInRequest, db: AsyncSession = Depend
     title = title_ar if is_ar else title_en
     description = desc_ar if is_ar else desc_en
     
-    # Customise prompt according to Tone
     tone_instruction = ""
     if req.tone == "technical":
         tone_instruction = (
@@ -68,21 +68,14 @@ async def generate_linkedin_post(req: LinkedInRequest, db: AsyncSession = Depend
         f"Output ONLY the final drafted post text. Do not include introductory notes or markdown markers."
     )
     
-    client = None
-    if settings.OPENAI_API_KEY and not settings.OPENAI_API_KEY.startswith("sk-your-openai"):
-        client = AsyncOpenAI(api_key=settings.OPENAI_API_KEY)
-        
+    gemini_active = settings.GEMINI_API_KEY and not settings.GEMINI_API_KEY.startswith("sk-")
     draft = ""
-    if client:
+    
+    if gemini_active:
         try:
-            res = await client.chat.completions.create(
-                messages=[{"role": "user", "content": prompt}],
-                model="gpt-4o-mini",
-                max_tokens=600,
-            )
-            draft = res.choices[0].message.content or ""
+            draft = await generate_gemini_content(prompt, "You are a professional LinkedIn post generator.")
         except Exception as e:
-            print(f"LinkedIn generator OpenAI call failed: {e}")
+            print(f"LinkedIn generator Gemini call failed: {e}")
             
     if not draft:
         # Fallback offline draft
@@ -109,7 +102,6 @@ async def generate_linkedin_post(req: LinkedInRequest, db: AsyncSession = Depend
             
     # Log the generated post draft into PostgreSQL database
     try:
-        import uuid
         await db.execute(
             text('INSERT INTO "GeneratedPost" (id, project_slug, tone, language_code, draft_text, created_at) '
                  'VALUES (:id, :slug, :tone, :lang, :draft, NOW())'),

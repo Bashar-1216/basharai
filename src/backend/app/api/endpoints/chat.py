@@ -2,51 +2,29 @@ import time
 import uuid
 import json
 import asyncio
-import hashlib
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import text
-from openai import AsyncOpenAI
+from google.genai import types
 
 from app.core.db import get_db
 from app.core.config import settings
 from app.core.rate_limit import check_rate_limit
+from app.core.gemini import get_gemini_client, get_gemini_embedding, generate_gemini_content
 
 router = APIRouter()
-
-DIMENSIONS = 1536
 
 class ChatRequest(BaseModel):
     message: str
     locale: str = "en"
     session_id: str | None = None
 
-async def generate_query_embedding(client, text_content: str) -> list[float]:
-    """Generate 1536-dim vector for the user query."""
-    if client:
-        try:
-            res = await client.embeddings.create(
-                input=[text_content],
-                model="text-embedding-3-small"
-            )
-            return res.data[0].embedding
-        except Exception as e:
-            print(f"Query embedding generation failed: {e}")
-            
-    # Hashing fallback for local offline testing
-    h = hashlib.sha256(text_content.encode("utf-8")).digest()
-    dummy = []
-    for i in range(DIMENSIONS):
-        byte_val = h[i % len(h)]
-        dummy.append((byte_val / 255.0) - 0.5)
-    norm = sum(x*x for x in dummy) ** 0.5
-    return [x/norm for x in dummy]
-
-async def run_llm_judge(client, context: str, response: str, query: str) -> tuple[float, float, float]:
-    """LLM-as-a-Judge evaluation of Groundedness, Context Relevance, and Answer Relevance."""
-    if not client:
+async def run_llm_judge(context: str, response: str, query: str) -> tuple[float, float, float]:
+    """LLM-as-a-Judge evaluation of Groundedness, Context Relevance, and Answer Relevance using Gemini."""
+    gemini_active = settings.GEMINI_API_KEY and not settings.GEMINI_API_KEY.startswith("sk-")
+    if not gemini_active:
         return 0.98, 0.95, 0.96 # Offline static fallback
         
     judge_prompt = (
@@ -61,13 +39,7 @@ async def run_llm_judge(client, context: str, response: str, query: str) -> tupl
         f"Output format exactly: Groundedness: [float], Context Relevance: [float], Answer Relevance: [float]"
     )
     try:
-        res = await client.chat.completions.create(
-            messages=[{"role": "user", "content": judge_prompt}],
-            model="gpt-4o-mini",
-            max_tokens=80,
-            temperature=0.0
-        )
-        body = res.choices[0].message.content or ""
+        body = await generate_gemini_content(judge_prompt, "You are a helpful QA evaluator.")
         g, c, a = 0.95, 0.95, 0.95
         for line in body.split("\n"):
             if "Groundedness:" in line:
@@ -112,14 +84,9 @@ async def chat_handler(req: ChatRequest, db: AsyncSession = Depends(get_db)):
         text('INSERT INTO "Message" (id, conversation_id, role, content, created_at) VALUES (:id, :cid, :role, :content, NOW())'),
         {"id": uuid.uuid4(), "cid": conversation_id, "role": "USER", "content": req.message}
     )
-    
-    # Initialize OpenAI Client
-    client = None
-    if settings.OPENAI_API_KEY and not settings.OPENAI_API_KEY.startswith("sk-your-openai"):
-        client = AsyncOpenAI(api_key=settings.OPENAI_API_KEY)
 
-    # 2. RETRIEVAL PHASE (Hybrid Vector + Keyword Search)
-    query_vector = await generate_query_embedding(client, req.message)
+    # 2. RETRIEVAL PHASE (Hybrid Vector + Keyword Search using Gemini Embedding)
+    query_vector = await get_gemini_embedding(req.message)
     
     # Vector Search query matching corresponding locale embeddings
     emb_col = "embedding_ar" if is_ar else "embedding_en"
@@ -185,37 +152,37 @@ async def chat_handler(req: ChatRequest, db: AsyncSession = Depends(get_db)):
         input_tokens = 0
         output_tokens = 0
         cost = 0.0
-        model_name = "gpt-4o-mini"
+        model_name = "gemini-2.0-flash"
         
-        openai_active = settings.OPENAI_API_KEY and not settings.OPENAI_API_KEY.startswith("sk-your-openai")
+        gemini_active = settings.GEMINI_API_KEY and not settings.GEMINI_API_KEY.startswith("sk-")
         
-        if openai_active:
+        if gemini_active:
             try:
-                # 3. LLM GENERATION WITH STREAMING (OpenAI)
-                stream = await client.chat.completions.create(
-                    messages=[
-                        {"role": "system", "content": system_prompt},
-                        {"role": "user", "content": req.message}
-                    ],
-                    model="gpt-4o-mini",
-                    max_tokens=400,
-                    stream=True,
+                # 3. LLM GENERATION WITH STREAMING (Gemini)
+                client = get_gemini_client()
+                config = types.GenerateContentConfig(
+                    systemInstruction=system_prompt,
+                    temperature=0.2
                 )
-                async for chunk in stream:
-                    token = chunk.choices[0].delta.content or ""
+                response_stream = await client.aio.models.generate_content_stream(
+                    model="gemini-2.0-flash",
+                    contents=req.message,
+                    config=config
+                )
+                async for chunk in response_stream:
+                    token = chunk.text or ""
                     if token:
                         response_text += token
                         yield f"data: {json.dumps({'token': token})}\n\n"
                 
-                # Estimate token bounds
                 input_tokens = len(system_prompt.split()) + len(req.message.split())
                 output_tokens = len(response_text.split())
-                cost = (input_tokens * 0.00015 + output_tokens * 0.00060) / 1000
+                cost = 0.0 # Gemini free tier cost is $0.00
             except Exception as e:
-                print(f"Streaming OpenAI execution error: {e}")
-                openai_active = False
+                print(f"Streaming Gemini execution error: {e}")
+                gemini_active = False
                 
-        if not openai_active:
+        if not gemini_active:
             # Fallback to streaming mock response text word-by-word with delay
             if top_chunks:
                 match_chunk = top_chunks[0]
@@ -233,12 +200,12 @@ async def chat_handler(req: ChatRequest, db: AsyncSession = Depends(get_db)):
                 )
             model_name = "Local pgvector Cosine Fallback"
             
-            # Stream words with slight delay
+            # Stream words
             words = response_text.split(" ")
             for idx, word in enumerate(words):
                 spaced_word = word + (" " if idx < len(words) - 1 else "")
                 yield f"data: {json.dumps({'token': spaced_word})}\n\n"
-                await asyncio.sleep(0.03) # 30ms simulation delay
+                await asyncio.sleep(0.03)
                 
             input_tokens = len(system_prompt.split()) + len(req.message.split())
             output_tokens = len(response_text.split())
@@ -253,7 +220,7 @@ async def chat_handler(req: ChatRequest, db: AsyncSession = Depends(get_db)):
         )
         
         # 5. LLM Judge Evaluation
-        groundedness, context_relevance, answer_relevance = await run_llm_judge(client, context, response_text, req.message)
+        groundedness, context_relevance, answer_relevance = await run_llm_judge(context, response_text, req.message)
         passed = groundedness >= 0.8 and answer_relevance >= 0.8
         
         # 6. Save LLM logs and evaluations
@@ -285,11 +252,10 @@ async def chat_handler(req: ChatRequest, db: AsyncSession = Depends(get_db)):
                 "gr": groundedness,
                 "ar": answer_relevance,
                 "passed": passed,
-                "reason": "Evaluated by LLM Judge."
+                "reason": "Evaluated by Gemini LLM Judge."
             }
         )
         
-        # Commit DB transaction
         await db.commit()
         
         telemetry = {
@@ -301,7 +267,6 @@ async def chat_handler(req: ChatRequest, db: AsyncSession = Depends(get_db)):
             "context_relevance": f"{context_relevance * 100:.1f}% " + ("🟢" if passed else "🔴")
         }
         
-        # Yield the final done token payload carrying telemetry data
         yield f"data: {json.dumps({'done': True, 'telemetry': telemetry})}\n\n"
         
     return StreamingResponse(sse_event_stream(), media_type="text/event-stream")

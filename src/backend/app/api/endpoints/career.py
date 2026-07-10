@@ -3,10 +3,10 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import text
-from openai import AsyncOpenAI
 
 from app.core.db import get_db
 from app.core.config import settings
+from app.core.gemini import generate_gemini_content
 
 router = APIRouter()
 
@@ -22,7 +22,6 @@ class OutreachResponse(BaseModel):
 async def generate_career_outreach(req: OutreachRequest, db: AsyncSession = Depends(get_db)):
     is_ar = req.locale == "ar"
     
-    # Customise prompt according to target company and content type
     prompt = (
         f"You are a professional hiring coach preparing recruiter outreach letters for Bashar Almuntaser (AI & ML Engineer).\n"
         f"Target Company: {req.company_name}\n"
@@ -35,27 +34,20 @@ async def generate_career_outreach(req: OutreachRequest, db: AsyncSession = Depe
         f"Output ONLY the final document. Do not include introductory notes or markdown decorators."
     )
     
-    client = None
-    if settings.OPENAI_API_KEY and not settings.OPENAI_API_KEY.startswith("sk-your-openai"):
-        client = AsyncOpenAI(api_key=settings.OPENAI_API_KEY)
-        
+    gemini_active = settings.GEMINI_API_KEY and not settings.GEMINI_API_KEY.startswith("sk-")
     generated = ""
-    if client:
+    
+    if gemini_active:
         try:
-            res = await client.chat.completions.create(
-                messages=[{"role": "user", "content": prompt}],
-                model="gpt-4o-mini",
-                max_tokens=600,
-            )
-            generated = res.choices[0].message.content or ""
+            generated = await generate_gemini_content(prompt, "You are a professional career content writer.")
         except Exception as e:
-            print(f"Career outreach OpenAI call failed: {e}")
+            print(f"Career outreach Gemini call failed: {e}")
             
     if not generated:
         # Fallback offline drafts
         if req.content_type == "linkedin_message":
             if is_ar:
-                generated = f"مرحباً، يسعدني التواصل معك. أنا بشار المنتصر، مهندس ذكاء اصطناعي ذو خبرة سابقة في RAG ونظم الوكلاء. أتطلع لمناقشة فرص التعاون والنمو في {req.company_name}."
+                generated = f"مرحباً، يسعدني التواصل معك. أنا بشار المنتصر، مهندس ذكاء اصطناعي ذو خبرة سابقة في RAG ونظم الوكلاء. أتطلب لمناقشة فرص التعاون والنمو في {req.company_name}."
             else:
                 generated = f"Hi, I'm Bashar Almuntaser, an AI Engineer specializing in LLM Agents and RAG systems. I'm keen to connect and learn more about the engineering work happening at {req.company_name}."
         elif req.content_type == "email_intro":
