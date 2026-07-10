@@ -154,7 +154,7 @@ async def chat_handler(req: ChatRequest, db: AsyncSession = Depends(get_db)):
         input_tokens = 0
         output_tokens = 0
         cost = 0.0
-        model_name = "gemini-2.0-flash"
+        model_name = "gemini-3.5-flash"
         
         import os
         api_key = settings.GEMINI_API_KEY or os.environ.get("GEMINI_API_KEY")
@@ -165,7 +165,7 @@ async def chat_handler(req: ChatRequest, db: AsyncSession = Depends(get_db)):
                 # 3. LLM GENERATION WITH STREAMING (Gemini Interactions API)
                 client = get_gemini_client()
                 response_stream = await client.aio.interactions.create(
-                    model="gemini-2.0-flash",
+                    model="gemini-3.5-flash",
                     system_instruction=system_prompt,
                     input=req.message,
                     stream=True
