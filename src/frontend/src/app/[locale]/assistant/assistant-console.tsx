@@ -31,6 +31,10 @@ export function AssistantConsole({ locale }: AssistantConsoleProps) {
   const [selectedProject, setSelectedProject] = useState("geo-platform");
   const [linkedinDraft, setLinkedinDraft] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
+  const [selectedCompany, setSelectedCompany] = useState("Saudi Aramco AI");
+  const [selectedContentType, setSelectedContentType] = useState("linkedin_message");
+  const [outreachDraft, setOutreachDraft] = useState("");
+  const [isGeneratingOutreach, setIsGeneratingOutreach] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -41,7 +45,11 @@ export function AssistantConsole({ locale }: AssistantConsoleProps) {
       const res = await fetch("/api/linkedin/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ project_slug: selectedProject, locale }),
+        body: JSON.stringify({
+          project_slug: selectedProject,
+          tone: "technical", // Default tone
+          language_code: locale
+        }),
       });
       if (res.ok) {
         const data = await res.json();
@@ -51,6 +59,30 @@ export function AssistantConsole({ locale }: AssistantConsoleProps) {
       console.error(e);
     } finally {
       setIsGenerating(false);
+    }
+  };
+
+  const generateOutreach = async () => {
+    setIsGeneratingOutreach(true);
+    setOutreachDraft("");
+    try {
+      const res = await fetch("/api/career/outreach", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          company_name: selectedCompany,
+          content_type: selectedContentType,
+          locale
+        })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setOutreachDraft(data.message);
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsGeneratingOutreach(false);
     }
   };
 
@@ -310,6 +342,9 @@ export function AssistantConsole({ locale }: AssistantConsoleProps) {
 
             <div className={styles.section}>
               <h4>{isAr ? "4. مولد منشورات LinkedIn" : "4. LinkedIn Post Generator"}</h4>
+              <label style={{ display: "block", fontSize: "0.75rem", marginBottom: "0.25rem" }}>
+                {isAr ? "المشروع:" : "Project:"}
+              </label>
               <select
                 value={selectedProject}
                 onChange={(e) => setSelectedProject(e.target.value)}
@@ -332,6 +367,53 @@ export function AssistantConsole({ locale }: AssistantConsoleProps) {
                 <textarea
                   readOnly
                   value={linkedinDraft}
+                  style={{ width: "100%", height: "120px", marginTop: "0.5rem", padding: "0.5rem", fontSize: "0.75rem", background: "hsl(var(--color-bg))", border: "1px solid hsl(var(--color-text-muted)/0.2)", borderRadius: "var(--radius-xs)", color: "hsl(var(--color-text-body))", outline: "none", resize: "none" }}
+                />
+              )}
+            </div>
+
+            <div className={styles.section}>
+              <h4>{isAr ? "5. محرك مراسلة الشركات والتوظيف" : "5. AI Recruiter Outreach Engine"}</h4>
+              <label style={{ display: "block", fontSize: "0.75rem", marginBottom: "0.25rem" }}>
+                {isAr ? "الشركة المستهدفة:" : "Target Company:"}
+              </label>
+              <select
+                value={selectedCompany}
+                onChange={(e) => setSelectedCompany(e.target.value)}
+                style={{ width: "100%", padding: "0.375rem", fontSize: "0.75rem", background: "hsl(var(--color-bg))", border: "1px solid hsl(var(--color-text-muted)/0.2)", borderRadius: "var(--radius-xs)", color: "hsl(var(--color-text-body))", outline: "none", marginBottom: "0.5rem" }}
+              >
+                <option value="Saudi Aramco AI">Saudi Aramco AI</option>
+                <option value="Humain">Humain</option>
+                <option value="Mozn">Mozn</option>
+                <option value="SAP">SAP</option>
+              </select>
+
+              <label style={{ display: "block", fontSize: "0.75rem", marginBottom: "0.25rem" }}>
+                {isAr ? "نوع المستند:" : "Content Type:"}
+              </label>
+              <select
+                value={selectedContentType}
+                onChange={(e) => setSelectedContentType(e.target.value)}
+                style={{ width: "100%", padding: "0.375rem", fontSize: "0.75rem", background: "hsl(var(--color-bg))", border: "1px solid hsl(var(--color-text-muted)/0.2)", borderRadius: "var(--radius-xs)", color: "hsl(var(--color-text-body))", outline: "none", marginBottom: "0.5rem" }}
+              >
+                <option value="linkedin_message">LinkedIn Message (&lt;300 chars)</option>
+                <option value="email_intro">Email Introduction</option>
+                <option value="cover_letter">Cover Letter</option>
+              </select>
+
+              <button
+                type="button"
+                onClick={generateOutreach}
+                disabled={isGeneratingOutreach}
+                className="btn-primary"
+                style={{ width: "100%", padding: "0.375rem", fontSize: "0.75rem", justifyContent: "center" }}
+              >
+                {isGeneratingOutreach ? (isAr ? "جاري الصياغة..." : "Drafting...") : (isAr ? "صياغة رسالة التواصل" : "Generate Outreach")}
+              </button>
+              {outreachDraft && (
+                <textarea
+                  readOnly
+                  value={outreachDraft}
                   style={{ width: "100%", height: "120px", marginTop: "0.5rem", padding: "0.5rem", fontSize: "0.75rem", background: "hsl(var(--color-bg))", border: "1px solid hsl(var(--color-text-muted)/0.2)", borderRadius: "var(--radius-xs)", color: "hsl(var(--color-text-body))", outline: "none", resize: "none" }}
                 />
               )}

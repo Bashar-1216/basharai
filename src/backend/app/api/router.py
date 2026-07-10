@@ -2,7 +2,7 @@
 
 from fastapi import APIRouter
 
-from app.api.endpoints import health, chat, github, linkedin
+from app.api.endpoints import health, chat, github, linkedin, resume, career
 
 api_router = APIRouter()
 
@@ -17,3 +17,9 @@ api_router.include_router(github.router, prefix="/github", tags=["GitHub"])
 
 # ── LinkedIn Integrations ─────────────────────────────────────────
 api_router.include_router(linkedin.router, prefix="/linkedin", tags=["LinkedIn"])
+
+# ── Resume Download ───────────────────────────────────────────────
+api_router.include_router(resume.router, prefix="/resume", tags=["Resume"])
+
+# ── Career Outreach ───────────────────────────────────────────────
+api_router.include_router(career.router, prefix="/career", tags=["Career"])

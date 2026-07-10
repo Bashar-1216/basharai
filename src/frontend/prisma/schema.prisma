@@ -113,6 +113,8 @@ model Chunk {
   contentEn   String   @db.Text @map("content_en")
   contentAr   String   @db.Text @map("content_ar")
   chunkHash   String   @map("chunk_hash")
+  embeddingEn Unsupported("vector(1536)")? @map("embedding_en")
+  embeddingAr Unsupported("vector(1536)")? @map("embedding_ar")
   
   document    Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
 }
@@ -169,4 +171,43 @@ model EvaluationResult {
   createdAt      DateTime @default(now()) @map("created_at")
 
   llmLog         LLMLog   @relation(fields: [llmLogId], references: [id], onDelete: Cascade)
+}
+
+// ==========================================
+// 5. Central Hub & Career Content Domain
+// ==========================================
+
+model GithubRepository {
+  id          String   @id @default(uuid()) @db.Uuid
+  repoName    String   @unique @map("repo_name")
+  stars       Int      @default(0)
+  forks       Int      @default(0)
+  language    String   @default("Python")
+  lastCommit  String   @map("last_commit")
+  openIssues  Int      @default(0) @map("open_issues")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+}
+
+model GeneratedPost {
+  id          String   @id @default(uuid()) @db.Uuid
+  projectSlug String   @map("project_slug")
+  tone        String   // TECHNICAL, RECRUITER, FOUNDER
+  languageCode String   @map("language_code") // en, ar
+  draftText   String   @db.Text @map("draft_text")
+  createdAt   DateTime @default(now()) @map("created_at")
+}
+
+model CareerContent {
+  id           String   @id @default(uuid()) @db.Uuid
+  companyName  String   @map("company_name") // Aramco, Humain, Mozn, SAP
+  contentType  String   @map("content_type") // LINKEDIN_MESSAGE, EMAIL_INTRO, COVER_LETTER
+  generatedText String   @db.Text @map("generated_text")
+  createdAt    DateTime @default(now()) @map("created_at")
+}
+
+model DownloadMetric {
+  id        String   @id @default(uuid()) @db.Uuid
+  fileName  String   @map("file_name")
+  visitorIp String?  @map("visitor_ip")
+  createdAt DateTime @default(now()) @map("created_at")
 }

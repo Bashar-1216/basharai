@@ -11,16 +11,17 @@ router = APIRouter()
 
 class LinkedInRequest(BaseModel):
     project_slug: str
-    locale: str = "en"
+    tone: str # "technical", "recruiter", "founder"
+    language_code: str # "en", "ar"
 
 class LinkedInResponse(BaseModel):
     draft: str
 
 @router.post("/generate", response_model=LinkedInResponse)
 async def generate_linkedin_post(req: LinkedInRequest, db: AsyncSession = Depends(get_db)):
-    is_ar = req.locale == "ar"
+    is_ar = req.language_code == "ar"
     
-    # Query project details from DB
+    # Fetch project details from DB
     proj_res = await db.execute(
         text('SELECT title_en, title_ar, description_en, description_ar, github_url FROM "Project" WHERE slug = :slug'),
         {"slug": req.project_slug}
@@ -36,20 +37,34 @@ async def generate_linkedin_post(req: LinkedInRequest, db: AsyncSession = Depend
     title = title_ar if is_ar else title_en
     description = desc_ar if is_ar else desc_en
     
-    # Construct Prompt
+    # Customise prompt according to Tone
+    tone_instruction = ""
+    if req.tone == "technical":
+        tone_instruction = (
+            "Write in a deep technical engineering tone. Highlight system design, architecture diagrams, latency milestones, and specific algorithms."
+        )
+    elif req.tone == "recruiter":
+        tone_instruction = (
+            "Write in a recruiter-friendly tone. Focus on business value, metrics (efficiency gains, costs saved), leadership, and team collaboration."
+        )
+    else: # founder
+        tone_instruction = (
+            "Write in a visionary founder style. Talk about problem spaces, user experience impacts, strategic product directions, and future capabilities."
+        )
+        
     prompt = (
         f"You are a professional technical content writer and career coach.\n"
         f"Draft an engaging, high-converting LinkedIn announcement post celebrating the completion of this project:\n\n"
         f"Project Title: {title}\n"
         f"Details: {description}\n"
         f"GitHub Repo: {github_url or ''}\n\n"
+        f"Tone Directive: {tone_instruction}\n\n"
         f"Format requirements:\n"
         f"- Start with a compelling hook sentence.\n"
         f"- List key engineering challenges solved and technical achievements using bullet points.\n"
         f"- List the primary tech stack tags.\n"
-        f"- End with an inviting call to action (encouraging recruiters and peers to read the case study or check the repo).\n"
-        f"- Keep the tone professional, humble, yet highly competent.\n"
-        f"- Output the post in the requested language: {'Arabic (with professional formatting)' if is_ar else 'English'}.\n"
+        f"- End with an inviting call to action.\n"
+        f"- Output the post in the requested language: {'Arabic' if is_ar else 'English'}.\n"
         f"Output ONLY the final drafted post text. Do not include introductory notes or markdown markers."
     )
     
@@ -63,7 +78,7 @@ async def generate_linkedin_post(req: LinkedInRequest, db: AsyncSession = Depend
             res = await client.chat.completions.create(
                 messages=[{"role": "user", "content": prompt}],
                 model="gpt-4o-mini",
-                max_tokens=500,
+                max_tokens=600,
             )
             draft = res.choices[0].message.content or ""
         except Exception as e:
@@ -74,20 +89,40 @@ async def generate_linkedin_post(req: LinkedInRequest, db: AsyncSession = Depend
         if is_ar:
             draft = (
                 f"🚀 سعيد بمشاركة مشروعي الأخير: {title}!\n\n"
-                f"خلال هذا العمل، قمت بحل عدة تحديات تقنية هندسية:\n"
+                f"الأسلوب المحدد: {req.tone}\n"
+                f"التحديات التقنية التي تم حلها:\n"
                 f"• {description}\n\n"
-                f"💻 التقنيات المستخدمة: Python, PostgreSQL, Next.js\n\n"
-                f"تفاصيل الكود متاحة على GitHub: {github_url or 'owner@bashar.ai'}\n"
-                f"أرحب بملاحظاتكم واستفساراتكم المهنية! #برمجة #ذكاء_اصطناعي"
+                f"💻 التقنيات المستخدمة: Python, PostgreSQL, Next.js\n"
+                f"رابط المستودع: {github_url or 'owner@bashar.ai'}\n"
+                f"يسعدني تلقي آرائكم وتوصياتكم المهنية! #ذكاء_اصطناعي #برمجة"
             )
         else:
             draft = (
                 f"🚀 Excited to announce my latest project: {title}!\n\n"
+                f"Tone Mode: {req.tone}\n"
                 f"In this project, I solved key technical challenges:\n"
                 f"• {description}\n\n"
-                f"💻 Tech Stack: Python, PostgreSQL, Next.js\n\n"
-                f"Check out the full repository here: {github_url or 'owner@bashar.ai'}\n"
-                f"Would love to hear your thoughts and feedback! #MachineLearning #AIEngineer"
+                f"💻 Tech Stack: Python, PostgreSQL, Next.js\n"
+                f"Check out the full repository: {github_url or 'owner@bashar.ai'}\n"
+                f"Feedback is highly appreciated! #AIEngineer #MachineLearning"
             )
             
+    # Log the generated post draft into PostgreSQL database
+    try:
+        import uuid
+        await db.execute(
+            text('INSERT INTO "GeneratedPost" (id, project_slug, tone, language_code, draft_text, created_at) '
+                 'VALUES (:id, :slug, :tone, :lang, :draft, NOW())'),
+            {
+                "id": uuid.uuid4(),
+                "slug": req.project_slug,
+                "tone": req.tone,
+                "lang": req.language_code,
+                "draft": draft
+            }
+        )
+        await db.commit()
+    except Exception as e:
+        print(f"Failed to save generated post: {e}")
+        
     return LinkedInResponse(draft=draft)

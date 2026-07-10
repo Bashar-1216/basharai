@@ -6,9 +6,9 @@ interface ResumeActionsProps {
 
 export function ResumeActions({ isAr }: ResumeActionsProps) {
   return (
-    <button
-      type="button"
-      onClick={() => window.print()}
+    <a
+      href="/api/resume/download"
+      download="Bashar_Almuntaser_AI_Engineer.pdf"
       style={{
         padding: "0.5rem 1.25rem",
         backgroundColor: "hsl(var(--color-primary))",
@@ -18,10 +18,12 @@ export function ResumeActions({ isAr }: ResumeActionsProps) {
         fontSize: "0.875rem",
         fontWeight: "600",
         cursor: "pointer",
+        textDecoration: "none",
+        display: "inline-block",
         transition: "background var(--transition-fast)",
       }}
     >
-      📄 {isAr ? "تحميل كـ PDF / طباعة" : "Download PDF / Print"}
-    </button>
+      📄 {isAr ? "تحميل كـ PDF" : "Download PDF"}
+    </a>
   );
 }
