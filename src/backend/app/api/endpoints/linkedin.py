@@ -6,7 +6,7 @@ from sqlalchemy import text
 
 from app.core.db import get_db
 from app.core.config import settings
-from app.core.gemini import generate_gemini_content
+from app.core.llm import generate_text_content, is_groq_active
 
 router = APIRouter()
 
@@ -68,14 +68,16 @@ async def generate_linkedin_post(req: LinkedInRequest, db: AsyncSession = Depend
         f"Output ONLY the final drafted post text. Do not include introductory notes or markdown markers."
     )
     
-    gemini_active = settings.GEMINI_API_KEY and not settings.GEMINI_API_KEY.startswith("sk-")
+    import os
+    gemini_active = bool(settings.GEMINI_API_KEY or os.environ.get("GEMINI_API_KEY"))
+    llm_active = is_groq_active() or gemini_active
     draft = ""
     
-    if gemini_active:
+    if llm_active:
         try:
-            draft = await generate_gemini_content(prompt, "You are a professional LinkedIn post generator.")
+            draft = await generate_text_content(prompt, "You are a professional LinkedIn post generator.")
         except Exception as e:
-            print(f"LinkedIn generator Gemini call failed: {e}")
+            print(f"LinkedIn generator LLM call failed: {e}")
             
     if not draft:
         # Fallback offline draft

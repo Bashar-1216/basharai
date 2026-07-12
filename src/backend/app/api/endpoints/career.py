@@ -6,7 +6,7 @@ from sqlalchemy import text
 
 from app.core.db import get_db
 from app.core.config import settings
-from app.core.gemini import generate_gemini_content
+from app.core.llm import generate_text_content, is_groq_active
 
 router = APIRouter()
 
@@ -34,14 +34,16 @@ async def generate_career_outreach(req: OutreachRequest, db: AsyncSession = Depe
         f"Output ONLY the final document. Do not include introductory notes or markdown decorators."
     )
     
-    gemini_active = settings.GEMINI_API_KEY and not settings.GEMINI_API_KEY.startswith("sk-")
+    import os
+    gemini_active = bool(settings.GEMINI_API_KEY or os.environ.get("GEMINI_API_KEY"))
+    llm_active = is_groq_active() or gemini_active
     generated = ""
     
-    if gemini_active:
+    if llm_active:
         try:
-            generated = await generate_gemini_content(prompt, "You are a professional career content writer.")
+            generated = await generate_text_content(prompt, "You are a professional career content writer.")
         except Exception as e:
-            print(f"Career outreach Gemini call failed: {e}")
+            print(f"Career outreach LLM call failed: {e}")
             
     if not generated:
         # Fallback offline drafts

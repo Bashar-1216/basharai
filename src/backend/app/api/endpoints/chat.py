@@ -12,7 +12,8 @@ from google.genai import types
 from app.core.db import get_db
 from app.core.config import settings
 from app.core.rate_limit import check_rate_limit
-from app.core.gemini import get_gemini_client, get_gemini_embedding, generate_gemini_content
+from app.core.gemini import get_gemini_embedding
+from app.core.llm import generate_text_content, stream_text_content, is_groq_active
 
 router = APIRouter()
 
@@ -22,11 +23,11 @@ class ChatRequest(BaseModel):
     session_id: str | None = None
 
 async def run_llm_judge(context: str, response: str, query: str) -> tuple[float, float, float]:
-    """LLM-as-a-Judge evaluation of Groundedness, Context Relevance, and Answer Relevance using Gemini."""
+    """LLM-as-a-Judge evaluation of Groundedness, Context Relevance, and Answer Relevance using Groq/Gemini."""
     import os
-    api_key = settings.GEMINI_API_KEY or os.environ.get("GEMINI_API_KEY")
-    gemini_active = api_key and not api_key.startswith("sk-")
-    if not gemini_active:
+    gemini_active = bool(settings.GEMINI_API_KEY or os.environ.get("GEMINI_API_KEY"))
+    llm_active = is_groq_active() or gemini_active
+    if not llm_active:
         return 0.98, 0.95, 0.96 # Offline static fallback
         
     judge_prompt = (
@@ -41,7 +42,7 @@ async def run_llm_judge(context: str, response: str, query: str) -> tuple[float,
         f"Output format exactly: Groundedness: [float], Context Relevance: [float], Answer Relevance: [float]"
     )
     try:
-        body = await generate_gemini_content(judge_prompt, "You are a helpful QA evaluator.")
+        body = await generate_text_content(judge_prompt, "You are a helpful QA evaluator.")
         g, c, a = 0.95, 0.95, 0.95
         for line in body.split("\n"):
             if "Groundedness:" in line:
@@ -153,48 +154,35 @@ async def chat_handler(req: ChatRequest, db: AsyncSession = Depends(get_db)):
         response_text = ""
         input_tokens = 0
         output_tokens = 0
-        cost = 0.0
-        model_name = "gemini-3.5-flash"
-        
         import os
-        api_key = settings.GEMINI_API_KEY or os.environ.get("GEMINI_API_KEY")
-        gemini_active = api_key and not api_key.startswith("sk-")
+        gemini_active = bool(settings.GEMINI_API_KEY or os.environ.get("GEMINI_API_KEY"))
+        llm_active = is_groq_active() or gemini_active
+        model_name = "llama-3.3-70b-specdec" if is_groq_active() else "gemini-3.5-flash"
         
-        if gemini_active:
+        if llm_active:
             try:
-                # 3. LLM GENERATION WITH STREAMING (Gemini Interactions API)
-                client = get_gemini_client()
-                response_stream = await client.aio.interactions.create(
-                    model="gemini-3.5-flash",
-                    system_instruction=system_prompt,
-                    input=req.message,
-                    stream=True
+                # 3. LLM GENERATION WITH STREAMING
+                response_stream = stream_text_content(
+                    prompt=req.message,
+                    system_instruction=system_prompt
                 )
-                async for event in response_stream:
-                    # Capture stream error events (such as 429 quota or 500 spikes) yielded without raising exceptions
-                    if hasattr(event, "error") and event.error:
-                        print(f"Gemini Interactions stream error event: {event.error.message}")
-                        gemini_active = False
-                        break
-                        
-                    if hasattr(event, "delta") and hasattr(event.delta, "text") and event.delta.text:
-                        token = event.delta.text
-                        response_text += token
-                        yield f"data: {json.dumps({'token': token})}\n\n"
+                async for token in response_stream:
+                    response_text += token
+                    yield f"data: {json.dumps({'token': token})}\n\n"
                 
                 # Verify we received content, otherwise fallback
                 if not response_text.strip():
-                    print("Gemini stream finished with no content, triggering fallback.")
-                    gemini_active = False
+                    print("LLM stream finished with no content, triggering fallback.")
+                    llm_active = False
                 else:
                     input_tokens = len(system_prompt.split()) + len(req.message.split())
                     output_tokens = len(response_text.split())
                     cost = 0.0
             except Exception as e:
-                print(f"Streaming Gemini execution error: {e}")
-                gemini_active = False
+                print(f"Streaming LLM execution error: {e}")
+                llm_active = False
                 
-        if not gemini_active:
+        if not llm_active:
             # Fallback to streaming mock response text word-by-word with delay
             if top_chunks:
                 match_chunk = top_chunks[0]
