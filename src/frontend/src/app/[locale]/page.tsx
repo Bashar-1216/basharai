@@ -40,13 +40,17 @@ export default async function HomePage({ params }: HomePageProps) {
     <>
       <Navbar dict={dict} locale={locale as Locale} />
       <main>
-        {/* 1. Minimized Hero */}
+        {/* 1. Minimized Hero with Hologram Portrait */}
         <Hero dict={dict} locale={locale as Locale} />
 
-        {/* 2. Featured Projects Preview (3 only) */}
+        {/* 2. Featured Projects Preview */}
         {projects.length > 0 && (
           <section className={styles.section}>
-            <div className="container">
+            {/* Ambient background glows */}
+            <div className={styles.goldGlow} />
+            <div className={styles.blueGlow} />
+
+            <div className="container" style={{ position: "relative", zIndex: 2 }}>
               <div className={styles.sectionHeader}>
                 <h2 className={styles.sectionTitle}>{dict.sections.featured_projects}</h2>
                 <Link href={`/${locale}/projects`} className={styles.viewAll}>
@@ -57,7 +61,7 @@ export default async function HomePage({ params }: HomePageProps) {
                 {projects.map((project) => (
                   <div key={project.id} className={styles.projectCard}>
                     <div className={styles.projectHeader}>
-                      <span className={styles.projectTag}>AI // ML PROJECT</span>
+                      <span className={styles.projectTag}>AI // ML ENGINE</span>
                       {project.githubUrl && (
                         <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className={styles.githubLink}>
                           GitHub ↗
@@ -78,7 +82,7 @@ export default async function HomePage({ params }: HomePageProps) {
           </section>
         )}
 
-        {/* 3. Experience Preview (2 only) */}
+        {/* 3. Experience Preview */}
         {experiences.length > 0 && (
           <section className={`${styles.section} ${styles.altBg}`}>
             <div className="container">
@@ -117,7 +121,8 @@ export default async function HomePage({ params }: HomePageProps) {
         {/* 4. Latest Blog Article Preview */}
         {latestPost ? (
           <section className={styles.section}>
-            <div className="container">
+            <div className={styles.goldGlow} />
+            <div className="container" style={{ position: "relative", zIndex: 2 }}>
               <div className={styles.sectionHeader}>
                 <h2 className={styles.sectionTitle}>{dict.sections.latest_articles}</h2>
                 <Link href={`/${locale}/blog`} className={styles.viewAll}>
@@ -146,7 +151,8 @@ export default async function HomePage({ params }: HomePageProps) {
           </section>
         ) : (
           <section className={styles.section}>
-            <div className="container">
+            <div className={styles.goldGlow} />
+            <div className="container" style={{ position: "relative", zIndex: 2 }}>
               <div className={styles.sectionHeader}>
                 <h2 className={styles.sectionTitle}>{dict.sections.latest_articles}</h2>
                 <Link href={`/${locale}/blog`} className={styles.viewAll}>
@@ -175,7 +181,8 @@ export default async function HomePage({ params }: HomePageProps) {
 
         {/* 5. Clean AI Assistant Trigger Section */}
         <section className={`${styles.section} ${styles.altBg}`}>
-          <div className="container">
+          <div className={styles.blueGlow} />
+          <div className="container" style={{ position: "relative", zIndex: 2 }}>
             <div className={styles.assistantPreview}>
               <h2 className={styles.sectionTitle}>{dict.sections.ai_assistant}</h2>
               <p className={styles.assistantDesc}>{dict.sections.assistant_desc}</p>

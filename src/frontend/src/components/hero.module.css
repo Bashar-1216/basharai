@@ -1,27 +1,29 @@
 .hero {
   position: relative;
-  min-height: 35vh;
+  min-height: 48vh;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
   padding-top: 6rem; /* navbar offset */
-  padding-bottom: 2rem;
+  padding-bottom: 3rem;
   background: hsl(var(--color-bg));
   border-bottom: 1px solid hsl(var(--color-border));
 }
 
 .content {
   position: relative;
-  z-index: 1;
+  z-index: 5;
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.75rem;
   max-width: 900px;
+  pointer-events: none; /* Let clicks pass through to background if needed */
 }
 
+/* Text elements */
 .name {
   font-size: 1rem;
   font-weight: 600;
@@ -30,16 +32,14 @@
   color: hsl(var(--color-text-muted));
 }
 
-/* Title */
 .title {
-  font-size: clamp(2rem, 4.5vw, 3.25rem);
+  font-size: clamp(2.25rem, 5vw, 3.5rem);
   font-weight: 800;
   line-height: 1.15;
   letter-spacing: -0.02em;
   color: hsl(var(--color-text));
 }
 
-/* Status Line */
 .statusLine {
   display: flex;
   align-items: center;
@@ -54,6 +54,7 @@
 
 .badge {
   font-weight: 600;
+  color: hsl(var(--color-accent));
 }
 
 .separator {
@@ -61,14 +62,87 @@
   font-size: 1.25rem;
 }
 
+/* ── Watermark Background styling ─────────────────── */
+.watermarkWrapper {
+  position: absolute;
+  right: 10%;
+  bottom: -20px;
+  width: 480px;
+  height: 480px;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.07;
+  mix-blend-mode: screen;
+  mask-image: radial-gradient(circle at center, black 25%, transparent 70%);
+  -webkit-mask-image: radial-gradient(circle at center, black 25%, transparent 70%);
+  animation: breathing 8s ease-in-out infinite;
+}
+
+.watermarkImg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: saturate(0.8) contrast(1.1) brightness(1.1);
+}
+
+.watermarkScanline {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    rgba(0, 0, 0, 0) 0px,
+    rgba(0, 0, 0, 0) 4px,
+    rgba(56, 189, 248, 0.2) 5px,
+    rgba(56, 189, 248, 0.2) 6px
+  );
+}
+
+/* Animations */
+@keyframes breathing {
+  0%, 100% {
+    opacity: 0.07;
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    opacity: 0.09;
+    transform: translateY(-8px) scale(1.02);
+  }
+}
+
+/* RTL Support - Move background watermark to the left */
+:global([dir="rtl"]) .watermarkWrapper {
+  right: auto;
+  left: 10%;
+}
+
 /* Responsive fixes */
-@media (max-width: 640px) {
+@media (max-width: 1024px) {
+  .watermarkWrapper {
+    right: 5%;
+    width: 400px;
+    height: 400px;
+  }
+}
+
+@media (max-width: 768px) {
   .hero {
-    min-height: 30vh;
+    min-height: 40vh;
     padding-top: 7rem;
   }
   .statusLine {
     font-size: 0.9375rem;
     gap: 0.5rem;
+  }
+  .watermarkWrapper {
+    right: 50%;
+    transform: translateX(50%);
+    bottom: -40px;
+    width: 350px;
+    height: 350px;
+    opacity: 0.05;
+  }
+  :global([dir="rtl"]) .watermarkWrapper {
+    left: auto;
+    right: 50%;
+    transform: translateX(50%);
   }
 }
