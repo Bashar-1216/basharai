@@ -43,14 +43,15 @@ async def run_llm_judge(context: str, response: str, query: str) -> tuple[float,
     )
     try:
         body = await generate_text_content(judge_prompt, "You are a helpful QA evaluator.")
+        import re
         g, c, a = 0.95, 0.95, 0.95
-        for line in body.split("\n"):
-            if "Groundedness:" in line:
-                g = float(line.split("Groundedness:")[-1].replace("[", "").replace("]", "").strip())
-            elif "Context Relevance:" in line:
-                c = float(line.split("Context Relevance:")[-1].replace("[", "").replace("]", "").strip())
-            elif "Answer Relevance:" in line:
-                a = float(line.split("Answer Relevance:")[-1].replace("[", "").replace("]", "").strip())
+        # Use regex to extract float values after each label (handles single-line and multi-line)
+        g_match = re.search(r'Groundedness[:\s]*\[?(\d+\.?\d*)\]?', body)
+        c_match = re.search(r'Context Relevance[:\s]*\[?(\d+\.?\d*)\]?', body)
+        a_match = re.search(r'Answer Relevance[:\s]*\[?(\d+\.?\d*)\]?', body)
+        if g_match: g = float(g_match.group(1))
+        if c_match: c = float(c_match.group(1))
+        if a_match: a = float(a_match.group(1))
         return min(max(g, 0.0), 1.0), min(max(c, 0.0), 1.0), min(max(a, 0.0), 1.0)
     except Exception as e:
         print(f"LLM Judge call failed: {e}")
@@ -157,7 +158,7 @@ async def chat_handler(req: ChatRequest, db: AsyncSession = Depends(get_db)):
         import os
         gemini_active = bool(settings.GEMINI_API_KEY or os.environ.get("GEMINI_API_KEY"))
         llm_active = is_groq_active() or gemini_active
-        model_name = "llama-3.3-70b-specdec" if is_groq_active() else "gemini-3.5-flash"
+        model_name = "qwen/qwen3.6-27b" if is_groq_active() else "gemini-3.5-flash"
         
         if llm_active:
             try:

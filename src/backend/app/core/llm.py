@@ -34,7 +34,7 @@ async def generate_text_content(prompt: str, system_instruction: str = None) -> 
                 
                 res = await client.chat.completions.create(
                     messages=messages,
-                    model="llama-3.3-70b-versatile",
+                    model="qwen/qwen3.6-27b",
                     temperature=0.2
                 )
                 if res.choices and res.choices[0].message.content:
@@ -59,7 +59,7 @@ async def stream_text_content(prompt: str, system_instruction: str = None) -> As
                 
                 stream = await client.chat.completions.create(
                     messages=messages,
-                    model="llama-3.3-70b-specdec",
+                    model="qwen/qwen3.6-27b",
                     temperature=0.2,
                     stream=True
                 )
