@@ -31,30 +31,26 @@ export function Navbar({ dict, locale }: NavbarProps) {
     };
   }, []);
 
-  // Close mobile menu on page transition
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [pathname]);
 
   const isActive = (path: string) => {
-    // pathname looks like "/en/projects" or "/ar/projects"
-    // path is e.g. "projects"
     const segments = pathname.split("/").filter(Boolean);
     if (path === "") {
-      return segments.length <= 1; // home route "/"
+      return segments.length <= 1; // overview route "/"
     }
     return segments.includes(path);
   };
 
   const navItems = [
+    { key: "overview", path: "", label: dict.nav.overview },
     { key: "experience", path: "experience", label: dict.nav.experience },
     { key: "projects", path: "projects", label: dict.nav.projects },
+    { key: "assistant", path: "assistant", label: dict.nav.assistant },
     { key: "blog", path: "blog", label: dict.nav.blog },
     { key: "resume", path: "resume", label: dict.nav.resume },
-    { key: "dashboard", path: "dashboard", label: dict.nav.dashboard },
-    { key: "assistant", path: "assistant", label: dict.nav.assistant },
     { key: "contact", path: "contact", label: dict.nav.contact },
-    { key: "now", path: "now", label: dict.nav.now },
   ];
 
   return (

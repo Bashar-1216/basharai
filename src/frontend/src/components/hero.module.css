@@ -1,13 +1,14 @@
 .hero {
   position: relative;
-  min-height: 55vh;
+  min-height: 35vh;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  padding-top: 5rem; /* navbar offset */
+  padding-top: 6rem; /* navbar offset */
   padding-bottom: 2rem;
   background: hsl(var(--color-bg));
+  border-bottom: 1px solid hsl(var(--color-border));
 }
 
 .content {
@@ -17,78 +18,57 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.25rem;
+  gap: 0.75rem;
   max-width: 900px;
+}
+
+.name {
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: hsl(var(--color-text-muted));
 }
 
 /* Title */
 .title {
-  font-size: clamp(2.5rem, 5.5vw, 4rem);
+  font-size: clamp(2rem, 4.5vw, 3.25rem);
   font-weight: 800;
   line-height: 1.15;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.02em;
   color: hsl(var(--color-text));
 }
 
-/* Roles and Tagline Subheading */
-.roleContainer {
+/* Status Line */
+.statusLine {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: hsl(var(--color-text));
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.roleBadge {
-  color: hsl(var(--color-secondary));
-  background: hsl(var(--color-secondary) / 0.1);
-  border: 1px solid hsl(var(--color-secondary) / 0.2);
-  padding: 0.25rem 0.75rem;
-  border-radius: var(--radius-sm);
-}
-
-.tagline {
+  font-size: 1.0625rem;
+  font-weight: 500;
   color: hsl(var(--color-text-body));
-}
-
-.separator {
-  color: hsl(var(--color-text-muted) / 0.5);
-  font-size: 1.5rem;
-}
-
-/* Subtitle description */
-.subtitle {
-  font-size: clamp(1rem, 1.8vw, 1.1875rem);
-  color: hsl(var(--color-text-muted));
-  max-width: 640px;
-  line-height: 1.6;
-}
-
-/* Call to Actions */
-.cta {
-  display: flex;
-  gap: 1rem;
   flex-wrap: wrap;
   justify-content: center;
   margin-top: 0.5rem;
 }
 
+.badge {
+  font-weight: 600;
+}
+
+.separator {
+  color: hsl(var(--color-text-muted) / 0.5);
+  font-size: 1.25rem;
+}
+
 /* Responsive fixes */
 @media (max-width: 640px) {
   .hero {
-    min-height: 45vh;
-    padding-top: 6rem;
+    min-height: 30vh;
+    padding-top: 7rem;
   }
-  .roleContainer {
+  .statusLine {
     font-size: 0.9375rem;
     gap: 0.5rem;
-  }
-  .cta {
-    flex-direction: column;
-    width: 100%;
-    max-width: 280px;
   }
 }

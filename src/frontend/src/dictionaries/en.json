@@ -4,64 +4,33 @@
     "description": "Digital headquarters of Bashar Almuntaser — AI Engineer building production AI systems."
   },
   "nav": {
-    "home": "Home",
+    "overview": "Overview",
     "projects": "Projects",
     "experience": "Experience",
     "blog": "Blog",
     "resume": "Resume",
-    "dashboard": "Dashboard",
     "assistant": "Assistant",
     "contact": "Contact",
-    "now": "Now",
     "language": "العربية"
   },
   "hero": {
+    "name": "Bashar Almuntaser",
     "title": "Building Production AI Systems",
-    "title_accent": "for Millions of Users.",
     "role": "AI Engineer",
-    "tagline": "LLMs · RAG · AI Agents · Computer Vision",
-    "subtitle": "Now building bilingual AI platforms tailored for GCC organizations and regional enterprise teams.",
-    "cta_projects": "Explore Projects",
-    "cta_resume": "View Resume"
-  },
-  "stats": {
-    "projects": "Projects",
-    "experience": "Experience",
-    "years": "Years",
-    "articles": "Articles",
-    "telemetry": "Telemetry",
-    "live": "Live",
-    "assistant": "Assistant",
-    "online": "Online",
-    "ask_me": "Ask me",
-    "health": "Health"
-  },
-  "status": {
-    "heading": "Current Status",
-    "availability": "Open to AI Opportunities",
-    "location_label": "Location",
-    "location": "Yemen",
-    "target_label": "Target",
-    "target": "Saudi Arabia (GCC)",
-    "focus_label": "Focus",
-    "focus": "LLMs · RAG · AI Agents · Computer Vision",
-    "latest_label": "Latest Build",
-    "latest": "GEO Platform"
+    "location_status": "Yemen → Saudi Arabia",
+    "availability": "Open to Opportunities 🟢"
   },
   "sections": {
     "featured_projects": "Featured Projects",
     "view_all_projects": "View All Projects",
     "experience_timeline": "Experience Timeline",
     "view_full_timeline": "View Full Timeline",
-    "live_dashboard": "Live Dashboard",
-    "open_dashboard": "Open Live Dashboard",
-    "ai_assistant": "AI Assistant",
-    "open_console": "Open Full Console",
     "latest_articles": "Latest Articles",
     "read_all": "Read All Articles",
     "read_case_study": "Read Case Study",
-    "dashboard_desc": "Real-time observability into the RAG pipeline powering this assistant.",
-    "assistant_desc": "Ask my AI assistant anything about my projects, experience, and technical skills."
+    "ai_assistant": "Ask Bashar AI",
+    "talk_to_ai": "Talk to My AI Assistant 🤖",
+    "assistant_desc": "Get instant answers about my technical background, architectures, and projects."
   },
   "experience": {
     "title": "Experience",

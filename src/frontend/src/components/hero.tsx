@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import type { Locale } from "@/lib/i18n";
 import styles from "./hero.module.css";
 
@@ -9,42 +8,22 @@ interface HeroProps {
   locale: Locale;
 }
 
-export function Hero({ dict, locale }: HeroProps) {
+export function Hero({ dict }: HeroProps) {
   const hero = dict.hero;
 
   return (
     <section className={styles.hero}>
       <div className={`container ${styles.content}`}>
-        {/* Title */}
-        <h1 className={`${styles.title} animate-fade-in-up`}>
-          {hero.title} <br />
-          <span className="gradient-text">{hero.title_accent}</span>
+        <span className={`${styles.name} animate-fade-in-up`}>{hero.name}</span>
+        <h1 className={`${styles.title} animate-fade-in-up delay-100`}>
+          <span className="gradient-text">{hero.title}</span>
         </h1>
-
-        {/* Roles & Tagline (No fictional references) */}
-        <div className={`${styles.roleContainer} animate-fade-in-up delay-100`}>
-          <span className={styles.roleBadge}>
-            {hero.role}
-          </span>
+        <div className={`${styles.statusLine} animate-fade-in-up delay-200`}>
+          <span>{hero.role}</span>
           <span className={styles.separator}>·</span>
-          <span className={styles.tagline}>
-            {hero.tagline}
-          </span>
-        </div>
-
-        {/* Subtitle */}
-        <p className={`${styles.subtitle} animate-fade-in-up delay-200`}>
-          {hero.subtitle}
-        </p>
-
-        {/* CTAs */}
-        <div className={`${styles.cta} animate-fade-in-up delay-300`}>
-          <Link href={`/${locale}/projects`} className="btn-primary">
-            📁 {hero.cta_projects}
-          </Link>
-          <Link href={`/${locale}/resume`} className="btn-secondary">
-            📄 {hero.cta_resume}
-          </Link>
+          <span>{hero.location_status}</span>
+          <span className={styles.separator}>·</span>
+          <span className={styles.badge}>{hero.availability}</span>
         </div>
       </div>
     </section>
