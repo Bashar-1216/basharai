@@ -1,11 +1,12 @@
 .hero {
   position: relative;
-  min-height: 80vh;
+  min-height: 55vh;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  padding-top: 4rem; /* navbar offset */
+  padding-top: 5rem; /* navbar offset */
+  padding-bottom: 2rem;
   background: hsl(var(--color-bg));
 }
 
@@ -16,7 +17,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.75rem;
+  gap: 1.25rem;
   max-width: 900px;
 }
 
@@ -29,8 +30,8 @@
   color: hsl(var(--color-text));
 }
 
-/* Companies and Roles Subheading */
-.companies {
+/* Roles and Tagline Subheading */
+.roleContainer {
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -41,28 +42,29 @@
   justify-content: center;
 }
 
-.role {
+.roleBadge {
   color: hsl(var(--color-secondary));
+  background: hsl(var(--color-secondary) / 0.1);
+  border: 1px solid hsl(var(--color-secondary) / 0.2);
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-sm);
 }
 
-.companyName {
-  background: hsl(var(--color-bg-card));
-  border: 1px solid hsl(var(--color-text-muted) / 0.15);
-  padding: 0.125rem 0.625rem;
-  border-radius: var(--radius-xs);
-  font-size: 0.9375rem;
+.tagline {
+  color: hsl(var(--color-text-body));
 }
 
 .separator {
   color: hsl(var(--color-text-muted) / 0.5);
+  font-size: 1.5rem;
 }
 
 /* Subtitle description */
 .subtitle {
   font-size: clamp(1rem, 1.8vw, 1.1875rem);
-  color: hsl(var(--color-text-body));
+  color: hsl(var(--color-text-muted));
   max-width: 640px;
-  line-height: 1.7;
+  line-height: 1.6;
 }
 
 /* Call to Actions */
@@ -74,42 +76,19 @@
   margin-top: 0.5rem;
 }
 
-.chatTrigger {
-  padding: 0.75rem 1.5rem;
-  border-radius: var(--radius-sm);
-  font-size: 0.875rem;
-  font-weight: 600;
-  cursor: pointer;
-  background: hsl(var(--color-bg-card));
-  border: 1px solid hsl(var(--color-text-muted) / 0.2);
-  color: hsl(var(--color-text-body));
-  transition: all var(--transition-fast);
-}
-
-.chatTrigger:hover {
-  border-color: hsl(var(--color-secondary));
-  color: hsl(var(--color-secondary));
-  background: hsl(var(--color-secondary) / 0.05);
-}
-
 /* Responsive fixes */
 @media (max-width: 640px) {
   .hero {
-    min-height: 70vh;
+    min-height: 45vh;
+    padding-top: 6rem;
   }
-  .companies {
+  .roleContainer {
     font-size: 0.9375rem;
     gap: 0.5rem;
-  }
-  .companyName {
-    font-size: 0.8125rem;
   }
   .cta {
     flex-direction: column;
     width: 100%;
     max-width: 280px;
-  }
-  .chatTrigger {
-    width: 100%;
   }
 }

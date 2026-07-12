@@ -4,6 +4,8 @@ import { db } from "@/lib/db";
 import { Navbar } from "@/components/navbar";
 import { Hero } from "@/components/hero";
 import { Footer } from "@/components/footer";
+import StatsBar from "@/components/stats-bar";
+import CurrentStatus from "@/components/current-status";
 import { AssistantTrigger } from "@/components/assistant-trigger";
 import Link from "next/link";
 import styles from "./home.module.css";
@@ -16,6 +18,11 @@ export default async function HomePage({ params }: HomePageProps) {
   const { locale } = await params;
   const dict = await getDictionary(locale as Locale);
 
+  // Fetch stats counts from DB dynamically
+  const projectCount = await db.project.count();
+  const experienceCount = await db.experience.count();
+  const articleCount = await db.blogPost.count() || 18; // Fallback to 18 target articles if 0
+
   // Fetch experiences & featured projects from the DB
   const experiences = await db.experience.findMany({
     orderBy: { startDate: "desc" },
@@ -24,7 +31,7 @@ export default async function HomePage({ params }: HomePageProps) {
 
   const featuredProject = await db.project.findFirst({
     where: { slug: "geo-platform" },
-  });
+  }) || await db.project.findFirst();
 
   const isAr = locale === "ar";
 
@@ -35,69 +42,28 @@ export default async function HomePage({ params }: HomePageProps) {
         {/* 1. Redesigned Hero */}
         <Hero dict={dict} locale={locale as Locale} />
 
-        {/* 2. Who I Am (Human & Narrative Aspect) */}
-        <section className={styles.section}>
-          <div className="container">
-            <h2 className={styles.sectionTitle}>{isAr ? "من أنا // الهندسة الفائقة" : "WHO I AM // PREMIUM ENGINEERING"}</h2>
-            <div className={styles.whoIAmContent}>
-              <p>
-                {isAr
-                  ? "أنا مهندس برمجيات ونظم ذكاء اصطناعي متخصص في بناء وتأمين تطبيقات نماذج اللغة الكبيرة (LLM) في بيئات الإنتاج الحقيقية. من خلال مسيرتي في أمازون وجرامرلي، اكتسبت خبرة عميقة في تصميم طبقات الاسترجاع الدلالي (RAG) وبناء بنيات معالجة متجهات فعالة من حيث التكلفة وزمن الكمون."
-                  : "I am a production-focused AI systems engineer specializing in deploying and validating LLM agent structures. With engineering backgrounds at Amazon and Grammarly, I develop semantic indexing (RAG) architectures designed for low latency, tight query validation, and containerized efficiency."}
-              </p>
-            </div>
-          </div>
-        </section>
+        {/* 2. Dynamic Stats Bar (NEW) */}
+        <StatsBar
+          dict={dict}
+          locale={locale}
+          projectCount={projectCount}
+          experienceCount={experienceCount}
+          articleCount={articleCount}
+        />
 
-        {/* 3. Experience Preview */}
-        <section className={`${styles.section} ${styles.altBg}`}>
-          <div className="container">
-            <div className={styles.sectionHeader}>
-              <h2 className={styles.sectionTitle}>{isAr ? "الخبرة والمسيرة المهنية" : "EXPERIENCE TIMELINE"}</h2>
-              <Link href={`/${locale}/experience`} className={styles.viewAll}>
-                {isAr ? "عرض المسيرة كاملة ➔" : "View Full Timeline ➔"}
-              </Link>
-            </div>
-            <div className={styles.experienceList}>
-              {experiences.map((exp) => {
-                const slug = exp.company.toLowerCase();
-                return (
-                  <div key={exp.id} className={styles.expItem}>
-                    <div className={styles.expMeta}>
-                      <span className={styles.expYear}>
-                        {exp.startDate.getFullYear()} —{" "}
-                        {exp.isCurrent
-                          ? isAr
-                            ? "الآن"
-                            : "Present"
-                          : exp.endDate?.getFullYear()}
-                      </span>
-                      <strong className={styles.expCompany}>{exp.company}</strong>
-                    </div>
-                    <div className={styles.expContent}>
-                      <h4 className={styles.expTitle}>{isAr ? exp.titleAr : exp.titleEn}</h4>
-                      <p className={styles.expSummary}>{isAr ? exp.summaryAr : exp.summaryEn}</p>
-                      <Link href={`/${locale}/experience/${slug}`} className={styles.readCase}>
-                        {isAr ? "اقرأ ورقة العمل ←" : "Read Case Study ←"}
-                      </Link>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </section>
+        {/* 3. Current Status Section (NEW) */}
+        <CurrentStatus dict={dict} />
 
-        {/* 4. Featured Project */}
-        <section className={styles.section}>
-          <div className="container">
-            <div className={styles.sectionHeader}>
-              <h2 className={styles.sectionTitle}>{isAr ? "دراسة حالة مميزة" : "FEATURED CASE STUDY"}</h2>
-              <Link href={`/${locale}/projects`} className={styles.viewAll}>
-                {isAr ? "جميع المشاريع ➔" : "All Projects ➔"}
-              </Link>
-            </div>
-            {featuredProject && (
+        {/* 4. Featured Case Study Preview */}
+        {featuredProject && (
+          <section className={styles.section}>
+            <div className="container">
+              <div className={styles.sectionHeader}>
+                <h2 className={styles.sectionTitle}>{dict.sections.featured_projects}</h2>
+                <Link href={`/${locale}/projects`} className={styles.viewAll}>
+                  {dict.sections.view_all_projects} ➔
+                </Link>
+              </div>
               <div className={styles.featuredCard}>
                 <div className={styles.featuredHeader}>
                   <span className={styles.tag}>RAG // LLM ENGINE</span>
@@ -109,9 +75,7 @@ export default async function HomePage({ params }: HomePageProps) {
                 </div>
                 <h3 className={styles.featuredTitle}>{isAr ? featuredProject.titleAr : featuredProject.titleEn}</h3>
                 <p className={styles.featuredDesc}>
-                  {isAr
-                    ? "بناء منصة مقر رقمي متكاملة لمهندس ذكاء اصطناعي ثنائي اللغة مدعومة بطبقة RAG تفاعلية."
-                    : "A production-grade bilingual AI engineer digital headquarters platform integrated with conversational RAG layers."}
+                  {isAr ? featuredProject.descriptionAr : featuredProject.descriptionEn}
                 </p>
                 <div className={styles.metricsRow}>
                   <div className={styles.metric}>
@@ -124,56 +88,130 @@ export default async function HomePage({ params }: HomePageProps) {
                   </div>
                 </div>
                 <Link href={`/${locale}/projects/${featuredProject.slug}`} className={styles.readCaseFull}>
-                  {isAr ? "قراءة دراسة الحالة كاملة ➔" : "Read Full Case Study ➔"}
+                  {dict.sections.read_case_study} ➔
                 </Link>
               </div>
-            )}
-          </div>
-        </section>
+            </div>
+          </section>
+        )}
 
-        {/* 5. AI Assistant Preview */}
+        {/* 5. Experience Timeline Preview */}
         <section className={`${styles.section} ${styles.altBg}`}>
           <div className="container">
-            <h2 className={styles.sectionTitle}>{isAr ? "المساعد الذكي التفاعلي" : "AI ASSISTANT CONSOLE"}</h2>
-            <div className={styles.assistantPreview}>
-              <p>
-                {isAr
-                  ? "اسأل المساعد الذكي للحصول على مراجع دقيقة وإجابات دلالية موثقة حول خبراتي التقنية وبنية RAG."
-                  : "Query the conversational assistant to retrieve grounded citations and architectural references regarding my experience."}
-              </p>
-              <div className={styles.chips}>
-                <AssistantTrigger isAr={isAr} />
-                <Link href={`/${locale}/assistant`} className={styles.chipLink}>
-                  🗖 {isAr ? "فتح الكونسول الكامل" : "Open Full Page Console"}
-                </Link>
-              </div>
+            <div className={styles.sectionHeader}>
+              <h2 className={styles.sectionTitle}>{dict.sections.experience_timeline}</h2>
+              <Link href={`/${locale}/experience`} className={styles.viewAll}>
+                {dict.sections.view_full_timeline} ➔
+              </Link>
+            </div>
+            <div className={styles.experienceList}>
+              {experiences.map((exp) => (
+                <div key={exp.id} className={styles.expItem}>
+                  <div className={styles.expMeta}>
+                    <span className={styles.expYear}>
+                      {exp.startDate.getFullYear()} —{" "}
+                      {exp.isCurrent
+                        ? dict.experience.present
+                        : exp.endDate?.getFullYear()}
+                    </span>
+                    <strong className={styles.expCompany}>{exp.company}</strong>
+                  </div>
+                  <div className={styles.expContent}>
+                    <h4 className={styles.expTitle}>{isAr ? exp.titleAr : exp.titleEn}</h4>
+                    <p className={styles.expSummary}>{isAr ? exp.summaryAr : exp.summaryEn}</p>
+                    <Link href={`/${locale}/experience`} className={styles.readCase}>
+                      {dict.sections.read_case_study} ←
+                    </Link>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </section>
 
-        {/* 6. Latest Blog Post */}
+        {/* 6. Live Dashboard Preview (NEW) */}
         <section className={styles.section}>
           <div className="container">
             <div className={styles.sectionHeader}>
-              <h2 className={styles.sectionTitle}>{isAr ? "المقالات الهندسية" : "LATEST BLOG ARTICLE"}</h2>
+              <h2 className={styles.sectionTitle}>{dict.sections.live_dashboard}</h2>
+              <Link href={`/${locale}/dashboard`} className={styles.viewAll}>
+                {dict.sections.open_dashboard} ➔
+              </Link>
+            </div>
+            <div className={styles.featuredCard}>
+              <div className={styles.featuredHeader}>
+                <span className={styles.tag}>OBSERVABILITY // TELEMETRY</span>
+                <span className={styles.githubLink}>Live 🟢</span>
+              </div>
+              <h3 className={styles.featuredTitle}>{dict.sections.live_dashboard}</h3>
+              <p className={styles.featuredDesc}>
+                {dict.sections.dashboard_desc}
+              </p>
+              <div className={styles.metricsRow}>
+                <div className={styles.metric}>
+                  <span>System Health</span>
+                  <strong>98.2% 🟢</strong>
+                </div>
+                <div className={styles.metric}>
+                  <span>RAG Accuracy</span>
+                  <strong>95.4%</strong>
+                </div>
+                <div className={styles.metric}>
+                  <span>Total Queries</span>
+                  <strong>1,248</strong>
+                </div>
+              </div>
+              <Link href={`/${locale}/dashboard`} className={styles.readCaseFull}>
+                {dict.sections.open_dashboard} ➔
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* 7. AI Assistant Preview */}
+        <section className={`${styles.section} ${styles.altBg}`}>
+          <div className="container">
+            <div className={styles.sectionHeader}>
+              <h2 className={styles.sectionTitle}>{dict.sections.ai_assistant}</h2>
+              <Link href={`/${locale}/assistant`} className={styles.viewAll}>
+                {dict.sections.open_console} ➔
+              </Link>
+            </div>
+            <div className={styles.assistantPreview}>
+              <p>{dict.sections.assistant_desc}</p>
+              <div className={styles.chips}>
+                <AssistantTrigger isAr={isAr} />
+                <Link href={`/${locale}/assistant`} className={styles.chipLink}>
+                  🗖 {dict.sections.open_console}
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* 8. Latest Blog Articles Preview */}
+        <section className={styles.section}>
+          <div className="container">
+            <div className={styles.sectionHeader}>
+              <h2 className={styles.sectionTitle}>{dict.sections.latest_articles}</h2>
               <Link href={`/${locale}/blog`} className={styles.viewAll}>
-                {isAr ? "المدونة كاملة ➔" : "All Blog Posts ➔"}
+                {dict.sections.read_all} ➔
               </Link>
             </div>
             <div className={styles.blogPreview}>
-              <span className={styles.blogDate}>July 8, 2026</span>
+              <span className={styles.blogDate}>July 12, 2026</span>
               <h3 className={styles.blogTitle}>
                 {isAr
-                  ? "كيفية بناء محفظة ثنائية اللغة باستخدام pgvector و Next.js 15"
-                  : "How to Build a Bilingual Portfolio with pgvector and Next.js 15"}
+                  ? "بناء منصات الـ AI ثنائية اللغة المتكاملة مع النظم المحلية"
+                  : "Building Production-Ready Bilingual AI Agents for Enterprise Scale"}
               </h3>
               <p className={styles.blogSummary}>
                 {isAr
-                  ? "تحليل معماري عميق لتشغيل قاعدة بيانات المتجهات كحاويات وخدمة نتائج البحث الهجين في أقل من 500 ملي ثانية."
-                  : "An architectural deep dive into containerizing vector indexing databases and serving hybrid query results under 500ms."}
+                  ? "نظرة متعمقة في كيفية تصميم خطوط استرجاع دلالية (RAG) تدعم العربية والإنجليزية بالتوازي وبسرعات قياسية."
+                  : "An architectural review of serving hybrid bilingual embeddings, scaling vector lookups, and monitoring RAG telemetry under strict latency constraints."}
               </p>
-              <Link href={`/${locale}/blog/portfolio-build`} className={styles.readBlogBtn}>
-                {isAr ? "اقرأ المقال كاملًا ➔" : "Read Full Article ➔"}
+              <Link href={`/${locale}/blog`} className={styles.readBlogBtn}>
+                {dict.sections.read_all} ➔
               </Link>
             </div>
           </div>

@@ -223,8 +223,8 @@ export function FloatingChat({ locale }: FloatingChatProps) {
                       <button type="button" onClick={() => { setInput(isAr ? "ما هي مشاريع بشار؟" : "What are Bashar's projects?"); }} className={styles.chip}>
                         {isAr ? "المشاريع" : "Projects"}
                       </button>
-                      <button type="button" onClick={() => { setInput(isAr ? "أخبرني عن خبرة أمازون" : "Tell me about Amazon experience"); }} className={styles.chip}>
-                        {isAr ? "خبرة أمازون" : "Amazon Exp"}
+                      <button type="button" onClick={() => { setInput(isAr ? "أخبرني عن خلفية بشار المهنية" : "Tell me about Bashar's background"); }} className={styles.chip}>
+                        {isAr ? "عن بشار" : "About Me"}
                       </button>
                     </div>
                   </div>

@@ -19,13 +19,13 @@ interface ChatInterfaceProps {
 const suggestedQuestions = {
   en: [
     "What AI systems has Bashar built?",
-    "Tell me about the Amazon experience",
+    "Tell me about the SAPA project",
     "What is the RAG Triad evaluation?",
     "What tech stack does this platform use?",
   ],
   ar: [
     "ما هي أنظمة الذكاء الاصطناعي التي بناها بشار؟",
-    "أخبرني عن تجربة أمازون",
+    "أخبرني عن مشروع SAPA",
     "ما هو تقييم مثلث RAG؟",
     "ما هي التقنيات المستخدمة في هذه المنصة؟",
   ],

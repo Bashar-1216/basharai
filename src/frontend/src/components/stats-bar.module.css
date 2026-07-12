@@ -1,0 +1,102 @@
+.statsSection {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto 3rem auto;
+  padding: 0 1.5rem;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.statCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem 1rem;
+  background-color: hsl(var(--color-bg-card) / 0.4);
+  border: 1px solid hsl(var(--color-border));
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: center;
+}
+
+.statCard:hover {
+  transform: translateY(-4px);
+  background-color: hsl(var(--color-bg-card-hover) / 0.6);
+  border-color: hsl(var(--color-primary) / 0.5);
+  box-shadow: 0 10px 25px -5px hsl(var(--color-primary) / 0.15),
+              0 0 15px 1px hsl(var(--color-primary) / 0.05);
+}
+
+.statIcon {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.statLabel {
+  font-size: 0.875rem;
+  color: hsl(var(--color-text-muted));
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.statValue {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: hsl(var(--color-text));
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.statSub {
+  font-size: 0.75rem;
+  color: hsl(var(--color-text-muted));
+  margin-top: 0.25rem;
+}
+
+.liveDot {
+  width: 8px;
+  height: 8px;
+  background-color: hsl(var(--color-accent));
+  border-radius: 50%;
+  display: inline-block;
+  box-shadow: 0 0 8px hsl(var(--color-accent));
+  animation: pulse-glow 2s infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 0.5;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .statsGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .statsGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .statCard:last-child {
+    grid-column: span 2;
+  }
+}

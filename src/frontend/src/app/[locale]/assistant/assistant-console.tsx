@@ -206,7 +206,7 @@ export function AssistantConsole({ locale }: AssistantConsoleProps) {
 
   const history = [
     { id: "1", title: isAr ? "مناقشة بنية RAG" : "RAG Pipeline Architecture" },
-    { id: "2", title: isAr ? "خبرة منصات أمازون" : "Amazon Platform Scaling" },
+    { id: "2", title: isAr ? "مطابقة الكيانات ثنائية اللغة" : "Bilingual Entity Resolution" },
     { id: "3", title: isAr ? "مراقبة التكاليف والرموز" : "LLM Cost Metrics check" },
   ];
 
@@ -351,7 +351,7 @@ export function AssistantConsole({ locale }: AssistantConsoleProps) {
                 style={{ width: "100%", padding: "0.375rem", fontSize: "0.75rem", background: "hsl(var(--color-bg))", border: "1px solid hsl(var(--color-text-muted)/0.2)", borderRadius: "var(--radius-xs)", color: "hsl(var(--color-text-body))", outline: "none", marginBottom: "0.5rem" }}
               >
                 <option value="geo-platform">GEO Platform</option>
-                <option value="sapa">SAPA Amazon Analyzer</option>
+                <option value="sapa">SAPA Product Analyzer</option>
                 <option value="drowsiness-detection">Drowsiness Detection</option>
               </select>
               <button

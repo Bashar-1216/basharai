@@ -9,74 +9,66 @@ interface ExperienceProps {
 const experiences = {
   en: [
     {
-      id: "amazon",
-      company: "Amazon",
-      role: "Software Development Engineer",
-      period: "2022 — 2024",
-      location: "Seattle, WA",
-      logo: "🔶",
+      id: "geo-platform",
+      company: "GEO Platform",
+      role: "Lead ML Engineer",
+      period: "2024 — Present",
+      location: "Yemen (Remote)",
+      logo: "🌍",
       highlights: [
-        "Designed and shipped ML-powered recommendation engine serving 50M+ daily active users",
-        "Reduced inference latency by 40% through model optimization and caching strategies",
-        "Led migration of legacy monolith to event-driven microservices architecture",
-        "Mentored 3 junior engineers and established team coding standards",
+        "Designed and implemented an 8-stage asynchronous AI analysis pipeline running multi-LLM workflows",
+        "Resolved bilingual Arabic/English entity matches using custom pg_trgm trigram indexing and Wikidata",
+        "Enforced prompt version control, model drift canaries, and Langfuse observability monitoring",
       ],
-      tech: ["Python", "AWS", "ML Pipelines", "DynamoDB", "SageMaker"],
+      tech: ["Python", "NestJS", "Next.js", "PostgreSQL", "Redis", "Langfuse"],
     },
     {
-      id: "grammarly",
-      company: "Grammarly",
-      role: "ML Engineer — NLP Team",
-      period: "2020 — 2022",
-      location: "San Francisco, CA",
-      logo: "🟢",
+      id: "sapa",
+      company: "SAPA Product Analyzer",
+      role: "Solo Full-Stack ML Engineer",
+      period: "2023 — 2024",
+      location: "Yemen",
+      logo: "📦",
       highlights: [
-        "Built transformer-based text classification pipeline processing 10M+ documents/day",
-        "Improved model accuracy from 87% to 94% through advanced fine-tuning techniques",
-        "Designed A/B testing framework for NLP model evaluation in production",
-        "Contributed to core writing suggestion engine used by 30M+ users globally",
+        "Engineered a five-indicator product scoring engine combining LightGBM demand forecasting",
+        "Built BERT and LLaMA-3 NLP pipeline (via Ollama) for review toxicity detection",
+        "Designed an automated Margin Kill-Switch that rejects investment opportunities when net ROI falls below critical targets",
       ],
-      tech: ["PyTorch", "Transformers", "GCP", "Kubernetes", "FastAPI"],
+      tech: ["Python", "FastAPI", "React", "TimescaleDB", "LLaMA-3", "LightGBM"],
     },
   ],
   ar: [
     {
-      id: "amazon",
-      company: "أمازون",
-      role: "مهندس تطوير برمجيات",
-      period: "2022 — 2024",
-      location: "سياتل، واشنطن",
-      logo: "🔶",
+      id: "geo-platform",
+      company: "منصة GEO",
+      role: "مهندس تعلم آلي رئيسي",
+      period: "2024 — الآن",
+      location: "اليمن (عن بعد)",
+      logo: "🌍",
       highlights: [
-        "صممت وشحنت محرك توصيات مدعوم بالتعلم الآلي يخدم أكثر من 50 مليون مستخدم نشط يومياً",
-        "خفضت زمن الاستدلال بنسبة 40% من خلال تحسين النماذج واستراتيجيات التخزين المؤقت",
-        "قدت عملية ترحيل النظام القديم إلى بنية خدمات مصغرة قائمة على الأحداث",
-        "أرشدت 3 مهندسين مبتدئين ووضعت معايير البرمجة للفريق",
+        "تصميم وتنفيذ خط معالجة غير متزامن مكون من 8 مراحل لتحليل البيانات ومطابقتها عبر نماذج LLM متعددة",
+        "مطابقة الكيانات ثنائية اللغة باستخدام Unicode normalization وفهرسة pg_trgm",
+        "تطوير أنظمة ضبط الموجهات وكشف الانحراف ومراقبة التكاليف عبر Langfuse",
       ],
-      tech: ["Python", "AWS", "ML Pipelines", "DynamoDB", "SageMaker"],
+      tech: ["Python", "NestJS", "Next.js", "PostgreSQL", "Redis", "Langfuse"],
     },
     {
-      id: "grammarly",
-      company: "جرامرلي",
-      role: "مهندس تعلم آلي — فريق معالجة اللغات الطبيعية",
-      period: "2020 — 2022",
-      location: "سان فرانسيسكو، كاليفورنيا",
-      logo: "🟢",
+      id: "sapa",
+      company: "محلل المنتجات SAPA",
+      role: "مهندس تعلم آلي متكامل",
+      period: "2023 — 2024",
+      location: "اليمن",
+      logo: "📦",
       highlights: [
-        "بنيت خط أنابيب تصنيف نصي قائم على المحولات يعالج أكثر من 10 ملايين مستند يومياً",
-        "حسّنت دقة النموذج من 87% إلى 94% من خلال تقنيات الضبط الدقيق المتقدمة",
-        "صممت إطار اختبار A/B لتقييم نماذج NLP في بيئة الإنتاج",
-        "ساهمت في محرك اقتراحات الكتابة الأساسي المستخدم من أكثر من 30 مليون مستخدم عالمياً",
+        "تطوير محرك تقييم منتجات ذو خمس مؤشرات يدمج توقعات الطلب بـ LightGBM",
+        "تطوير خط أنابيب NLP هجين BERT و LLaMA-3 للكشف عن سمية المراجعات",
+        "أتمتة مفتاح إيقاف الأرباح الهامشية الذي يرفض فرص الاستثمار عند انخفاض العائد الصافي",
       ],
-      tech: ["PyTorch", "Transformers", "GCP", "Kubernetes", "FastAPI"],
+      tech: ["Python", "FastAPI", "React", "TimescaleDB", "LLaMA-3", "LightGBM"],
     },
   ],
 };
 
-/**
- * Experience section — timeline-style cards showcasing work history.
- * Data is NDA-safe: high-level metrics only, no proprietary details.
- */
 export function Experience({ dict, locale }: ExperienceProps) {
   const data = experiences[locale];
 
@@ -94,33 +86,24 @@ export function Experience({ dict, locale }: ExperienceProps) {
               className={`${styles.resumeItem} animate-fade-in-up`}
               style={{ animationDelay: `${(index + 1) * 120}ms` }}
             >
-              {/* ── Resume Item Header ─────────────────────── */}
               <div className={styles.resumeHeader}>
                 <div>
                   <h3 className={styles.company}>
-                    {exp.company}{" "}
-                    <span className={styles.period}>({exp.period})</span>
+                    {exp.logo} {exp.company}
                   </h3>
-                  <p className={styles.role}>{exp.role}</p>
+                  <h4 className={styles.role}>{exp.role}</h4>
                 </div>
-                <div className={styles.location}>{exp.location}</div>
+                <div className={styles.meta}>
+                  <span className={styles.period}>{exp.period}</span>
+                  <span className={styles.location}>{exp.location}</span>
+                </div>
               </div>
-
-              {/* ── Highlights ──────────────────────────────── */}
               <ul className={styles.highlights}>
-                {exp.highlights.map((item, i) => (
-                  <li key={i} className={styles.highlight}>
-                    <span className={styles.bulletIcon}>-</span>
-                    {item}
-                  </li>
+                {exp.highlights.map((h, i) => (
+                  <li key={i}>{h}</li>
                 ))}
               </ul>
-
-              {/* ── Tech Stack ──────────────────────────────── */}
               <div className={styles.techStack}>
-                <span className={styles.techLabel}>
-                  {locale === "ar" ? "التقنيات:" : "Tech Stack:"}
-                </span>
                 {exp.tech.map((t) => (
                   <span key={t} className={styles.techBadge}>
                     {t}

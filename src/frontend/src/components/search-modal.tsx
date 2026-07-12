@@ -35,14 +35,12 @@ export function SearchModal({ locale, isOpen, onClose }: SearchModalProps) {
     };
   }, [isOpen]);
 
-  // Handle global hotkey Ctrl+K / Cmd+K handled outside (in layout or navbar)
-
   const items: SearchItem[] = [
-    { title: locale === "ar" ? "خبرة شركة أمازون" : "Amazon Experience", category: "Experience", url: `/${locale}/experience/amazon` },
-    { title: locale === "ar" ? "خبرة شركة جرامرلي" : "Grammarly Experience", category: "Experience", url: `/${locale}/experience/grammarly` },
-    { title: locale === "ar" ? "محرك منصة RAG الذكي" : "bashar.ai Platform Engine", category: "Projects", url: `/${locale}/projects/rag-platform` },
-    { title: locale === "ar" ? "إطار عمل تقييم النماذج" : "LLM Evaluation Framework", category: "Projects", url: `/${locale}/projects/evaluation-framework` },
-    { title: locale === "ar" ? "لوحة تحليلات المراقبة" : "Observability Telemetry Dashboard", category: "Observability", url: `/${locale}/dashboard` },
+    { title: locale === "ar" ? "المشاريع ودراسات الحالة" : "Projects & Case Studies", category: "Projects", url: `/${locale}/projects` },
+    { title: locale === "ar" ? "الخط الزمني للخبرات المهنية" : "Professional Experience Timeline", category: "Experience", url: `/${locale}/experience` },
+    { title: locale === "ar" ? "لوحة المراقبة وتحليلات النظام" : "Live Telemetry & Observability Dashboard", category: "Observability", url: `/${locale}/dashboard` },
+    { title: locale === "ar" ? "المساعد الذكي (المحادثة الكاملة)" : "AI Assistant Console (Full Page)", category: "Assistant", url: `/${locale}/assistant` },
+    { title: locale === "ar" ? "صفحة التواصل" : "Contact Page", category: "Contact", url: `/${locale}/contact` },
     { title: locale === "ar" ? "ماذا أفعل الآن؟" : "What I'm doing Now", category: "Now", url: `/${locale}/now` },
     { title: locale === "ar" ? "السيرة الذاتية التفاعلية" : "Interactive CV / Resume", category: "CV", url: `/${locale}/resume` },
   ];

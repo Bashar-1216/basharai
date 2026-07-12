@@ -9,60 +9,42 @@ interface HeroProps {
   locale: Locale;
 }
 
-export function Hero({ locale }: HeroProps) {
-  const triggerChat = () => {
-    window.dispatchEvent(new CustomEvent("open-chat"));
-  };
-
-  const isAr = locale === "ar";
+export function Hero({ dict, locale }: HeroProps) {
+  const hero = dict.hero;
 
   return (
     <section className={styles.hero}>
       <div className={`container ${styles.content}`}>
         {/* Title */}
         <h1 className={`${styles.title} animate-fade-in-up`}>
-          {isAr ? (
-            <>
-              بناء أنظمة ذكاء اصطناعي إنتاجية <br />
-              <span className="gradient-text">لملايين المستخدمين.</span>
-            </>
-          ) : (
-            <>
-              Building Production AI Systems <br />
-              <span className="gradient-text">for Millions of Users.</span>
-            </>
-          )}
+          {hero.title} <br />
+          <span className="gradient-text">{hero.title_accent}</span>
         </h1>
 
-        {/* Roles & Companies */}
-        <div className={`${styles.companies} animate-fade-in-up delay-100`}>
-          <span className={styles.role}>
-            {isAr ? "مهندس تطبيقات نماذج اللغة (LLM)" : "LLM Application Engineer"}
+        {/* Roles & Tagline (No fictional references) */}
+        <div className={`${styles.roleContainer} animate-fade-in-up delay-100`}>
+          <span className={styles.roleBadge}>
+            {hero.role}
           </span>
-          <span className={styles.separator}>•</span>
-          <span className={styles.companyName}>Amazon</span>
-          <span className={styles.separator}>•</span>
-          <span className={styles.companyName}>Grammarly</span>
+          <span className={styles.separator}>·</span>
+          <span className={styles.tagline}>
+            {hero.tagline}
+          </span>
         </div>
 
-        {/* GCC Context Subtitle */}
+        {/* Subtitle */}
         <p className={`${styles.subtitle} animate-fade-in-up delay-200`}>
-          {isAr
-            ? "أعمل حالياً على تطوير منصات ذكاء اصطناعي ثنائية اللغة تدعم متطلبات الشرق الأوسط ومؤسسات الخليج العربي."
-            : "Now building bilingual AI platforms tailored for GCC organizations and regional enterprise teams."}
+          {hero.subtitle}
         </p>
 
         {/* CTAs */}
         <div className={`${styles.cta} animate-fade-in-up delay-300`}>
           <Link href={`/${locale}/projects`} className="btn-primary">
-            📁 {isAr ? "تصفح المشاريع" : "Explore Projects"}
+            📁 {hero.cta_projects}
           </Link>
           <Link href={`/${locale}/resume`} className="btn-secondary">
-            📄 {isAr ? "السيرة الذاتية" : "View Resume"}
+            📄 {hero.cta_resume}
           </Link>
-          <button type="button" onClick={triggerChat} className={styles.chatTrigger}>
-            💬 {isAr ? "حدث مساعدي الذكي" : "Talk to My AI"}
-          </button>
         </div>
       </div>
     </section>

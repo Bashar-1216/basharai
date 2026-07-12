@@ -66,8 +66,8 @@ export default async function ResumePage({ params }: ResumePageProps) {
           </h2>
           <p className={styles.summaryText}>
             {isAr
-              ? "مهندس تطبيقات ذكاء اصطناعي ونماذج لغة كبيرة (LLM) مع خبرة إنتاجية في أمازون وجرامرلي. متخصص في بناء منصات RAG ثنائية اللغة وتطوير خطوط تقييم مؤتمتة وتأمين استدلال النماذج بفعالية تكلفة عالية وزمن استجابة منخفض."
-              : "AI and LLM Application Engineer with production experience at Amazon and Grammarly. Specialized in building bilingual RAG systems, developing automated evaluation pipelines, and optimizing token inference with high performance and cost containment."}
+              ? "مهندس ذكاء اصطناعي ونماذج لغة كبيرة (LLM) متخصص في بناء منصات RAG ثنائية اللغة وتطوير خطوط تقييم مؤتمتة وتأمين استدلال النماذج بفعالية تكلفة عالية وزمن استجابة منخفض."
+              : "AI and LLM Application Engineer specializing in building bilingual RAG systems, developing automated evaluation pipelines, and optimizing token inference with high performance and cost containment."}
           </p>
         </section>
 
