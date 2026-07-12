@@ -34,6 +34,15 @@ export default async function HomePage({ params }: HomePageProps) {
     orderBy: { publishedAt: "desc" },
   });
 
+  // Fetch cached GitHub stats from DB
+  const githubStats = await db.githubRepository.findMany();
+
+  const getRepoStats = (githubUrl: string | null) => {
+    if (!githubUrl) return null;
+    const path = githubUrl.replace("https://github.com/", "").replace("http://github.com/", "").trim();
+    return githubStats.find((r) => r.repoName.toLowerCase() === path.toLowerCase());
+  };
+
   const isAr = locale === "ar";
 
   return (
@@ -58,25 +67,41 @@ export default async function HomePage({ params }: HomePageProps) {
                 </Link>
               </div>
               <div className={styles.projectsGrid}>
-                {projects.map((project) => (
-                  <div key={project.id} className={styles.projectCard}>
-                    <div className={styles.projectHeader}>
-                      <span className={styles.projectTag}>AI // ML ENGINE</span>
-                      {project.githubUrl && (
-                        <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className={styles.githubLink}>
-                          GitHub ↗
-                        </a>
+                {projects.map((project) => {
+                  const stats = getRepoStats(project.githubUrl);
+                  return (
+                    <div key={project.id} className={styles.projectCard}>
+                      <div className={styles.projectHeader}>
+                        <span className={styles.projectTag}>AI // ML ENGINE</span>
+                        {project.githubUrl && (
+                          <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className={styles.githubLink}>
+                            GitHub ↗
+                          </a>
+                        )}
+                      </div>
+                      <h3 className={styles.projectTitle}>{isAr ? project.titleAr : project.titleEn}</h3>
+                      <p className={styles.projectDesc}>
+                        {isAr ? project.descriptionAr : project.descriptionEn}
+                      </p>
+                      
+                      {/* GitHub stats row */}
+                      {stats && (
+                        <div className={styles.projectStatsRow}>
+                          <span className={styles.statBadge}>⭐ {stats.stars}</span>
+                          <span className={styles.statBadge}>🍴 {stats.forks}</span>
+                          <span className={styles.langBadge}>
+                            <span className={styles.langDot} />
+                            {stats.language}
+                          </span>
+                        </div>
                       )}
+                      
+                      <Link href={`/${locale}/projects/${project.slug}`} className={styles.readCase}>
+                        {dict.sections.read_case_study} ➔
+                      </Link>
                     </div>
-                    <h3 className={styles.projectTitle}>{isAr ? project.titleAr : project.titleEn}</h3>
-                    <p className={styles.projectDesc}>
-                      {isAr ? project.descriptionAr : project.descriptionEn}
-                    </p>
-                    <Link href={`/${locale}/projects/${project.slug}`} className={styles.readCase}>
-                      {dict.sections.read_case_study} ➔
-                    </Link>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           </section>

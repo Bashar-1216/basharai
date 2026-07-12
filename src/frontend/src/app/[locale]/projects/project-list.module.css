@@ -156,6 +156,48 @@
   align-self: flex-end;
 }
 
+/* GitHub Stats Row inside Project Cards */
+.projectStatsRow {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  font-size: 0.8125rem;
+  font-family: var(--font-mono);
+  color: hsl(var(--color-text-muted));
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 1rem;
+  margin-top: 0.25rem;
+}
+
+.statBadge {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-weight: 500;
+}
+
+.langBadge {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-left: auto; /* push to the right */
+  font-weight: 600;
+  color: hsl(var(--color-text-body));
+}
+
+[dir="rtl"] .langBadge {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+.langDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: hsl(var(--color-primary));
+  box-shadow: 0 0 8px 1px hsl(var(--color-primary) / 0.5);
+}
+
 .noResults {
   text-align: center;
   padding: 3rem 0;

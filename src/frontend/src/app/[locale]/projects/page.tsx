@@ -18,13 +18,17 @@ export default async function ProjectsIndex({ params }: ProjectsIndexProps) {
     orderBy: { publishedAt: "desc" },
   });
 
-  // Mock categorizations for filtering (matching metadata tags)
+  // Fetch all cached GitHub stats from DB
+  const githubStats = await db.githubRepository.findMany();
+
+  // Determine tags dynamically based on actual database-seeded project slugs
   const projectsWithTags = projects.map((p) => {
-    // Determine tags dynamically based on slug
     let tags: string[] = ["All"];
-    if (p.slug === "bashar-ai") tags.push("RAG", "LLM");
-    if (p.slug === "eval-framework") tags.push("Evaluation", "Automation");
-    if (p.slug === "rag-pipeline") tags.push("RAG", "LLM");
+    if (p.slug === "geo-platform") tags.push("RAG", "LLM");
+    if (p.slug === "sapa") tags.push("Automation", "LLM");
+    if (p.slug === "drowsiness-detection") tags.push("Vision", "Automation");
+    if (p.slug === "fraud-detection") tags.push("Automation");
+    if (p.slug === "sentiment-analysis") tags.push("LLM");
     return { ...p, tags };
   });
 
@@ -44,7 +48,11 @@ export default async function ProjectsIndex({ params }: ProjectsIndexProps) {
             </p>
           </header>
 
-          <ProjectList initialProjects={projectsWithTags} locale={locale as Locale} />
+          <ProjectList 
+            initialProjects={projectsWithTags} 
+            githubStats={githubStats}
+            locale={locale as Locale} 
+          />
         </div>
       </main>
       <Footer dict={dict} />

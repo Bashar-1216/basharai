@@ -16,12 +16,20 @@ interface Project {
   tags: string[];
 }
 
+interface GithubStats {
+  repoName: string;
+  stars: number;
+  forks: number;
+  language: string;
+}
+
 interface ProjectListProps {
   initialProjects: Project[];
+  githubStats: GithubStats[];
   locale: Locale;
 }
 
-export function ProjectList({ initialProjects, locale }: ProjectListProps) {
+export function ProjectList({ initialProjects, githubStats, locale }: ProjectListProps) {
   const [search, setSearch] = useState("");
   const [activeTag, setActiveTag] = useState("All");
 
@@ -46,6 +54,12 @@ export function ProjectList({ initialProjects, locale }: ProjectListProps) {
 
     return matchesSearch && matchesTag;
   });
+
+  const getRepoStats = (githubUrl: string | null) => {
+    if (!githubUrl) return null;
+    const path = githubUrl.replace("https://github.com/", "").replace("http://github.com/", "").trim();
+    return githubStats.find((r) => r.repoName.toLowerCase() === path.toLowerCase());
+  };
 
   const isAr = locale === "ar";
 
@@ -83,32 +97,48 @@ export function ProjectList({ initialProjects, locale }: ProjectListProps) {
       {/* Grid of Results */}
       {filtered.length > 0 ? (
         <div className={styles.grid}>
-          {filtered.map((proj) => (
-            <article key={proj.id} className={styles.card}>
-              <div className={styles.cardHeader}>
-                <span className={styles.cardCategory}>
-                  {proj.tags.filter((t) => t !== "All").join(", ")}
-                </span>
-                {proj.githubUrl && (
-                  <a
-                    href={proj.githubUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={styles.githubLink}
-                  >
-                    GitHub ↗
-                  </a>
+          {filtered.map((proj) => {
+            const stats = getRepoStats(proj.githubUrl);
+            return (
+              <article key={proj.id} className={styles.card}>
+                <div className={styles.cardHeader}>
+                  <span className={styles.cardCategory}>
+                    {proj.tags.filter((t) => t !== "All").join(", ")}
+                  </span>
+                  {proj.githubUrl && (
+                    <a
+                      href={proj.githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={styles.githubLink}
+                    >
+                      GitHub ↗
+                    </a>
+                  )}
+                </div>
+                <h3 className={styles.cardTitle}>{isAr ? proj.titleAr : proj.titleEn}</h3>
+                <p className={styles.cardDesc}>
+                  {isAr ? proj.descriptionAr : proj.descriptionEn}
+                </p>
+
+                {/* Dynamic GitHub stats row */}
+                {stats && (
+                  <div className={styles.projectStatsRow}>
+                    <span className={styles.statBadge}>⭐ {stats.stars}</span>
+                    <span className={styles.statBadge}>🍴 {stats.forks}</span>
+                    <span className={styles.langBadge}>
+                      <span className={styles.langDot} />
+                      {stats.language}
+                    </span>
+                  </div>
                 )}
-              </div>
-              <h3 className={styles.cardTitle}>{isAr ? proj.titleAr : proj.titleEn}</h3>
-              <p className={styles.cardDesc}>
-                {isAr ? proj.descriptionAr : proj.descriptionEn}
-              </p>
-              <Link href={`/${locale}/projects/${proj.slug}`} className={styles.readBtn}>
-                {isAr ? "قراءة دراسة الحالة كاملة ➔" : "Read Full Case Study ➔"}
-              </Link>
-            </article>
-          ))}
+
+                <Link href={`/${locale}/projects/${proj.slug}`} className={styles.readBtn}>
+                  {isAr ? "قراءة دراسة الحالة كاملة ➔" : "Read Full Case Study ➔"}
+                </Link>
+              </article>
+            );
+          })}
         </div>
       ) : (
         <div className={styles.noResults}>
