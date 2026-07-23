@@ -144,11 +144,17 @@ async def chat_handler(req: ChatRequest, db: AsyncSession = Depends(get_db)):
         c_text = chunk["content_ar"] if is_ar else chunk["content_en"]
         context += f"[Chunk {idx+1}] (Score: {chunk['score']:.3f}): {c_text}\n\n"
 
+    # Fetch all active portfolio project titles dynamically
+    r_all_proj = await db.execute(text('SELECT title_en, title_ar FROM "Project" WHERE published = true'))
+    all_projects = r_all_proj.fetchall()
+    proj_list_str = ", ".join([p[1] if is_ar else p[0] for p in all_projects])
+
     system_prompt = (
-        f"You are the personal AI Assistant of Bashar Almuntaser (AI & ML Engineer). "
-        f"Answer the user query professionally in the requested language (Arabic or English) based strictly on the provided context chunks.\n\n"
+        f"You are the personal AI Assistant of Bashar Almuntaser (AI & ML Engineer).\n"
+        f"Bashar's Portfolio Projects include: {proj_list_str}.\n\n"
+        f"Answer the user query professionally in the requested language (Arabic or English) based on the provided context chunks and project catalog.\n\n"
         f"Context Chunks:\n{context}\n\n"
-        f"If the user asks something not present in the context, politely state you only have information about Bashar's AI projects (GEO Platform, SAPA, Driver Drowsiness, etc.)."
+        f"Always provide an accurate, helpful response about Bashar's engineering work and projects."
     )
     
     async def sse_event_stream():
