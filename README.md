@@ -110,7 +110,6 @@ Open `http://localhost:3000` in your browser.
 - 📍 **Location:** Yemen → Saudi Arabia (GCC)
 - 🌐 **Portfolio Website:** [bashar.ai](https://bashar.ai)
 - 🐙 **GitHub:** [@Bashar-1216](https://github.com/Bashar-1216)
-- ✉️ **Contact:** `owner@bashar.ai`
 
 ---
 
