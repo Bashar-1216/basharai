@@ -145,7 +145,7 @@ async def chat_handler(req: ChatRequest, db: AsyncSession = Depends(get_db)):
         context += f"[Chunk {idx+1}] (Score: {chunk['score']:.3f}): {c_text}\n\n"
 
     # Fetch all active portfolio project titles dynamically
-    r_all_proj = await db.execute(text('SELECT title_en, title_ar FROM "Project" WHERE published = true'))
+    r_all_proj = await db.execute(text('SELECT title_en, title_ar FROM "Project" WHERE title_en IS NOT NULL'))
     all_projects = r_all_proj.fetchall()
     proj_list_str = ", ".join([p[1] if is_ar else p[0] for p in all_projects])
 
