@@ -13,6 +13,7 @@ interface Project {
   descriptionEn: string;
   descriptionAr: string;
   githubUrl: string | null;
+  liveUrl?: string | null;
   tags: string[];
 }
 
@@ -21,6 +22,7 @@ interface GithubStats {
   stars: number;
   forks: number;
   language: string;
+  lastCommit?: string;
 }
 
 interface ProjectListProps {
@@ -61,6 +63,34 @@ export function ProjectList({ initialProjects, githubStats, locale }: ProjectLis
     return githubStats.find((r) => r.repoName.toLowerCase() === path.toLowerCase());
   };
 
+  // Helper to determine automated status badge based on live project metadata
+  const getProjectStatus = (project: Project, stats: any) => {
+    if (project.liveUrl) {
+      return {
+        labelEn: "In Production 🚀",
+        labelAr: "في مرحلة الإنتاج 🚀",
+        type: "inProduction",
+      };
+    }
+    if (stats && stats.lastCommit) {
+      const commitDate = new Date(stats.lastCommit);
+      const now = new Date();
+      const diffDays = Math.floor((now.getTime() - commitDate.getTime()) / (1000 * 3600 * 24));
+      if (!isNaN(diffDays) && diffDays <= 30) {
+        return {
+          labelEn: "Active Build 🟢",
+          labelAr: "تطوير نشط 🟢",
+          type: "activeBuild",
+        };
+      }
+    }
+    return {
+      labelEn: "Completed ✅",
+      labelAr: "مكتمل ✅",
+      type: "completed",
+    };
+  };
+
   const isAr = locale === "ar";
 
   return (
@@ -99,11 +129,12 @@ export function ProjectList({ initialProjects, githubStats, locale }: ProjectLis
         <div className={styles.grid}>
           {filtered.map((proj) => {
             const stats = getRepoStats(proj.githubUrl);
+            const status = getProjectStatus(proj, stats);
             return (
               <article key={proj.id} className={styles.card}>
                 <div className={styles.cardHeader}>
-                  <span className={styles.cardCategory}>
-                    {proj.tags.filter((t) => t !== "All").join(", ")}
+                  <span className={`${styles.statusBadge} ${styles[status.type]}`}>
+                    {isAr ? status.labelAr : status.labelEn}
                   </span>
                   {proj.githubUrl && (
                     <a

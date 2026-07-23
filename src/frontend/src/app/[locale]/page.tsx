@@ -43,6 +43,37 @@ export default async function HomePage({ params }: HomePageProps) {
     return githubStats.find((r) => r.repoName.toLowerCase() === path.toLowerCase());
   };
 
+  // Helper to determine automated status badge based on live project metadata
+  const getProjectStatus = (project: any, stats: any) => {
+    // 1. In Production: Has explicit liveUrl
+    if (project.liveUrl) {
+      return {
+        labelEn: "In Production 🚀",
+        labelAr: "في مرحلة الإنتاج 🚀",
+        type: "inProduction",
+      };
+    }
+    // 2. Active Build: Last commit within the last 30 days
+    if (stats && stats.lastCommit) {
+      const commitDate = new Date(stats.lastCommit);
+      const now = new Date();
+      const diffDays = Math.floor((now.getTime() - commitDate.getTime()) / (1000 * 3600 * 24));
+      if (!isNaN(diffDays) && diffDays <= 30) {
+        return {
+          labelEn: "Active Build 🟢",
+          labelAr: "تطوير نشط 🟢",
+          type: "activeBuild",
+        };
+      }
+    }
+    // 3. Default: Completed stable build
+    return {
+      labelEn: "Completed ✅",
+      labelAr: "مكتمل ✅",
+      type: "completed",
+    };
+  };
+
   const isAr = locale === "ar";
 
   return (
@@ -69,10 +100,13 @@ export default async function HomePage({ params }: HomePageProps) {
               <div className={styles.projectsGrid}>
                 {projects.map((project) => {
                   const stats = getRepoStats(project.githubUrl);
+                  const status = getProjectStatus(project, stats);
                   return (
                     <div key={project.id} className={styles.projectCard}>
                       <div className={styles.projectHeader}>
-                        <span className={styles.projectTag}>AI // ML ENGINE</span>
+                        <span className={`${styles.statusBadge} ${styles[status.type]}`}>
+                          {isAr ? status.labelAr : status.labelEn}
+                        </span>
                         {project.githubUrl && (
                           <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className={styles.githubLink}>
                             GitHub ↗
