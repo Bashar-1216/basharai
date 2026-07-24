@@ -2,27 +2,27 @@
 
 /* ══════════════════════════════════════════════════════════════
    bashar.ai — Design System Tokens
-   Reference: docs/06-UI-UX/06.1-Visual-Language.md
+   Theme: Cinematic Mesh Gradient (Option B)
    ══════════════════════════════════════════════════════════════ */
 
 :root {
-  /* ── Brand Colors (HSL / Hex) ────────────────────────────── */
-  --color-primary: 221 83% 53%;       /* Electric Blue #2563EB */
-  --color-primary-hover: 221 83% 45%;
-  --color-secondary: 217 91% 60%;     /* Royal Blue #3B82F6 */
-  --color-accent: 161 84% 39%;        /* Emerald #10B981 for success metrics */
+  /* ── Brand Colors (HSL) ─────────────────────────────────── */
+  --color-primary: 258 90% 58%;       /* Electric Violet #7c3aed */
+  --color-primary-hover: 258 90% 48%;
+  --color-secondary: 199 90% 49%;     /* Sky Blue #0ea5e9 */
+  --color-accent: 161 84% 39%;        /* Emerald #10B981 for success */
   --color-warning: 38 92% 50%;        /* Amber #F59E0B */
   --color-error: 0 84% 60%;           /* Red #EF4444 */
 
-  /* ── Neutral Palette (Dark Mode Layered) ─────────────────── */
-  --color-bg: 223 47% 7%;             /* Base bg #0A0F1C */
-  --color-bg-secondary: 221 39% 11%;   /* Section bg #111827 */
-  --color-bg-card: 221 39% 14%;       /* Card bg #161F32 */
-  --color-bg-card-hover: 221 37% 18%; /* Card hover bg */
-  --color-text: 210 40% 98%;          /* Titles Slate-50 */
-  --color-text-body: 215 20% 80%;     /* Body Slate-300 */
-  --color-text-muted: 215 16% 65%;    /* Muted Slate-400 */
-  --color-border: 215 16% 65% / 0.15; /* Subtle Border */
+  /* ── Neutral Palette (True Dark Layered) ─────────────────── */
+  --color-bg: 0 0% 4%;               /* Near-black #0a0a0a */
+  --color-bg-secondary: 0 0% 5.5%;    /* Slightly lifted #0e0e0e */
+  --color-bg-card: 0 0% 7%;          /* Card bg #121212 */
+  --color-bg-card-hover: 0 0% 10%;   /* Card hover #1a1a1a */
+  --color-text: 0 0% 96%;            /* Headings #f5f5f5 */
+  --color-text-body: 0 0% 70%;       /* Body #b3b3b3 */
+  --color-text-muted: 0 0% 45%;      /* Muted #737373 */
+  --color-border: 0 0% 45% / 0.15;   /* Subtle Border */
 
   /* ── Typography ─────────────────────────────────────────── */
   --font-sans: "Inter", system-ui, sans-serif;
@@ -34,11 +34,12 @@
   --radius-sm: 0.25rem;               /* 4px */
   --radius-md: 0.5rem;                /* 8px */
   --radius-lg: 0.75rem;               /* 12px */
+  --radius-xs: 0.1875rem;             /* 3px */
 
   /* ── Shadows & Blurs ────────────────────────────────────── */
-  --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.3);
-  --shadow-glow: 0 8px 40px rgba(37, 99, 235, 0.08); /* Subtle blue glow */
-  --blur-base: 8px;
+  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 8px 40px rgba(124, 58, 237, 0.08);
+  --blur-base: 12px;
 
   /* ── Transitions & Motion ───────────────────────────────── */
   --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
@@ -65,13 +66,67 @@ html {
 body {
   font-family: var(--font-sans);
   background: hsl(var(--color-bg));
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.02'/%3E%3C/svg%3E");
   color: hsl(var(--color-text-body));
   line-height: 1.6;
   min-height: 100dvh;
+  position: relative;
 }
 
-/* Arabic font class applications (to be compared) */
+/* ── Ambient Mesh Gradient (Cinematic Aurora) ──────────────── */
+body::before {
+  content: "";
+  position: fixed;
+  top: -20%;
+  right: -10%;
+  width: 60vw;
+  height: 60vh;
+  background: radial-gradient(
+    ellipse at 70% 30%,
+    rgba(124, 58, 237, 0.08) 0%,
+    rgba(30, 64, 175, 0.05) 35%,
+    rgba(13, 148, 136, 0.03) 60%,
+    transparent 80%
+  );
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(80px);
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  bottom: -15%;
+  left: -10%;
+  width: 50vw;
+  height: 50vh;
+  background: radial-gradient(
+    ellipse at 30% 70%,
+    rgba(124, 58, 237, 0.04) 0%,
+    rgba(14, 165, 233, 0.03) 40%,
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(100px);
+}
+
+/* Ensure content sits above the mesh gradient */
+body > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Subtle Noise Texture ──────────────────────────────────── */
+body > div:first-child::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.015'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Arabic font class applications */
 .font-arabic-plex {
   font-family: var(--font-arabic-plex);
 }
@@ -86,15 +141,16 @@ body {
 
 .glass-card {
   background: hsl(var(--color-bg-card));
-  border: 1px solid hsl(var(--color-text-muted) / 0.15);
+  border: 1px solid hsl(var(--color-text-muted) / 0.12);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-card);
   transition: all var(--transition-base);
+  backdrop-filter: blur(var(--blur-base));
 }
 
 .glass-card:hover {
   background: hsl(var(--color-bg-card-hover));
-  border-color: hsl(var(--color-text-muted) / 0.25);
+  border-color: hsl(var(--color-primary) / 0.2);
   box-shadow: var(--shadow-glow);
   transform: translateY(-2px);
 }
@@ -118,7 +174,7 @@ body {
 .btn-primary:hover {
   background: hsl(var(--color-primary-hover));
   transform: translateY(-1px);
-  box-shadow: var(--shadow-glow);
+  box-shadow: 0 6px 30px rgba(124, 58, 237, 0.25);
 }
 
 .btn-secondary {
@@ -139,7 +195,7 @@ body {
 
 .btn-secondary:hover {
   background: hsl(var(--color-bg-card));
-  border-color: hsl(var(--color-text-muted) / 0.4);
+  border-color: hsl(var(--color-primary) / 0.3);
   color: hsl(var(--color-text));
 }
 
@@ -148,7 +204,7 @@ button:focus-visible,
 a:focus-visible,
 textarea:focus-visible,
 input:focus-visible {
-  outline: 2px solid hsl(var(--color-secondary));
+  outline: 2px solid hsl(var(--color-primary));
   outline-offset: 2px;
 }
 
@@ -184,7 +240,7 @@ input:focus-visible {
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(8px); /* Calm, subtle translation */
+    transform: translateY(8px);
   }
   to {
     opacity: 1;
@@ -201,6 +257,18 @@ input:focus-visible {
   }
 }
 
+@keyframes meshFloat {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(2%, -1%) scale(1.02);
+  }
+  66% {
+    transform: translate(-1%, 1%) scale(0.98);
+  }
+}
+
 .animate-fade-in-up {
   animation: fadeInUp 0.4s var(--transition-spring) both;
 }
@@ -214,3 +282,11 @@ input:focus-visible {
 .delay-200 { animation-delay: 160ms; }
 .delay-300 { animation-delay: 240ms; }
 .delay-400 { animation-delay: 320ms; }
+
+/* ── Print ─────────────────────────────────────────────────── */
+@media print {
+  body::before,
+  body::after {
+    display: none;
+  }
+}
