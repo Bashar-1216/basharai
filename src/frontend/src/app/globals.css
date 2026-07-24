@@ -2,27 +2,28 @@
 
 /* ══════════════════════════════════════════════════════════════
    bashar.ai — Design System Tokens
-   Theme: Cinematic Mesh Gradient (Option B)
+   Theme: A — Deep Navy + Signature Mint (Engineering Credibility)
+   Inspired by brittanychiang.com & high-performance engineering
    ══════════════════════════════════════════════════════════════ */
 
 :root {
   /* ── Brand Colors (HSL) ─────────────────────────────────── */
-  --color-primary: 258 90% 58%;       /* Electric Violet #7c3aed */
-  --color-primary-hover: 258 90% 48%;
-  --color-secondary: 199 90% 49%;     /* Sky Blue #0ea5e9 */
-  --color-accent: 161 84% 39%;        /* Emerald #10B981 for success */
+  --color-primary: 166 100% 70%;      /* Signature Mint #64ffda */
+  --color-primary-hover: 166 80% 60%; /* Hover Mint #4dd0b5 */
+  --color-secondary: 166 70% 55%;    /* Secondary Mint/Teal #4dd0b5 */
+  --color-accent: 166 100% 70%;       /* Mint Accent #64ffda */
   --color-warning: 38 92% 50%;        /* Amber #F59E0B */
   --color-error: 0 84% 60%;           /* Red #EF4444 */
 
-  /* ── Neutral Palette (True Dark Layered) ─────────────────── */
-  --color-bg: 0 0% 4%;               /* Near-black #0a0a0a */
-  --color-bg-secondary: 0 0% 5.5%;    /* Slightly lifted #0e0e0e */
-  --color-bg-card: 0 0% 7%;          /* Card bg #121212 */
-  --color-bg-card-hover: 0 0% 10%;   /* Card hover #1a1a1a */
-  --color-text: 0 0% 96%;            /* Headings #f5f5f5 */
-  --color-text-body: 0 0% 70%;       /* Body #b3b3b3 */
-  --color-text-muted: 0 0% 45%;      /* Muted #737373 */
-  --color-border: 0 0% 45% / 0.15;   /* Subtle Border */
+  /* ── Neutral Palette (Deep Navy Layered) ─────────────────── */
+  --color-bg: 215 28% 7%;            /* Deep Navy #0a192f */
+  --color-bg-secondary: 215 28% 10%; /* Lifted Navy #0f203b */
+  --color-bg-card: 215 28% 14%;      /* Card Slate Navy #112240 */
+  --color-bg-card-hover: 215 25% 18%;/* Card Hover #1d3461 */
+  --color-text: 210 25% 92%;         /* Headings Slate #ccd6f6 */
+  --color-text-body: 215 20% 68%;    /* Body Slate #a8b2d1 */
+  --color-text-muted: 215 15% 55%;   /* Muted Slate #8892b0 */
+  --color-border: 215 20% 68% / 0.15;/* Subtle Border */
 
   /* ── Typography ─────────────────────────────────────────── */
   --font-sans: "Inter", system-ui, sans-serif;
@@ -37,8 +38,8 @@
   --radius-xs: 0.1875rem;             /* 3px */
 
   /* ── Shadows & Blurs ────────────────────────────────────── */
-  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.5);
-  --shadow-glow: 0 8px 40px rgba(124, 58, 237, 0.08);
+  --shadow-card: 0 10px 30px -15px rgba(2, 12, 27, 0.7);
+  --shadow-glow: 0 8px 30px rgba(100, 255, 218, 0.08);
   --blur-base: 12px;
 
   /* ── Transitions & Motion ───────────────────────────────── */
@@ -72,58 +73,29 @@ body {
   position: relative;
 }
 
-/* ── Ambient Mesh Gradient (Cinematic Aurora) ──────────────── */
+/* ── Subtle Ambient Depth (Hero Only Glow) ─────────────────── */
 body::before {
   content: "";
   position: fixed;
-  top: -20%;
-  right: -10%;
-  width: 60vw;
-  height: 60vh;
-  background: radial-gradient(
-    ellipse at 70% 30%,
-    rgba(124, 58, 237, 0.08) 0%,
-    rgba(30, 64, 175, 0.05) 35%,
-    rgba(13, 148, 136, 0.03) 60%,
-    transparent 80%
-  );
-  pointer-events: none;
-  z-index: 0;
-  filter: blur(80px);
-}
-
-body::after {
-  content: "";
-  position: fixed;
-  bottom: -15%;
-  left: -10%;
+  top: -15%;
+  right: -5%;
   width: 50vw;
   height: 50vh;
   background: radial-gradient(
-    ellipse at 30% 70%,
-    rgba(124, 58, 237, 0.04) 0%,
-    rgba(14, 165, 233, 0.03) 40%,
-    transparent 70%
+    ellipse at 70% 30%,
+    rgba(100, 255, 218, 0.04) 0%,
+    rgba(17, 34, 64, 0.1) 40%,
+    transparent 75%
   );
   pointer-events: none;
   z-index: 0;
-  filter: blur(100px);
+  filter: blur(90px);
 }
 
-/* Ensure content sits above the mesh gradient */
+/* Content layer above ambient background */
 body > * {
   position: relative;
   z-index: 1;
-}
-
-/* ── Subtle Noise Texture ──────────────────────────────────── */
-body > div:first-child::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.015'/%3E%3C/svg%3E");
-  pointer-events: none;
-  z-index: 0;
 }
 
 /* Arabic font class applications */
@@ -141,18 +113,17 @@ body > div:first-child::before {
 
 .glass-card {
   background: hsl(var(--color-bg-card));
-  border: 1px solid hsl(var(--color-text-muted) / 0.12);
+  border: 1px solid hsl(var(--color-text-muted) / 0.15);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-card);
   transition: all var(--transition-base);
-  backdrop-filter: blur(var(--blur-base));
 }
 
 .glass-card:hover {
   background: hsl(var(--color-bg-card-hover));
-  border-color: hsl(var(--color-primary) / 0.2);
+  border-color: hsl(var(--color-primary) / 0.3);
   box-shadow: var(--shadow-glow);
-  transform: translateY(-2px);
+  transform: translateY(-3px);
 }
 
 .btn-primary {
@@ -160,21 +131,22 @@ body > div:first-child::before {
   align-items: center;
   gap: 0.5rem;
   padding: 0.625rem 1.25rem;
-  background: hsl(var(--color-primary));
-  color: hsl(var(--color-text));
-  border: none;
+  background: transparent;
+  color: hsl(var(--color-primary));
+  border: 1px solid hsl(var(--color-primary));
   border-radius: var(--radius-md);
   font-weight: 600;
   font-size: 0.875rem;
+  font-family: var(--font-mono);
   cursor: pointer;
   transition: all var(--transition-fast);
   text-decoration: none;
 }
 
 .btn-primary:hover {
-  background: hsl(var(--color-primary-hover));
-  transform: translateY(-1px);
-  box-shadow: 0 6px 30px rgba(124, 58, 237, 0.25);
+  background: hsl(var(--color-primary) / 0.1);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow);
 }
 
 .btn-secondary {
@@ -196,7 +168,7 @@ body > div:first-child::before {
 .btn-secondary:hover {
   background: hsl(var(--color-bg-card));
   border-color: hsl(var(--color-primary) / 0.3);
-  color: hsl(var(--color-text));
+  color: hsl(var(--color-primary));
 }
 
 /* ── Focus Ring ────────────────────────────────────────────── */
@@ -210,14 +182,7 @@ input:focus-visible {
 
 /* ── Gradient Text ─────────────────────────────────────────── */
 .gradient-text {
-  background: linear-gradient(
-    135deg,
-    hsl(var(--color-primary)),
-    hsl(var(--color-secondary))
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: hsl(var(--color-primary));
 }
 
 /* ── Container ─────────────────────────────────────────────── */
@@ -248,33 +213,8 @@ input:focus-visible {
   }
 }
 
-@keyframes pulse-glow {
-  0%, 100% {
-    opacity: 0.8;
-  }
-  50% {
-    opacity: 0.4;
-  }
-}
-
-@keyframes meshFloat {
-  0%, 100% {
-    transform: translate(0, 0) scale(1);
-  }
-  33% {
-    transform: translate(2%, -1%) scale(1.02);
-  }
-  66% {
-    transform: translate(-1%, 1%) scale(0.98);
-  }
-}
-
 .animate-fade-in-up {
   animation: fadeInUp 0.4s var(--transition-spring) both;
-}
-
-.animate-pulse-glow {
-  animation: pulse-glow 2s ease-in-out infinite;
 }
 
 /* ── Staggered animation delays ────────────────────────────── */
@@ -285,8 +225,7 @@ input:focus-visible {
 
 /* ── Print ─────────────────────────────────────────────────── */
 @media print {
-  body::before,
-  body::after {
+  body::before {
     display: none;
   }
 }
