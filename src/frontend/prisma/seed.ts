@@ -5,53 +5,53 @@ const prisma = new PrismaClient();
 async function seedExperiences() {
   const experiences = [
     {
-      company: "GEO Platform",
-      titleEn: "Lead ML Engineer - AI Discovery Monitor",
-      titleAr: "مهندس تعلم آلي رئيسي - منصة GEO للمراقبة",
+      company: "AI Discovery Monitor — GEO Platform",
+      titleEn: "Lead ML Engineer — Generative Engine Optimization",
+      titleAr: "مهندس تعلم آلي رئيسي — منصة تحسين المحركات التوليدية (GEO)",
       startDate: new Date("2025-01-01"),
       isCurrent: true,
-      summaryEn: "Designed and implemented an 8-stage asynchronous AI analysis pipeline executing structured prompt workflows across GPT-4, Claude, Gemini, and Perplexity using a Python worker architecture with Redis task queues. Engineered a bilingual entity resolution engine utilizing trigram indexing.",
-      summaryAr: "تصميم وتنفيذ خط معالجة تحليلي غير متزامن مكون من 8 مراحل ينفذ قوالب موجهات مهيكلة عبر GPT-4 و Claude و Gemini و Perplexity. تطوير محرك مطابقة كيانات ثنائي اللغة باستخدام فهرسة trigram.",
+      summaryEn: "Architected an 8-stage asynchronous AI analysis pipeline executing structured prompt workflows across GPT-4, Claude, Gemini, and Perplexity using a Python worker architecture with BullMQ/Redis queues and Pydantic validation.",
+      summaryAr: "هندسة خط معالجة تحليلي غير متزامن مكون من 8 مراحل ينفذ موجهات مهيكلة عبر GPT-4 و Claude و Gemini و Perplexity مع فحص Pydantic وزمن استجابة فائق السرعة.",
     },
     {
-      company: "SAPA Product Analyzer",
-      titleEn: "Solo Full-Stack ML Engineer - Smart Amazon Product Analyzer",
-      titleAr: "مهندس تعلم آلي متكامل - محلل منتجات أمازون الذكي",
+      company: "SAPA Intelligence",
+      titleEn: "Solo Full-Stack ML Engineer — Amazon Market Analytics",
+      titleAr: "مهندس تعلم آلي متكامل — المحلل الذكي لمنتجات أمازون",
       startDate: new Date("2025-01-01"),
       endDate: new Date("2026-06-30"),
       isCurrent: false,
-      summaryEn: "Engineered a five-indicator product scoring engine combining LightGBM demand forecasting with a hybrid BERT and LLaMA-3 NLP pipeline (via Ollama) for review toxicity detection. Deployed an 8-container microservices compose stack on Linux servers.",
-      summaryAr: "تطوير محرك تقييم منتجات ذو خمس مؤشرات يدمج توقعات الطلب بـ LightGBM مع خط أنابيب NLP هجين BERT و LLaMA-3 للكشف عن سمية المراجعات. نشر بنية خوادم مدمجة من 8 حاويات Docker Compose.",
+      summaryEn: "Engineered a five-indicator product scoring engine combining LightGBM demand forecasting with a hybrid BERT and LLaMA-3 NLP pipeline (via Ollama) for review toxicity detection and competitive market analysis using HHI.",
+      summaryAr: "تطوير محرك تقييم منتجات يدمج توقعات الطلب بـ LightGBM مع خط NLP هجين من BERT و LLaMA-3 للتحليل التنافسي واكتشاف سمية المراجعات.",
     },
     {
-      company: "Drowsiness Detection System",
-      titleEn: "Solo ML Engineer - Driver Safety Pipeline",
-      titleAr: "مهندس تعلم آلي - كشف نعاس السائق لحظياً",
+      company: "Driver Safety AI Systems",
+      titleEn: "Computer Vision ML Engineer — Real-Time Alertness Pipeline",
+      titleAr: "مهندس تعلم آلي للرؤية الحاسوبية — نظام كشف السلامة والنعاس",
       startDate: new Date("2024-01-01"),
       endDate: new Date("2025-12-31"),
       isCurrent: false,
-      summaryEn: "Built a real-time drowsiness detection pipeline using OpenCV and MediaPipe FaceMesh to analyze Eye Aspect Ratio (EAR) and facial landmark geometry for driver alertness classification. Implemented 3D pose estimation.",
-      summaryAr: "بناء خط معالجة لحظي للكشف عن النعاس باستخدام OpenCV و MediaPipe FaceMesh لتحليل معدل فتح العين ومعالم الوجه لتصنيف يقظة السائق. دمج تقدير الوضعية ثلاثي الأبعاد.",
+      summaryEn: "Built a real-time drowsiness detection pipeline using OpenCV and MediaPipe FaceMesh to analyze EAR and facial landmark geometry for driver alertness classification with 3D pose estimation.",
+      summaryAr: "بناء نظام رؤية حاسوبية لحظي لكشف نعاس وحركات رأس السائق باستخدام OpenCV و MediaPipe مع تقدير الوضعية ثلاثية الأبعاد.",
     },
     {
-      company: "Financial Fraud Detection",
-      titleEn: "ML Engineer - PySpark Transaction Analytics",
-      titleAr: "مهندس تعلم آلي - كشف الاحتيال المالي بـ PySpark",
+      company: "Financial Analytics Engine",
+      titleEn: "Big Data ML Engineer — PySpark Transaction Fraud Analytics",
+      titleAr: "مهندس تعلم آلي للبيانات الضخمة — منصة كشف الاحتيال المالي",
       startDate: new Date("2024-01-01"),
       endDate: new Date("2024-12-31"),
       isCurrent: false,
-      summaryEn: "Built an end-to-end fraud detection pipeline using PySpark and ensemble machine learning models to classify anomalous financial transactions. Simulated real-time transaction streaming using Apache Kafka.",
-      summaryAr: "بناء خط معالجة متكامل لكشف الاحتيال باستخدام PySpark ونماذج التعلم الآلي لتصنيف المعاملات المالية غير العادية. محاكاة البث اللحظي للبيانات باستخدام Apache Kafka.",
+      summaryEn: "Built an end-to-end fraud detection pipeline using PySpark and ensemble machine learning models to classify anomalous financial transactions with real-time Kafka streaming.",
+      summaryAr: "بناء خط معالجة متكامل لكشف المعاملات المالية الشاذة باستخدام PySpark ونماذج التعلم الآلي مع بث لحظي عبر Apache Kafka.",
     },
     {
-      company: "Sentiment Analysis System",
-      titleEn: "ML Engineer - Arabic Sentiment & Fake Review Classifier",
-      titleAr: "مهندس تعلم آلي - تصنيف المشاعر والتقييمات المزيفة",
+      company: "Arabic NLP Lab",
+      titleEn: "NLP Research Engineer — Arabic Sentiment & Fake Review Classifier",
+      titleAr: "مهندس أبحاث معالجة اللغات الطبيعية — تصنيف المشاعر والتقييمات العربية",
       startDate: new Date("2024-01-01"),
       endDate: new Date("2024-08-31"),
       isCurrent: false,
-      summaryEn: "Fine-tuned CAMeL-BERT and BiLSTM architectures for domain-specific Arabic sentiment classification, building custom Arabic text preprocessing pipelines to handle social media dialects.",
-      summaryAr: "ضبط دقة نماذج CAMeL-BERT و BiLSTM لتصنيف المشاعر العربية في مجالات محددة، وبناء خطوط معالجة مسبقة للنصوص العربية للتعامل مع لهجات شبكات التواصل.",
+      summaryEn: "Fine-tuned CAMeL-BERT and BiLSTM architectures for domain-specific Arabic sentiment classification with custom text preprocessing for social media dialects.",
+      summaryAr: "ضبط دقة نماذج CAMeL-BERT و BiLSTM لتصنيف المشاعر باللغة العربية وتحديد التقييمات المزيفة مع معالجة اللهجات المحلية.",
     },
   ];
 
@@ -62,7 +62,7 @@ async function seedExperiences() {
       create: exp,
     });
   }
-  console.log("Actual Experiences seeded successfully.");
+  console.log("Experiences updated successfully.");
 }
 
 async function seedProjects() {
@@ -73,7 +73,7 @@ async function seedProjects() {
       titleAr: "منصة GEO لمراقبة الاكتشاف الذكي",
       descriptionEn: "Bilingual entity resolution engine, Wikidata SPARQL, Google Knowledge Graph, hallucination detection layer, and competitor feature gap analysis.",
       descriptionAr: "محرك مطابقة كيانات ثنائي اللغة، Wikidata SPARQL، واجهة Google Knowledge Graph، طبقة التحقق من الهلوسة، وتحليل الفجوات التنافسية.",
-      githubUrl: "https://github.com/Bashar-1216/AI-Discovery-Monitor-GEO-Platform",
+      githubUrl: "https://github.com/Bashar-1216/basharai",
       featured: true,
     },
     {
@@ -86,31 +86,58 @@ async function seedProjects() {
       featured: true,
     },
     {
-      slug: "drowsiness-detection",
-      titleEn: "Real-Time Driver Drowsiness Detection",
-      titleAr: "نظام كشف نعاس السائق في الوقت الفعلي",
+      slug: "real-time-driver-monitoring-system",
+      titleEn: "Real Time Driver Monitoring System",
+      titleAr: "نظام مراقبة السائق في الوقت الفعلي",
       descriptionEn: "EAR alertness classification, 3D pose estimation positional drift detection, and multithreaded non-blocking video/audio pipeline.",
       descriptionAr: "تصنيف اليقظة بمعدل EAR، كشف الانحراف بتقدير وضعية الرأس ثلاثية الأبعاد، وخط معالجة فيديو وصوت متعدد المسارات.",
-      githubUrl: "https://github.com/Bashar-1216/AI-Powered-Exercise-Tracker-Squat-Counter-Gesture-Control",
+      githubUrl: "https://github.com/Bashar-1216/Real-Time-Driver-Monitoring-System",
       featured: true,
     },
     {
-      slug: "fraud-detection",
+      slug: "financial-fraud-detection",
       titleEn: "Financial Fraud Detection Platform",
       titleAr: "منصة الكشف عن الاحتيال المالي",
       descriptionEn: "Transaction anomaly classification, real-time transaction streaming using PySpark and Apache Kafka, and predictions storage in MongoDB.",
       descriptionAr: "تصنيف المعاملات الشاذة، بث المعاملات في الوقت الفعلي باستخدام PySpark و Apache Kafka، وتخزين التوقعات في MongoDB.",
       githubUrl: "https://github.com/Bashar-1216/Financial-Fraud-Detection",
-      featured: false,
+      featured: true,
     },
     {
-      slug: "sentiment-analysis",
-      titleEn: "Arabic Sentiment & Fake Review Classifier",
-      titleAr: "تصنيف المشاعر والتقييمات المزيفة باللغة العربية",
+      slug: "arabic-sentiment-analysis",
+      titleEn: "Arabic Sentiment Analysis",
+      titleAr: "تحليل المشاعر باللغة العربية",
       descriptionEn: "Fine-tuned CAMeL-BERT and BiLSTM sentiment classifier deployed as a real-time inference service using FastAPI.",
       descriptionAr: "تصنيف المشاعر المعتمد على ضبط دقة CAMeL-BERT و BiLSTM المنشور كخدمة استدلال فوري باستخدام FastAPI.",
+      githubUrl: "https://github.com/Bashar-1216/Arabic-Sentiment-Analysis",
+      featured: true,
+    },
+    {
+      slug: "fake-review-detection",
+      titleEn: "Fake Review Detection",
+      titleAr: "كشف التقييمات المزيفة",
+      descriptionEn: "Domain-adversarial transformer-based NLP system for cross-category fake review detection.",
+      descriptionAr: "نظام معالجة لغات طبيعية لكشف المراجعات المزيفة عبر الفئات المختلفة المنشور كخدمة FastAPI.",
       githubUrl: "https://github.com/Bashar-1216/Fake-Review-Detection",
-      featured: false,
+      featured: true,
+    },
+    {
+      slug: "money-tracker",
+      titleEn: "Money Tracker",
+      titleAr: "متتبع المصاريف والمالية",
+      descriptionEn: "Personal finance tracking application with data visualization and analytics capabilities.",
+      descriptionAr: "تطبيق تتبع المالية الشخصية وإدارة الميزانيات مع تصورات بيانية تحليليية.",
+      githubUrl: "https://github.com/Bashar-1216/Money-Tracker",
+      featured: true,
+    },
+    {
+      slug: "air-quality-analysis",
+      titleEn: "Air Quality Analysis",
+      titleAr: "تحليل جودة الهواء والبيئة",
+      descriptionEn: "Environmental data analysis project focused on monitoring and interpreting air quality metrics.",
+      descriptionAr: "مشروع تحليل البيانات البيئية لمعالجة مؤشرات جودة الهواء وتصور اتجاهات التلوث.",
+      githubUrl: "https://github.com/Bashar-1216/air-quality-analysis",
+      featured: true,
     },
   ];
 
@@ -121,32 +148,14 @@ async function seedProjects() {
       create: proj,
     });
   }
-  console.log("Actual Projects seeded successfully.");
+  console.log("Projects updated successfully without duplicates.");
 }
 
 async function main() {
-  console.log("Starting seed database with Bashar Almuntaser's CV...");
-
-  // WIPE existing placeholder records first to avoid stale entries
-  await prisma.experience.deleteMany({});
-  await prisma.project.deleteMany({});
-  console.log("Stale experiences and projects cleared.");
-
-  const admin = await prisma.user.upsert({
-    where: { email: "owner@bashar.ai" },
-    update: {},
-    create: {
-      email: "owner@bashar.ai",
-      name: "Bashar Almuntaser",
-      role: "ADMIN",
-    },
-  });
-  console.log("Admin user seeded:", admin.name);
-
+  console.log("Updating database with clean projects and experiences...");
   await seedExperiences();
   await seedProjects();
-
-  console.log("Database seed completed successfully.");
+  console.log("Database update completed successfully.");
 }
 
 main()
