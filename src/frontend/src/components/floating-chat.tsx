@@ -5,6 +5,15 @@ import type { Locale } from "@/lib/i18n";
 import styles from "./floating-chat.module.css";
 import Link from "next/link";
 
+/** Strip <think>...</think> reasoning blocks from LLM output */
+function stripThinkTags(text: string): string {
+  // Remove complete <think>...</think> blocks (including multiline)
+  let cleaned = text.replace(/<think>[\s\S]*?<\/think>/gi, "");
+  // Remove any trailing unclosed <think> block
+  cleaned = cleaned.replace(/<think>[\s\S]*$/gi, "");
+  return cleaned.trimStart();
+}
+
 interface Message {
   id: string;
   role: "user" | "assistant";
@@ -114,9 +123,10 @@ export function FloatingChat({ locale }: FloatingChatProps) {
               const data = JSON.parse(line.slice(6));
               if (data.token) {
                 assistantResponse += data.token;
+                const cleaned = stripThinkTags(assistantResponse);
                 setMessages((prev) =>
                   prev.map((msg) =>
-                    msg.id === tempId ? { ...msg, content: assistantResponse } : msg
+                    msg.id === tempId ? { ...msg, content: cleaned } : msg
                   )
                 );
               } else if (data.done && data.telemetry) {

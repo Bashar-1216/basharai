@@ -5,6 +5,13 @@ import type { Locale } from "@/lib/i18n";
 import styles from "./assistant-console.module.css";
 import Link from "next/link";
 
+/** Strip <think>...</think> reasoning blocks from LLM output */
+function stripThinkTags(text: string): string {
+  let cleaned = text.replace(/<think>[\s\S]*?<\/think>/gi, "");
+  cleaned = cleaned.replace(/<think>[\s\S]*$/gi, "");
+  return cleaned.trimStart();
+}
+
 interface Message {
   id: string;
   role: "user" | "assistant";
@@ -161,9 +168,10 @@ export function AssistantConsole({ locale }: AssistantConsoleProps) {
               const data = JSON.parse(line.slice(6));
               if (data.token) {
                 assistantResponse += data.token;
+                const cleaned = stripThinkTags(assistantResponse);
                 setMessages((prev) =>
                   prev.map((msg) =>
-                    msg.id === tempId ? { ...msg, content: assistantResponse } : msg
+                    msg.id === tempId ? { ...msg, content: cleaned } : msg
                   )
                 );
               } else if (data.done && data.telemetry) {
