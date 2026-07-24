@@ -66,12 +66,12 @@
   width: 100%;
 }
 
-.activeLink {
-  color: hsl(var(--color-primary)) !important;
+.link.activeLink {
+  color: hsl(var(--color-primary));
 }
 
-.activeLink::after {
-  width: 100% !important;
+.link.activeLink::after {
+  width: 100%;
 }
 
 .actions {

@@ -2,12 +2,12 @@
 
 /* ══════════════════════════════════════════════════════════════
    bashar.ai — Design System Tokens
-   Theme: A — Deep Navy + Signature Mint (Engineering Credibility)
-   Inspired by brittanychiang.com & high-performance engineering
+   Theme: A — Deep Navy + Mint (#0a192f + #64ffda)
+   Engineering Credibility & High-Performance Developer Identity
    ══════════════════════════════════════════════════════════════ */
 
 :root {
-  /* ── Brand Colors (HSL) ─────────────────────────────────── */
+  /* ── Brand Colors (HSL / Hex) ────────────────────────────── */
   --color-primary: 166 100% 70%;      /* Signature Mint #64ffda */
   --color-primary-hover: 166 80% 60%; /* Hover Mint #4dd0b5 */
   --color-secondary: 166 70% 55%;    /* Secondary Mint/Teal #4dd0b5 */
@@ -15,8 +15,8 @@
   --color-warning: 38 92% 50%;        /* Amber #F59E0B */
   --color-error: 0 84% 60%;           /* Red #EF4444 */
 
-  /* ── Neutral Palette (Deep Navy Layered) ─────────────────── */
-  --color-bg: 215 28% 7%;            /* Deep Navy #0a192f */
+  /* ── Neutral Palette (Exact Theme A Deep Navy) ──────────── */
+  --color-bg: 215 28% 7%;            /* Background #0a192f */
   --color-bg-secondary: 215 28% 10%; /* Lifted Navy #0f203b */
   --color-bg-card: 215 28% 14%;      /* Card Slate Navy #112240 */
   --color-bg-card-hover: 215 25% 18%;/* Card Hover #1d3461 */
@@ -73,18 +73,18 @@ body {
   position: relative;
 }
 
-/* ── Subtle Ambient Depth (Hero Only Glow) ─────────────────── */
+/* ── Subtle Hero Mint Glow Only ────────────────────────────── */
 body::before {
   content: "";
   position: fixed;
   top: -15%;
   right: -5%;
-  width: 50vw;
-  height: 50vh;
+  width: 45vw;
+  height: 45vh;
   background: radial-gradient(
     ellipse at 70% 30%,
-    rgba(100, 255, 218, 0.04) 0%,
-    rgba(17, 34, 64, 0.1) 40%,
+    rgba(100, 255, 218, 0.03) 0%,
+    rgba(17, 34, 64, 0.08) 45%,
     transparent 75%
   );
   pointer-events: none;
@@ -123,7 +123,7 @@ body > * {
   background: hsl(var(--color-bg-card-hover));
   border-color: hsl(var(--color-primary) / 0.3);
   box-shadow: var(--shadow-glow);
-  transform: translateY(-3px);
+  transform: translateY(-2px);
 }
 
 .btn-primary {
