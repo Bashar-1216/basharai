@@ -211,3 +211,12 @@ model DownloadMetric {
   visitorIp String?  @map("visitor_ip")
   createdAt DateTime @default(now()) @map("created_at")
 }
+
+model ContactMessage {
+  id        String   @id @default(uuid()) @db.Uuid
+  name      String
+  email     String
+  message   String   @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+}
+
