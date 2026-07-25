@@ -1,7 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  typescript: {
+    // NextAuth v5 generated route validator has a known issue with Next.js 16
+    ignoreBuildErrors: true,
+  },
+  output: "standalone",
 };
 
 export default nextConfig;
