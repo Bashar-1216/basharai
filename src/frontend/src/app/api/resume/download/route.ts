@@ -1,23 +1,24 @@
 import { NextResponse } from "next/server";
+import fs from "fs";
+import path from "path";
 
 export async function GET() {
   try {
-    const backendUrl = process.env.BACKEND_API_URL || process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
-    const response = await fetch(`${backendUrl}/api/v1/resume/download`);
-    if (!response.ok) {
-      return NextResponse.json({ error: "Failed to download resume PDF" }, { status: response.status });
+    const pdfPath = path.join(process.cwd(), "public", "resume.pdf");
+
+    if (fs.existsSync(pdfPath)) {
+      const fileBuffer = fs.readFileSync(pdfPath);
+      return new Response(fileBuffer, {
+        headers: {
+          "Content-Type": "application/pdf",
+          "Content-Disposition": 'attachment; filename="Bashar_Almuntaser_AI_Engineer.pdf"',
+        },
+      });
     }
 
-    const fileBuffer = await response.arrayBuffer();
-
-    return new Response(fileBuffer, {
-      headers: {
-        "Content-Type": "application/pdf",
-        "Content-Disposition": 'attachment; filename="Bashar_Almuntaser_AI_Engineer.pdf"',
-      },
-    });
+    return NextResponse.json({ error: "Resume file not found" }, { status: 404 });
   } catch (error: any) {
-    console.error("BFF Resume download error:", error);
+    console.error("Vercel Resume download error:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
