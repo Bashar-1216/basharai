@@ -227,18 +227,22 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
   const isAr = locale === "ar";
   const key = slug.toLowerCase();
 
-  const defaultStudyEn: CaseStudySection = {
-    overview: project.descriptionEn || "Engineering project overview and system implementation details.",
-    problem: "Developing scalable software modules, implementing robust data flows, and optimizing runtime execution.",
-    architecture: "Modular software design with clean component isolation and maintainable codebase structure.",
-    tradeoffs: "Balanced high execution speed with clean code readability and automated testing.",
-    evaluation: "Validated through functional test suites, empirical code reviews, and deployment benchmarks.",
+  const title = isAr ? (project.titleAr || project.titleEn) : project.titleEn;
+  const desc = isAr ? (project.descriptionAr || project.descriptionEn) : project.descriptionEn;
+  const lang = (project as any).language || "Python";
+
+  const dynamicStudyEn: CaseStudySection = {
+    overview: desc || `Engineering overview and implementation architecture for ${title}.`,
+    problem: `Designing scalable data pipelines, robust execution modules, and system features for ${title}.`,
+    architecture: `${title} Engine ➔ ${lang} Processing Pipeline ➔ Optimized System Output.`,
+    tradeoffs: `Balanced high execution throughput, memory efficiency, and maintainable codebase structure in ${lang}.`,
+    evaluation: `Validated through benchmark suites, performance profiling, and empirical code reviews.`,
     metrics: [
+      { label: "Language", val: lang },
       { label: "Source Code", val: "Open Source 🟢" },
-      { label: "Repository", val: "GitHub Verified" },
-      { label: "Status", val: "Active Build" }
+      { label: "Repository", val: "GitHub Verified" }
     ],
-    lessons: "Maintaining clean modular code structures ensures seamless scalability and long-term maintainability.",
+    lessons: `Structuring modular components and clean data flows in ${title} ensures long-term scalability and reliability.`,
     knowledgeGraph: {
       experience: { title: "AI Engineering Experience", url: `/${locale}/experience` },
       dashboard: { title: "Telemetry Dashboard", url: `/${locale}/dashboard` },
@@ -246,18 +250,18 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
     }
   };
 
-  const defaultStudyAr: CaseStudySection = {
-    overview: project.descriptionAr || "نظرة عامة على المشروع الهندسي وتفاصيل المعمارية البرمجية.",
-    problem: "بناء وحدات برمجية قابلة للتوسع وتصميم خطوط معالجة بيانات سريعة ومستقرة.",
-    architecture: "تصميم برمجي نمطي يضمن فصل المهام وسهولة التوسع والصيانة.",
-    tradeoffs: "الموازنة بين سرعة التنفيذ العالية ونظافة الكود وسهولة الاختبار والتحقق.",
-    evaluation: "تم التقييم والتحقق عبر الفحص الدوري للكود واختبارات الأداء.",
+  const dynamicStudyAr: CaseStudySection = {
+    overview: desc || `نظرة عامة هندسية وتفاصيل المعمارية لمشروع ${title}.`,
+    problem: `بناء وحدات برمجية قابلة للتوسع وتصميم خطوط معالجة بيانات متقدمة لمشروع ${title}.`,
+    architecture: `محرك ${title} ➔ خط معالجة البيانات بـ ${lang} ➔ مخرجات النظام المحسنة.`,
+    tradeoffs: `تمت الموازنة بين سرعة المعالجة الفائقة والكفاءة في استهلاك الموارد ونظافة الكود المصدري باستخدام ${lang}.`,
+    evaluation: `تم التقييم والتحقق عبر الفحص الدوري للكود واختبارات الأداء التشغيلية.`,
     metrics: [
+      { label: "لغة البرمجة", val: lang },
       { label: "الكود المصدري", val: "مفتوح المصدر 🟢" },
-      { label: "المستودع", val: "موثق على GitHub" },
-      { label: "الحالة", val: "بناء مستقر" }
+      { label: "المستودع", val: "موثق على GitHub" }
     ],
-    lessons: "البنية النظيفة والواضحة للبرمجيات توفر مرونة عالية عند إضافة ميزات جديدة مستقبلاً.",
+    lessons: `تطبيق النماذج النمطية وتطوير البنية الهندسية المستقرة لـ ${title} يضمن الجودة والتوسع السلس.`,
     knowledgeGraph: {
       experience: { title: "خبرات الذكاء الاصطناعي", url: `/${locale}/experience` },
       dashboard: { title: "لوحة المراقبة الحية", url: `/${locale}/dashboard` },
@@ -265,7 +269,7 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
     }
   };
 
-  const study = (isAr ? studiesAr[key] : studiesEn[key]) || (isAr ? defaultStudyAr : defaultStudyEn);
+  const study = (isAr ? studiesAr[key] : studiesEn[key]) || (isAr ? dynamicStudyAr : dynamicStudyEn);
 
   return (
     <>
