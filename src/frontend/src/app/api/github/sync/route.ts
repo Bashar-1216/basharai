@@ -34,15 +34,12 @@ async function handleSync() {
 
     for (const repo of repos) {
       const name = repo.name;
-      if (!name || name === "Bashar-1216") continue;
-
-      const topics: string[] = repo.topics || [];
-      const isPortfolioTagged = topics.includes("portfolio") || topics.includes("portfolio-project");
+      if (!name || name === "Bashar-1216" || repo.fork) continue; // Skip profile repo & forks
 
       const slug = name.toLowerCase().replace(/_/g, "-");
       const githubUrl = repo.html_url || `https://github.com/Bashar-1216/${name}`;
       const title = name.replace(/[-_]/g, " ").replace(/\b\w/g, (l: string) => l.toUpperCase());
-      const description = repo.description || `Engineering project repository for ${title}.`;
+      const description = repo.description || `Production AI engineering project repository for ${title}.`;
       const stars = repo.stargazers_count || 0;
       const forks = repo.forks_count || 0;
       const language = repo.language || "Python";
@@ -51,13 +48,13 @@ async function handleSync() {
       const repoPath = `Bashar-1216/${name}`;
       const lastCommit = repo.pushed_at ? new Date(repo.pushed_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "Recently";
 
-      // 1. Upsert Project table
+      // 1. Upsert Project table (Set featured: true for all user repos by default)
       await db.project.upsert({
         where: { slug },
         update: {
           githubUrl,
           liveUrl: homepage && homepage.startsWith("http") ? homepage : undefined,
-          featured: isPortfolioTagged,
+          featured: true,
         },
         create: {
           slug,
@@ -67,7 +64,7 @@ async function handleSync() {
           descriptionAr: description,
           githubUrl,
           liveUrl: homepage && homepage.startsWith("http") ? homepage : null,
-          featured: isPortfolioTagged,
+          featured: true,
         },
       });
 
@@ -91,12 +88,12 @@ async function handleSync() {
         },
       });
 
-      synced.push({ repo: repoPath, taggedPortfolio: isPortfolioTagged });
+      synced.push({ repo: repoPath, title });
     }
 
     return NextResponse.json({
       success: true,
-      message: `Successfully synced ${synced.length} repositories from GitHub!`,
+      message: `Successfully synced ${synced.length} public repositories for Bashar-1216 from GitHub!`,
       synced,
     });
   } catch (error: any) {
