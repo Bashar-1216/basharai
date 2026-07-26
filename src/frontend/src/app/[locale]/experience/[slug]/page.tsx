@@ -151,33 +151,66 @@ const detailsAr: Record<string, DetailSection> = {
 export default async function ExperienceDetailPage({ params }: ExperienceDetailPageProps) {
   const { locale, slug } = await params;
   const dict = await getDictionary(locale as Locale);
+  const isAr = locale === "ar";
+  const decodedSlug = decodeURIComponent(slug).toLowerCase();
 
-  // Normalize slug to query match casing
-  let queryCompany = "GEO Platform";
-  if (slug.toLowerCase() === "sapa") queryCompany = "SAPA Product Analyzer";
-  if (slug.toLowerCase() === "drowsiness-detection") queryCompany = "Drowsiness Detection System";
-  if (slug.toLowerCase() === "fraud-detection") queryCompany = "Financial Fraud Detection";
-  if (slug.toLowerCase() === "sentiment-analysis") queryCompany = "Sentiment Analysis System";
-
-  const experience = await db.experience.findFirst({
-    where: {
-      company: {
-        equals: queryCompany,
-        mode: "insensitive"
-      }
-    }
+  const allExperiences = await db.experience.findMany({
+    orderBy: { startDate: "desc" },
   });
+
+  let experience = allExperiences.find((exp) => {
+    const comp = exp.company.toLowerCase();
+    if (decodedSlug.includes("geo") && comp.includes("geo")) return true;
+    if (decodedSlug.includes("sapa") && comp.includes("sapa")) return true;
+    if (decodedSlug.includes("drowsiness") && comp.includes("drowsiness")) return true;
+    if (decodedSlug.includes("fraud") && comp.includes("fraud")) return true;
+    if (decodedSlug.includes("sentiment") && comp.includes("sentiment")) return true;
+    return comp === decodedSlug || comp.includes(decodedSlug) || decodedSlug.includes(comp);
+  });
+
+  if (!experience) {
+    experience = allExperiences[0];
+  }
 
   if (!experience) {
     notFound();
   }
 
-  const isAr = locale === "ar";
-  const detail = isAr ? detailsAr[slug.toLowerCase()] : detailsEn[slug.toLowerCase()];
+  let matchedKey = "geo-platform";
+  const compLower = experience.company.toLowerCase();
+  if (compLower.includes("sapa")) matchedKey = "sapa";
+  else if (compLower.includes("drowsiness")) matchedKey = "drowsiness-detection";
+  else if (compLower.includes("fraud")) matchedKey = "fraud-detection";
+  else if (compLower.includes("sentiment")) matchedKey = "sentiment-analysis";
 
-  if (!detail) {
-    notFound();
-  }
+  const defaultDetailEn: DetailSection = {
+    overview: experience.summaryEn || "Engineered scalable production software systems and data pipelines.",
+    problem: "Optimizing runtime throughput, architectural component isolation, and resource management.",
+    role: experience.titleEn,
+    challenges: "Building resilient microservices and distributed data processing modules.",
+    impact: "Delivered measurable performance and architectural scalability improvements.",
+    technologies: "Python, Next.js, PostgreSQL, Docker, Redis.",
+    learned: "Modular system design and clean codebase architecture ensure long-term engineering scalability.",
+    faq: [
+      { q: "What was the key engineering takeaway?", a: "Component decoupling and clean schema design are vital for production reliability." }
+    ]
+  };
+
+  const defaultDetailAr: DetailSection = {
+    overview: experience.summaryAr || "بناء أنظمة برمجية وإنتاجية متكاملة وخطوط معالجة بيانات سريعة ومستقرة.",
+    problem: "تحسين سرعة الاستجابة وعزل المكونات البرمجية وإدارة الموارد بفاعلية.",
+    role: experience.titleAr,
+    challenges: "تطوير خدمات مصغرة وتطبيقات موثوقة لمعالجة البيانات الضخمة.",
+    impact: "تحقيق تحسينات ملموسة في أداء وكفاءة الأنظمة الهندسية.",
+    technologies: "Python, Next.js, PostgreSQL, Docker, Redis.",
+    learned: "التصميم النمطي وإدارة الحالة بشكل نظيف هما أساس نجاح المشاريع الهندسية التنافسية.",
+    faq: [
+      { q: "ما هي الدرس الهندسي الأبرز؟", a: "فصل المكونات وتصميم قواعد البيانات النظيفة يضمن القابلية للتوسع والتطوير المستقبلي." }
+    ]
+  };
+
+  const detail = (isAr ? detailsAr[matchedKey] : detailsEn[matchedKey]) || (isAr ? defaultDetailAr : defaultDetailEn);
+
 
   return (
     <>

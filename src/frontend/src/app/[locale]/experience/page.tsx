@@ -10,6 +10,16 @@ interface ExperienceIndexProps {
   params: Promise<{ locale: string }>;
 }
 
+function getExperienceSlug(companyName: string): string {
+  const c = companyName.toLowerCase();
+  if (c.includes("geo")) return "geo-platform";
+  if (c.includes("sapa")) return "sapa";
+  if (c.includes("drowsiness")) return "drowsiness-detection";
+  if (c.includes("fraud")) return "fraud-detection";
+  if (c.includes("sentiment")) return "sentiment-analysis";
+  return c.replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+}
+
 export default async function ExperienceIndex({ params }: ExperienceIndexProps) {
   const { locale } = await params;
   const dict = await getDictionary(locale as Locale);
@@ -38,7 +48,7 @@ export default async function ExperienceIndex({ params }: ExperienceIndexProps) 
 
           <div className={styles.timeline}>
             {experiences.map((exp, idx) => {
-              const slug = exp.company.toLowerCase();
+              const slug = getExperienceSlug(exp.company);
               return (
                 <div key={exp.id} className={styles.timelineItem}>
                   <div className={styles.timelineMarker}>
