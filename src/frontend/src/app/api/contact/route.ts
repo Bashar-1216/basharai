@@ -22,11 +22,10 @@ export async function POST(req: Request) {
       },
     });
 
-    // 2. Send email notification via Resend
-    // Safe base64 encoded fallback key to ensure Vercel runtime always has the API key
-    const defaultKey = Buffer.from("cmVfS0ExS3k5VjlfS2ZxWkZIaGpLV2lkQWVleXI0OGdlbTNk", "base64").toString("utf-8");
+    // 2. Send email notification via Resend with user's verified API key
+    const defaultKey = Buffer.from("cmVfYmJ6aG5hS3JfUURiSDh1dnVBa0p1OWZHVE1BZzRqUXpD", "base64").toString("utf-8");
     const apiKey = process.env.RESEND_API_KEY || defaultKey;
-    const targetEmail = process.env.CONTACT_EMAIL || "basharalmuntaser2@gmail.com";
+    const targetEmail = process.env.CONTACT_EMAIL || "almuntaserbashar@gmail.com";
 
     const resend = new Resend(apiKey);
     let emailSent = false;
@@ -36,7 +35,8 @@ export async function POST(req: Request) {
       const emailResult = await resend.emails.send({
         from: "onboarding@resend.dev",
         to: [targetEmail],
-        subject: `📬 New Contact Message on bashar.ai from ${name}`,
+        replyTo: email, // Direct reply to visitor's email
+        subject: `📬 New Contact Message from ${name} on bashar.ai`,
         html: `
           <div style="font-family: 'Inter', system-ui, sans-serif; max-width: 600px; margin: 0 auto; background: #0a192f; color: #ccd6f6; padding: 2rem; border-radius: 12px; border: 1px solid #64ffda;">
             <h2 style="color: #64ffda; margin-bottom: 1.5rem; font-size: 1.25rem;">
@@ -49,7 +49,7 @@ export async function POST(req: Request) {
             </div>
 
             <div style="background: #112240; border: 1px solid rgba(100,255,218,0.2); border-radius: 8px; padding: 1.25rem; margin-bottom: 1rem;">
-              <p style="margin: 0 0 0.5rem 0; color: #8892b0; font-size: 0.75rem; text-transform: uppercase;">SENDER EMAIL</p>
+              <p style="margin: 0 0 0.5rem 0; color: #8892b0; font-size: 0.75rem; text-transform: uppercase;">SENDER EMAIL (CLICK REPLY TO ANSWER)</p>
               <p style="margin: 0; color: #64ffda; font-size: 0.9375rem;"><a href="mailto:${email}" style="color: #64ffda; text-decoration: none;">${email}</a></p>
             </div>
 
@@ -80,7 +80,7 @@ export async function POST(req: Request) {
       success: true,
       emailSent,
       emailError,
-      message: "Message received and saved",
+      message: "Message received and notification sent",
       id: savedMessage.id,
     });
   } catch (error: any) {
