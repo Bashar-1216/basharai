@@ -5,6 +5,10 @@ import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { ProjectList } from "./project-list";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
+
 interface ProjectsIndexProps {
   params: Promise<{ locale: string }>;
 }

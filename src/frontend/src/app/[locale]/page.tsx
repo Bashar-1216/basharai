@@ -8,6 +8,10 @@ import { AssistantTrigger } from "@/components/assistant-trigger";
 import Link from "next/link";
 import styles from "./home.module.css";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
+
 interface HomePageProps {
   params: Promise<{ locale: string }>;
 }
