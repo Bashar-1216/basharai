@@ -8,11 +8,11 @@
 }
 
 .consoleWrapper.withDev {
-  grid-template-columns: 1fr 300px;
+  grid-template-columns: 1fr 320px;
 }
 
 [dir="rtl"] .consoleWrapper.withDev {
-  grid-template-columns: 300px 1fr;
+  grid-template-columns: 320px 1fr;
 }
 
 /* ── Chat Area ─────────────────────────────────────────────── */
@@ -24,12 +24,20 @@
 }
 
 .threadHeader {
-  padding: 1rem 2rem;
-  border-bottom: 1px solid hsl(var(--color-text-muted) / 0.1);
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid hsl(var(--color-text-muted) / 0.15);
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
+  background: hsl(var(--color-bg-card) / 0.5);
+  backdrop-filter: blur(10px);
+}
+
+.headerTitle {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 
 .headerTitle h2 {
@@ -38,11 +46,61 @@
   color: hsl(var(--color-text));
 }
 
-.headerTitle span {
+.statusBadges {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.onlineBadge {
   font-size: 0.6875rem;
-  color: hsl(130 60% 50%);
-  text-transform: uppercase;
+  color: #10b981;
+  font-weight: 700;
+  background: rgba(16, 185, 129, 0.1);
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-xs);
+}
+
+.ragBadge {
+  font-size: 0.6875rem;
+  color: hsl(var(--color-secondary));
   font-weight: 600;
+  background: hsl(var(--color-secondary) / 0.1);
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-xs);
+  font-family: var(--font-mono);
+}
+
+/* ── Mode Switcher Tabs ────────────────────────────────────────── */
+.modeTabs {
+  display: flex;
+  gap: 0.25rem;
+  background: hsl(var(--color-bg-card));
+  padding: 0.25rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid hsl(var(--color-text-muted) / 0.15);
+}
+
+.modeTabs button {
+  background: transparent;
+  border: none;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: hsl(var(--color-text-muted));
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.modeTabs button:hover {
+  color: hsl(var(--color-text));
+}
+
+.modeTabs .modeActive {
+  background: hsl(var(--color-secondary) / 0.15);
+  color: hsl(var(--color-secondary));
+  font-weight: 700;
 }
 
 .headerActions {
@@ -88,10 +146,10 @@
 .devActive {
   border-color: hsl(var(--color-secondary));
   color: hsl(var(--color-secondary));
-  background: hsl(var(--color-secondary) / 0.05);
+  background: hsl(var(--color-secondary) / 0.1);
 }
 
-/* ── Messages ──────────────────────────────────────────────── */
+/* ── Messages Area ─────────────────────────────────────────── */
 .messagesArea {
   flex: 1;
   overflow-y: auto;
@@ -105,7 +163,7 @@
   justify-content: center;
   height: 100%;
   text-align: center;
-  max-width: 520px;
+  max-width: 540px;
   margin: 0 auto;
   gap: 0.75rem;
 }
@@ -138,7 +196,7 @@
 
 .promptChip {
   background: hsl(var(--color-bg-card));
-  border: 1px solid hsl(var(--color-text-muted) / 0.15);
+  border: 1px solid hsl(var(--color-text-muted) / 0.2);
   padding: 0.5rem 1rem;
   border-radius: var(--radius-sm);
   font-size: 0.8125rem;
@@ -150,14 +208,14 @@
 .promptChip:hover {
   border-color: hsl(var(--color-secondary));
   color: hsl(var(--color-secondary));
-  background: hsl(var(--color-secondary) / 0.05);
+  background: hsl(var(--color-secondary) / 0.08);
 }
 
 .messagesList {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  max-width: 750px;
+  gap: 1.25rem;
+  max-width: 800px;
   margin: 0 auto;
 }
 
@@ -174,11 +232,14 @@
 }
 
 .msgBubble {
-  max-width: 80%;
-  padding: 0.875rem 1.125rem;
+  max-width: 85%;
+  padding: 1rem 1.25rem;
   border-radius: var(--radius-md);
   font-size: 0.875rem;
   line-height: 1.7;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
 .userMsg .msgBubble {
@@ -194,7 +255,7 @@
 
 .assistantMsg .msgBubble {
   background: hsl(var(--color-bg-card));
-  border: 1px solid hsl(var(--color-text-muted) / 0.15);
+  border: 1px solid hsl(var(--color-text-muted) / 0.18);
   color: hsl(var(--color-text-body));
   border-bottom-left-radius: var(--radius-xs);
 }
@@ -209,18 +270,115 @@
   word-break: break-word;
 }
 
+/* ── Interactive Action Chips ────────────────────────────────────── */
+.actionChips {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px dashed hsl(var(--color-text-muted) / 0.2);
+}
+
+.actionChip {
+  background: hsl(var(--color-secondary) / 0.1);
+  border: 1px solid hsl(var(--color-secondary) / 0.25);
+  color: hsl(var(--color-secondary));
+  padding: 0.3rem 0.65rem;
+  border-radius: var(--radius-xs);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.actionChip:hover {
+  background: hsl(var(--color-secondary) / 0.2);
+  border-color: hsl(var(--color-secondary));
+  transform: translateY(-1px);
+}
+
+/* ── Mermaid Diagrams Card ────────────────────────────────────── */
+.diagramCard {
+  background: hsl(var(--color-bg));
+  border: 1px solid hsl(var(--color-secondary) / 0.3);
+  border-radius: var(--radius-sm);
+  margin: 0.75rem 0;
+  overflow: hidden;
+}
+
+.diagramHeader {
+  background: hsl(var(--color-secondary) / 0.1);
+  padding: 0.4rem 0.875rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: hsl(var(--color-secondary));
+  font-family: var(--font-mono);
+  border-bottom: 1px solid hsl(var(--color-secondary) / 0.2);
+}
+
+.diagramCode {
+  padding: 0.875rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: hsl(var(--color-text));
+  overflow-x: auto;
+  line-height: 1.5;
+  background: hsl(0 0% 0% / 0.2);
+}
+
+/* ── Code Blocks ──────────────────────────────────────────────── */
+.codeBlock {
+  background: hsl(0 0% 0% / 0.3);
+  border: 1px solid hsl(var(--color-text-muted) / 0.2);
+  border-radius: var(--radius-xs);
+  margin: 0.75rem 0;
+  overflow: hidden;
+}
+
+.codeHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.35rem 0.75rem;
+  background: hsl(var(--color-bg-card));
+  font-size: 0.6875rem;
+  font-family: var(--font-mono);
+  color: hsl(var(--color-text-muted));
+  text-transform: uppercase;
+  border-bottom: 1px solid hsl(var(--color-text-muted) / 0.15);
+}
+
+.copyBtn {
+  background: transparent;
+  border: none;
+  color: hsl(var(--color-secondary));
+  font-size: 0.6875rem;
+  cursor: pointer;
+  font-family: var(--font-mono);
+}
+
+.codeText {
+  padding: 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  overflow-x: auto;
+  color: hsl(var(--color-text));
+  line-height: 1.5;
+}
+
 /* ── Typing Indicator ──────────────────────────────────────── */
 .typing {
   display: flex;
-  gap: 3px;
+  gap: 4px;
   padding: 0.25rem 0;
 }
 
 .typing span {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
-  background: hsl(var(--color-text-muted));
+  background: hsl(var(--color-secondary));
   animation: bounce 1.4s infinite ease-in-out;
 }
 
@@ -235,11 +393,11 @@
 /* ── Input Form ────────────────────────────────────────────── */
 .inputForm {
   padding: 1.25rem 2rem;
-  border-top: 1px solid hsl(var(--color-text-muted) / 0.1);
+  border-top: 1px solid hsl(var(--color-text-muted) / 0.15);
   display: flex;
   gap: 1rem;
   align-items: center;
-  max-width: 800px;
+  max-width: 850px;
   width: 100%;
   margin: 0 auto;
 }
@@ -247,7 +405,7 @@
 .inputForm textarea {
   flex: 1;
   background: hsl(var(--color-bg-card));
-  border: 1px solid hsl(var(--color-text-muted) / 0.15);
+  border: 1px solid hsl(var(--color-text-muted) / 0.2);
   border-radius: var(--radius-sm);
   padding: 0.75rem 1rem;
   font-size: 0.875rem;
@@ -255,7 +413,7 @@
   resize: none;
   color: hsl(var(--color-text-body));
   line-height: 1.5;
-  height: 42px;
+  height: 44px;
   transition: border-color var(--transition-fast);
 }
 
@@ -280,7 +438,7 @@
 
 .panelHeader {
   padding: 1.25rem 1.5rem;
-  border-bottom: 1px solid hsl(var(--color-text-muted) / 0.1);
+  border-bottom: 1px solid hsl(var(--color-text-muted) / 0.15);
 }
 
 .panelHeader h3 {
@@ -349,6 +507,12 @@
   }
   .threadHeader {
     padding: 0.75rem 1rem;
+    flex-wrap: wrap;
+  }
+  .modeTabs {
+    order: 3;
+    width: 100%;
+    justify-content: space-around;
   }
   .messagesArea {
     padding: 1rem;
