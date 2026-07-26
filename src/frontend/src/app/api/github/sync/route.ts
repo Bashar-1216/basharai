@@ -36,6 +36,14 @@ async function handleSync() {
       const name = repo.name;
       if (!name || name === "Bashar-1216" || repo.fork) continue; // Skip profile repo & forks
 
+      const topics: string[] = repo.topics || [];
+      const hasPortfolioTag = topics.includes("portfolio") || topics.includes("portfolio-project") || topics.includes("featured");
+
+      // ONLY sync repositories that the user explicitly tagged with "portfolio" or "featured"
+      if (!hasPortfolioTag) {
+        continue;
+      }
+
       const slug = name.toLowerCase().replace(/_/g, "-");
       const githubUrl = repo.html_url || `https://github.com/Bashar-1216/${name}`;
       const title = name.replace(/[-_]/g, " ").replace(/\b\w/g, (l: string) => l.toUpperCase());
@@ -48,7 +56,7 @@ async function handleSync() {
       const repoPath = `Bashar-1216/${name}`;
       const lastCommit = repo.pushed_at ? new Date(repo.pushed_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "Recently";
 
-      // 1. Upsert Project table (Set featured: true for all user repos by default)
+      // 1. Upsert Project table
       await db.project.upsert({
         where: { slug },
         update: {
@@ -88,12 +96,12 @@ async function handleSync() {
         },
       });
 
-      synced.push({ repo: repoPath, title });
+      synced.push({ repo: repoPath, title, topics });
     }
 
     return NextResponse.json({
       success: true,
-      message: `Successfully synced ${synced.length} public repositories for Bashar-1216 from GitHub!`,
+      message: `Successfully synced ${synced.length} portfolio-tagged repositories for Bashar-1216 from GitHub!`,
       synced,
     });
   } catch (error: any) {
