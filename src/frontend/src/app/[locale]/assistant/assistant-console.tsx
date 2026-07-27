@@ -67,12 +67,21 @@ function renderMermaidNodes(mermaidText: string) {
     return <pre className={styles.diagramCode}>{mermaidText}</pre>;
   }
 
+  const cleanLabel = (str: string) => {
+    const cleaned = str.trim();
+    const bracketMatch = cleaned.match(/\[(.*?)\]/);
+    if (bracketMatch && bracketMatch[1]) {
+      return bracketMatch[1].replace(/["']/g, "").trim();
+    }
+    return cleaned.replace(/^[A-Z0-9_-]+\s*/i, "").replace(/["']/g, "").trim() || cleaned;
+  };
+
   const nodes: { from: string; to: string }[] = [];
   lines.forEach((line) => {
     const parts = line.split(/-->|---|->/);
     if (parts.length >= 2) {
-      const from = parts[0].replace(/^[A-Z0-9_-]+\s*\[|\]$/g, "").replace(/["']/g, "").trim();
-      const to = parts[1].replace(/^[A-Z0-9_-]+\s*\[|\]$/g, "").replace(/["']/g, "").trim();
+      const from = cleanLabel(parts[0]);
+      const to = cleanLabel(parts[1]);
       if (from && to) nodes.push({ from, to });
     }
   });
@@ -121,7 +130,6 @@ function renderMarkdownParagraphs(text: string) {
   });
 }
 
-
 interface Message {
   id: string;
   role: "user" | "assistant";
@@ -144,6 +152,7 @@ export function AssistantConsole({ locale }: AssistantConsoleProps) {
   const [mode, setMode] = useState<ConsoleMode>("copilot");
   const [isDevView, setIsDevView] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [userScrolled, setUserScrolled] = useState(false);
 
   const [telemetry, setTelemetry] = useState({
     model: "Groq LLaMA 3.3 70B",
@@ -159,9 +168,17 @@ export function AssistantConsole({ locale }: AssistantConsoleProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const target = e.currentTarget;
+    const isAtBottom = target.scrollHeight - target.scrollTop - target.clientHeight < 60;
+    setUserScrolled(!isAtBottom);
+  };
+
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+    if (!userScrolled) {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages, userScrolled]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInput(e.target.value);
@@ -171,6 +188,7 @@ export function AssistantConsole({ locale }: AssistantConsoleProps) {
 
   const handleNewChat = () => {
     setMessages([]);
+    setUserScrolled(false);
   };
 
   const handleActionClick = (action: string) => {
@@ -192,6 +210,8 @@ export function AssistantConsole({ locale }: AssistantConsoleProps) {
     e?.preventDefault();
     const query = overrideQuery || input.trim();
     if (!query || isLoading) return;
+
+    setUserScrolled(false);
 
     const userMsg: Message = {
       id: crypto.randomUUID(),
@@ -301,7 +321,6 @@ export function AssistantConsole({ locale }: AssistantConsoleProps) {
     return parseFormattedMarkdown(content, isAr, copiedId, handleCopy);
   };
 
-
   return (
     <div className={`${styles.consoleWrapper} ${isDevView ? styles.withDev : ""}`}>
       <div className={styles.chatArea}>
@@ -362,7 +381,7 @@ export function AssistantConsole({ locale }: AssistantConsoleProps) {
         </div>
 
         {/* Messages */}
-        <div className={styles.messagesArea}>
+        <div className={styles.messagesArea} onScroll={handleScroll}>
           {messages.length === 0 ? (
             <div className={styles.emptyConsole}>
               <div className={styles.emptyIcon}>🤖</div>

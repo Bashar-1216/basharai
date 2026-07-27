@@ -28,7 +28,7 @@ Mode Instructions:
 - If mode is "interview_hr": Act as an executive HR Recruiter interviewing Bashar. Ask relevant HR questions or answer questions about Bashar's career achievements, leadership, and relocation readiness.
 - If mode is "interview_tech": Act as a Senior Technical Lead. Ask or answer deep-dive technical questions about PySpark, MediaPipe, CAMeL-BERT, pgvector RAG, and microservices architecture.
 - If mode is "interview_architect": Act as a Principal AI Architect. Evaluate or answer system design questions (e.g. vector indexing strategies, latency vs accuracy trade-offs, async queue decoupling). Always output a candidate rating block: "Technical Depth: X/10" with key strengths and improvement suggestions.
-- If user asks for architecture/flow diagrams: Always include a fenced code block with language identifier "mermaid" illustrating the system components visually!
+- Diagram Rule: ONLY include a fenced code block with language identifier "mermaid" if the user explicitly asks for system architecture, infrastructure design, or flow diagrams. Do NOT include mermaid diagrams for general background, experience, or bio questions.
 
 Behavior Rules:
 - Respond in the language of the user query (Arabic if Arabic, English if English).
@@ -153,46 +153,65 @@ ${experiences.map((e) => `- ${e.titleEn} at ${e.company}: ${e.summaryEn}`).join(
 
         if (!replyText) {
           usedModel = "Static System Engine";
+          const asksForArchitecture = /architecture|diagram|mermaid|flow|system design|معمارية|مخطط|هيكل/i.test(message);
+
           if (locale === "ar") {
-            replyText = [
+            const baseAr = [
               "مرحباً بك! أنا مساعد بشار المنتصر الهندسي (AI Portfolio Copilot v2).",
               "",
-              "بشار مهندس ذكاء اصطناعي متخصص في بناء أنظمة النماذج اللغوية (LLMs)، ومحركات RAG ذات الأداء الفائق، والوكلاء الأذكياء (AI Agents).",
-              "",
-              "```mermaid",
-              "graph TD",
-              "    A[Client User] --> B[Next.js Operations Console]",
-              "    B --> C[FastAPI Serverless API]",
-              "    C --> D[PostgreSQL + pgvector]",
-              "    C --> E[LLM Inference Engine]",
-              "```",
+              "بشار مهندس ذكاء اصطناعي متخصص في بناء أنظمة النماذج اللغوية (LLMs)، ومحركات RAG ذات الأداء الفائق، والوكلاء الأذكياء (AI Agents)، والرؤية الحاسوبية.",
               "",
               "أبرز مشاريع بشار الهندسية تشمل:",
-              "1. **منصة GEO:** خط معالجة بـ 8 مراحل عبر متوازي النماذج.",
-              "2. **محلل SAPA:** خادم التنبؤ بالطلب ومراجعات المنتجات.",
-              "3. **كشف الاحتيال:** بث المعاملات اللحظية عبر PySpark و Kafka."
-            ].join("\n");
+              "1. **منصة GEO (Generative Engine Optimization):** خط معالجة بـ 8 مراحل تحليلي مستند إلى Python وتطابق الكيانات ثنائي اللغة.",
+              "2. **محلل SAPA (Smart Amazon Product Analyzer):** محرك التنبؤ بالطلب المستند إلى LightGBM و BERT.",
+              "3. **نظام كشف النعاس اللحظي:** رؤية حاسوبية باستخدام OpenCV و MediaPipe بخمود أقل من 30ms.",
+              "4. **كشف الاحتيال المالي:** معالجة البيانات الضخمة عبر PySpark و Kafka بسرعة 10,000 معاملة/ثانية."
+            ];
+
+            if (asksForArchitecture) {
+              baseAr.splice(3, 0,
+                "",
+                "```mermaid",
+                "graph TD",
+                "    A[Client User] --> B[Next.js Operations Console]",
+                "    B --> C[FastAPI Serverless API]",
+                "    C --> D[PostgreSQL + pgvector]",
+                "    C --> E[LLM Inference Engine]",
+                "```",
+                ""
+              );
+            }
+
+            replyText = baseAr.join("\n");
           } else {
-            replyText = [
+            const baseEn = [
               "Welcome! I am Bashar Almuntaser's AI Portfolio Copilot v2.",
               "",
-              "Bashar is an AI Engineer specializing in LLM systems, high-throughput RAG engines, AI Agents, and Computer Vision.",
-              "",
-              "```mermaid",
-              "graph TD",
-              "    A[User Client] --> B[Next.js Operations Console]",
-              "    B --> C[FastAPI Serverless API]",
-              "    C --> D[PostgreSQL + pgvector]",
-              "    C --> E[LLM Inference Core]",
-              "```",
+              "Bashar is an AI Engineer specializing in LLM systems, high-throughput RAG engines, AI Agents, and Computer Vision based in Yemen, ready for AI Engineering roles in Saudi Arabia & GCC.",
               "",
               "Bashar's key featured systems include:",
-              "1. **GEO Platform:** 8-stage async AI pipeline.",
-              "2. **SAPA Product Analyzer:** LightGBM demand forecasting & BERT NLP.",
-              "3. **Fraud Detection:** PySpark & Kafka real-time analytics."
-            ].join("\n");
-          }
+              "1. **GEO Platform:** 8-stage async AI analysis pipeline with bilingual entity resolution.",
+              "2. **SAPA Product Analyzer:** LightGBM demand forecasting & hybrid BERT + LLaMA-3 review toxicity engine.",
+              "3. **Real-Time Drowsiness Detection:** OpenCV & MediaPipe multi-threaded edge video parsing under 30ms latency.",
+              "4. **Financial Fraud Detection:** PySpark & Kafka real-time analytics handling 10,000 msgs/sec."
+            ];
 
+            if (asksForArchitecture) {
+              baseEn.splice(3, 0,
+                "",
+                "```mermaid",
+                "graph TD",
+                "    A[User Client] --> B[Next.js Operations Console]",
+                "    B --> C[FastAPI Serverless API]",
+                "    C --> D[PostgreSQL + pgvector]",
+                "    C --> E[LLM Inference Core]",
+                "```",
+                ""
+              );
+            }
+
+            replyText = baseEn.join("\n");
+          }
         }
 
         // Stream word by word for real-time typing effect

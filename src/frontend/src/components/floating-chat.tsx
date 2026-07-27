@@ -66,12 +66,21 @@ function renderMermaidNodes(mermaidText: string) {
     return <pre className={styles.diagramCode}>{mermaidText}</pre>;
   }
 
+  const cleanLabel = (str: string) => {
+    const cleaned = str.trim();
+    const bracketMatch = cleaned.match(/\[(.*?)\]/);
+    if (bracketMatch && bracketMatch[1]) {
+      return bracketMatch[1].replace(/["']/g, "").trim();
+    }
+    return cleaned.replace(/^[A-Z0-9_-]+\s*/i, "").replace(/["']/g, "").trim() || cleaned;
+  };
+
   const nodes: { from: string; to: string }[] = [];
   lines.forEach((line) => {
     const parts = line.split(/-->|---|->/);
     if (parts.length >= 2) {
-      const from = parts[0].replace(/^[A-Z0-9_-]+\s*\[|\]$/g, "").replace(/["']/g, "").trim();
-      const to = parts[1].replace(/^[A-Z0-9_-]+\s*\[|\]$/g, "").replace(/["']/g, "").trim();
+      const from = cleanLabel(parts[0]);
+      const to = cleanLabel(parts[1]);
       if (from && to) nodes.push({ from, to });
     }
   });
@@ -138,6 +147,8 @@ export function FloatingChat({ locale }: FloatingChatProps) {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [userScrolled, setUserScrolled] = useState(false);
+
   const [telemetry, setTelemetry] = useState({
     latency: "120ms",
     cost: "$0.00000",
@@ -153,11 +164,17 @@ export function FloatingChat({ locale }: FloatingChatProps) {
     return () => window.removeEventListener("open-chat", handleOpenChat);
   }, []);
 
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const target = e.currentTarget;
+    const isAtBottom = target.scrollHeight - target.scrollTop - target.clientHeight < 60;
+    setUserScrolled(!isAtBottom);
+  };
+
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && !userScrolled) {
       messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }
-  }, [messages, isOpen]);
+  }, [messages, isOpen, userScrolled]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInput(e.target.value);
@@ -175,6 +192,8 @@ export function FloatingChat({ locale }: FloatingChatProps) {
     e?.preventDefault();
     const query = overrideQuery || input.trim();
     if (!query || isLoading) return;
+
+    setUserScrolled(false);
 
     const userMsg: Message = {
       id: crypto.randomUUID(),
@@ -328,7 +347,7 @@ export function FloatingChat({ locale }: FloatingChatProps) {
 
           <div className={styles.popupBody}>
             <div className={styles.chatPane}>
-              <div className={styles.messagesArea}>
+              <div className={styles.messagesArea} onScroll={handleScroll}>
                 {messages.length === 0 ? (
                   <div className={styles.emptyState}>
                     <p>👋 {isAr ? "مرحباً! اسألني أي شيء عن خبرات بشار ومشاريعه." : "Hello! Ask me anything about Bashar's experience and projects."}</p>
