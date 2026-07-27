@@ -521,3 +521,90 @@
     padding: 0.75rem 1rem;
   }
 }
+
+/* ── Markdown Paragraphs & Formatted Output ───────────────────────── */
+.markdownText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.paragraph {
+  margin: 0;
+  line-height: 1.75;
+  color: hsl(var(--color-text-body));
+}
+
+.paragraph strong {
+  color: hsl(var(--color-text));
+  font-weight: 700;
+}
+
+/* ── Visual Mermaid Node Diagrams ───────────────────────────────── */
+.diagramCard {
+  background: hsl(var(--color-bg));
+  border: 1px solid hsl(var(--color-secondary) / 0.35);
+  border-radius: var(--radius-md);
+  margin: 1rem 0;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+}
+
+.diagramHeader {
+  background: hsl(var(--color-secondary) / 0.12);
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: hsl(var(--color-secondary));
+  font-family: var(--font-mono);
+  border-bottom: 1px solid hsl(var(--color-secondary) / 0.25);
+}
+
+.diagramFlow {
+  padding: 1.25rem;
+  background: hsl(var(--color-bg-card));
+}
+
+.visualFlowNodes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.flowRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.flowNode {
+  background: hsl(var(--color-bg));
+  border: 1px solid hsl(var(--color-text-muted) / 0.25);
+  padding: 0.4rem 0.85rem;
+  border-radius: var(--radius-xs);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: hsl(var(--color-text-body));
+  font-family: var(--font-mono);
+}
+
+.flowArrow {
+  color: hsl(var(--color-secondary));
+  font-size: 0.875rem;
+  font-weight: 800;
+}
+
+.flowNodeActive {
+  background: hsl(var(--color-secondary) / 0.12);
+  border: 1px solid hsl(var(--color-secondary) / 0.4);
+  padding: 0.4rem 0.85rem;
+  border-radius: var(--radius-xs);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: hsl(var(--color-secondary));
+  font-family: var(--font-mono);
+  box-shadow: 0 0 10px hsl(var(--color-secondary) / 0.15);
+}
+

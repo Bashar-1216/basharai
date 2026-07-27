@@ -11,6 +11,117 @@ function stripThinkTags(text: string): string {
   return cleaned.trimStart();
 }
 
+function parseFormattedMarkdown(
+  text: string,
+  isAr: boolean,
+  copiedId: string | null,
+  onCopy: (txt: string, id: string) => void
+) {
+  if (!text) return null;
+
+  // Split text by ``` code blocks
+  const parts = text.split(/(```[a-z0-9_-]*\n[\s\S]*?```)/gi);
+
+  return parts.map((part, idx) => {
+    if (part.startsWith("```")) {
+      const firstLineEnd = part.indexOf("\n");
+      const langHeader = part.slice(3, firstLineEnd).trim().toLowerCase();
+      const codeBody = part.slice(firstLineEnd + 1, -3).trim();
+      const blockId = `block-${idx}`;
+
+      if (langHeader === "mermaid") {
+        return (
+          <div key={idx} className={styles.diagramCard}>
+            <div className={styles.diagramHeader}>
+              <span>🌐 {isAr ? "المخطط الهيكلي للنظام (System Flow)" : "System Architecture Flow"}</span>
+            </div>
+            <div className={styles.diagramFlow}>{renderMermaidNodes(codeBody)}</div>
+          </div>
+        );
+      }
+
+      return (
+        <div key={idx} className={styles.codeBlock}>
+          <div className={styles.codeHeader}>
+            <span>{langHeader || "code"}</span>
+            <button type="button" onClick={() => onCopy(codeBody, blockId)} className={styles.copyBtn}>
+              {copiedId === blockId ? (isAr ? "✓ تم النسخ" : "✓ Copied") : (isAr ? "📋 نسخ" : "📋 Copy")}
+            </button>
+          </div>
+          <pre className={styles.codeText}>{codeBody}</pre>
+        </div>
+      );
+    }
+
+    return (
+      <div key={idx} className={styles.markdownText}>
+        {renderMarkdownParagraphs(part)}
+      </div>
+    );
+  });
+}
+
+function renderMermaidNodes(mermaidText: string) {
+  const lines = mermaidText.split("\n").filter((l) => l.includes("-->") || l.includes("---") || l.includes("->"));
+  if (lines.length === 0) {
+    return <pre className={styles.diagramCode}>{mermaidText}</pre>;
+  }
+
+  const nodes: { from: string; to: string }[] = [];
+  lines.forEach((line) => {
+    const parts = line.split(/-->|---|->/);
+    if (parts.length >= 2) {
+      const from = parts[0].replace(/^[A-Z0-9_-]+\s*\[|\]$/g, "").replace(/["']/g, "").trim();
+      const to = parts[1].replace(/^[A-Z0-9_-]+\s*\[|\]$/g, "").replace(/["']/g, "").trim();
+      if (from && to) nodes.push({ from, to });
+    }
+  });
+
+  if (nodes.length === 0) {
+    return <pre className={styles.diagramCode}>{mermaidText}</pre>;
+  }
+
+  return (
+    <div className={styles.visualFlowNodes}>
+      {nodes.map((node, idx) => (
+        <div key={idx} className={styles.flowRow}>
+          <div className={styles.flowNode}>{node.from}</div>
+          <div className={styles.flowArrow}>➔</div>
+          <div className={styles.flowNodeActive}>{node.to}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function renderMarkdownParagraphs(text: string) {
+  const paragraphs = text.split("\n\n");
+  return paragraphs.map((para, pIdx) => {
+    const lines = para.split("\n");
+    return (
+      <p key={pIdx} className={styles.paragraph}>
+        {lines.map((line, lIdx) => {
+          const parts = line.split(/(\*\*.*?\*\*)/g);
+          const formattedLine = parts.map((part, bIdx) => {
+            if (part.startsWith("**") && part.endsWith("**")) {
+              return <strong key={bIdx}>{part.slice(2, -2)}</strong>;
+            }
+            return part;
+          });
+
+          return (
+            <span key={lIdx}>
+              {formattedLine}
+              {lIdx < lines.length - 1 && <br />}
+            </span>
+          );
+        })}
+      </p>
+    );
+  });
+}
+
+
 interface Message {
   id: string;
   role: "user" | "assistant";
@@ -187,57 +298,9 @@ export function AssistantConsole({ locale }: AssistantConsoleProps) {
   };
 
   const renderContent = (content: string) => {
-    // Render Mermaid architecture diagrams if available
-    if (content.includes("```mermaid")) {
-      const parts = content.split(/```mermaid([\s\S]*?)```/g);
-      return parts.map((part, index) => {
-        if (index % 2 === 1) {
-          return (
-            <div key={index} className={styles.diagramCard}>
-              <div className={styles.diagramHeader}>
-                <span>🌐 {isAr ? "المخطط الهيكلي للنظام (Mermaid)" : "System Architecture Flow (Mermaid)"}</span>
-              </div>
-              <pre className={styles.diagramCode}>{part.trim()}</pre>
-            </div>
-          );
-        }
-        return <span key={index}>{part}</span>;
-      });
-    }
-
-    // Render formatted code blocks
-    if (content.includes("```")) {
-      const parts = content.split(/```([a-z]*)\n([\s\S]*?)```/g);
-      const elements = [];
-      for (let i = 0; i < parts.length; i++) {
-        if (i % 3 === 2) {
-          const lang = parts[i - 1] || "code";
-          const codeText = parts[i];
-          const blockId = `block-${i}`;
-          elements.push(
-            <div key={i} className={styles.codeBlock}>
-              <div className={styles.codeHeader}>
-                <span>{lang}</span>
-                <button
-                  type="button"
-                  onClick={() => handleCopy(codeText, blockId)}
-                  className={styles.copyBtn}
-                >
-                  {copiedId === blockId ? (isAr ? "✓ تم النسخ" : "✓ Copied") : (isAr ? "📋 نسخ" : "📋 Copy")}
-                </button>
-              </div>
-              <pre className={styles.codeText}>{codeText.trim()}</pre>
-            </div>
-          );
-        } else if (i % 3 === 0 && parts[i]) {
-          elements.push(<span key={i}>{parts[i]}</span>);
-        }
-      }
-      return elements;
-    }
-
-    return content;
+    return parseFormattedMarkdown(content, isAr, copiedId, handleCopy);
   };
+
 
   return (
     <div className={`${styles.consoleWrapper} ${isDevView ? styles.withDev : ""}`}>
