@@ -63,8 +63,98 @@ model Project {
   descriptionAr  String    @db.Text @map("description_ar")
   githubUrl      String?   @map("github_url")
   liveUrl        String?   @map("live_url")
+  status         String    @default("completed") // completed, active, in_production
+  sortOrder      Int       @default(99) @map("sort_order")
+  isFeatured     Boolean   @default(false) @map("is_featured")
+  ogImageUrl     String?   @map("og_image_url")
   publishedAt    DateTime  @default(now()) @map("published_at")
   featured       Boolean   @default(false)
+  
+  metrics        ProjectMetric[]
+  caseStudy      CaseStudy?
+  screenshots    ProjectScreenshot[]
+  technologies   ProjectTechnology[]
+}
+
+model Education {
+  id             String   @id @default(uuid()) @db.Uuid
+  institutionEn  String   @map("institution_en")
+  institutionAr  String?  @map("institution_ar")
+  degreeEn       String   @map("degree_en")
+  degreeAr       String?  @map("degree_ar")
+  fieldEn        String?  @map("field_en")
+  fieldAr        String?  @map("field_ar")
+  startYear      Int      @map("start_year")
+  endYear        Int?     @map("end_year")
+  gpa            String?
+  highlightsEn   String[] @map("highlights_en")
+  highlightsAr   String[] @map("highlights_ar")
+  sortOrder      Int      @default(0) @map("sort_order")
+}
+
+model ProjectMetric {
+  id            String   @id @default(uuid()) @db.Uuid
+  projectId     String   @db.Uuid @map("project_id")
+  metricName    String   @map("metric_name")
+  metricValue   Decimal  @map("metric_value") @db.Decimal(12, 4)
+  metricUnit    String?  @map("metric_unit")
+  metricContext String?  @map("metric_context") @db.Text
+  displayOrder  Int      @default(0) @map("display_order")
+  createdAt     DateTime @default(now()) @map("created_at")
+  
+  project       Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model CaseStudy {
+  id                     String   @id @default(uuid()) @db.Uuid
+  projectId              String   @unique @db.Uuid @map("project_id")
+  problemEn              String?  @db.Text @map("problem_en")
+  problemAr              String?  @db.Text @map("problem_ar")
+  motivationEn           String?  @db.Text @map("motivation_en")
+  motivationAr           String?  @db.Text @map("motivation_ar")
+  architectureDescEn     String?  @db.Text @map("architecture_desc_en")
+  architectureDescAr     String?  @db.Text @map("architecture_desc_ar")
+  architectureDiagramUrl String?  @map("architecture_diagram_url")
+  decisionsEn            String?  @db.Text @map("decisions_en")
+  decisionsAr            String?  @db.Text @map("decisions_ar")
+  challengesEn           String?  @db.Text @map("challenges_en")
+  challengesAr           String?  @db.Text @map("challenges_ar")
+  experimentsEn          String?  @db.Text @map("experiments_en")
+  experimentsAr          String?  @db.Text @map("experiments_ar")
+  lessonsLearnedEn       String?  @db.Text @map("lessons_learned_en")
+  lessonsLearnedAr       String?  @db.Text @map("lessons_learned_ar")
+  updatedAt              DateTime @updatedAt @map("updated_at")
+  
+  project                Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model ProjectScreenshot {
+  id         String   @id @default(uuid()) @db.Uuid
+  projectId  String   @db.Uuid @map("project_id")
+  url        String
+  captionEn  String?  @map("caption_en")
+  captionAr  String?  @map("caption_ar")
+  sortOrder  Int      @default(0) @map("sort_order")
+  
+  project    Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model Technology {
+  id       String              @id @default(uuid()) @db.Uuid
+  name     String              @unique
+  category String?
+  projects ProjectTechnology[]
+}
+
+model ProjectTechnology {
+  projectId    String     @db.Uuid @map("project_id")
+  technologyId String     @db.Uuid @map("technology_id")
+  isPrimary    Boolean    @default(false) @map("is_primary")
+  
+  project      Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  technology   Technology @relation(fields: [technologyId], references: [id], onDelete: Cascade)
+  
+  @@id([projectId, technologyId])
 }
 
 model Experience {
@@ -81,14 +171,19 @@ model Experience {
 }
 
 model BlogPost {
-  id          String   @id @default(uuid()) @db.Uuid
-  slug        String   @unique
-  titleEn     String   @map("title_en")
-  titleAr     String   @map("title_ar")
-  contentEn   String   @db.Text @map("content_en")
-  contentAr   String   @db.Text @map("content_ar")
-  publishedAt DateTime @default(now()) @map("published_at")
-  published   Boolean  @default(false)
+  id                 String   @id @default(uuid()) @db.Uuid
+  slug               String   @unique
+  titleEn            String   @map("title_en")
+  titleAr            String   @map("title_ar")
+  contentEn          String   @db.Text @map("content_en")
+  contentAr          String   @db.Text @map("content_ar")
+  summaryEn          String?  @db.Text @map("summary_en")
+  summaryAr          String?  @db.Text @map("summary_ar")
+  readingTimeMinutes Int?     @map("reading_time_minutes")
+  tags               String[]
+  ogImageUrl         String?  @map("og_image_url")
+  publishedAt        DateTime @default(now()) @map("published_at")
+  published          Boolean  @default(false)
 }
 
 // ==========================================

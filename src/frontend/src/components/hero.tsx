@@ -5,6 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import styles from "./hero.module.css";
 
+import { HeroAgent } from "@/components/hero-agent";
+
 interface HeroProps {
   dict: any;
   locale: Locale;
@@ -40,40 +42,20 @@ export function Hero({ dict, locale }: HeroProps) {
 
           <div className={`${styles.actions} animate-fade-in-up delay-400`}>
             <Link href={`/${locale}/projects`} className="btn-primary">
-              🚀 {isAr ? "استعرض المشاريع" : "View Projects"}
+              {isAr ? "استعرض المشاريع" : "View Projects"}
+            </Link>
+            <Link href={`/${locale}/resume`} className="btn-secondary">
+              {isAr ? "تحميل السيرة الذاتية" : "Download Resume"}
             </Link>
             <Link href={`/${locale}/contact`} className="btn-secondary">
-              📬 {isAr ? "تواصل معي" : "Contact Me"}
+              {isAr ? "تواصل معي" : "Contact Me"}
             </Link>
           </div>
         </div>
 
-        {/* ── Right Column: Split Glass Profile Card ───────────── */}
+        {/* ── Right Column: Interactive Hero AI Agent ─────────── */}
         <div className={`${styles.cardColumn} animate-fade-in-up delay-200`}>
-          <div className={styles.profileCard}>
-            <div className={styles.imageFrame}>
-              <Image
-                src="/avatar.jpg"
-                alt={hero.name}
-                width={400}
-                height={480}
-                className={styles.profileImg}
-                priority
-              />
-              <div className={styles.statusPill}>
-                <span className={styles.liveDot} />
-                <span>{hero.location_status}</span>
-              </div>
-            </div>
-
-            <div className={styles.cardFooter}>
-              <div className={styles.techTags}>
-                <span className={styles.tag}>PyTorch</span>
-                <span className={styles.tag}>LLMs & RAG</span>
-                <span className={styles.tag}>Vision AI</span>
-              </div>
-            </div>
-          </div>
+          <HeroAgent locale={locale} />
         </div>
       </div>
     </section>

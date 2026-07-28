@@ -22,8 +22,8 @@ export async function POST(req: Request) {
     let dbExperiences: any[] = [];
 
     try {
-      dbProjects = await db.project.findMany({ orderBy: { starsCount: "desc" } });
-      dbExperiences = await db.experience.findMany({ orderBy: { period: "desc" } });
+      dbProjects = await db.project.findMany({ orderBy: { publishedAt: "desc" } });
+      dbExperiences = await db.experience.findMany({ orderBy: { startDate: "desc" } });
     } catch (dbErr) {
       console.warn("DB context fetch fallback:", dbErr);
     }

@@ -9,11 +9,14 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import text
 from google.genai import types
 
+from datetime import datetime
 from app.core.db import get_db
 from app.core.config import settings
 from app.core.rate_limit import check_rate_limit
 from app.core.gemini import get_gemini_embedding
 from app.core.llm import generate_text_content, stream_text_content, is_groq_active
+from app.services import detect_persona, RedisConversationMemory
+from app.tools import get_projects, get_project_detail, get_github_stats, get_resume, search_knowledge_base, run_interview
 
 router = APIRouter()
 
@@ -21,6 +24,18 @@ class ChatRequest(BaseModel):
     message: str
     locale: str = "en"
     session_id: str | None = None
+
+class SessionRequest(BaseModel):
+    locale: str = "en"
+    persona_hint: str | None = None
+
+@router.post("/session", status_code=201)
+async def create_session(req: SessionRequest):
+    session_id = str(uuid.uuid4())
+    memory = RedisConversationMemory(session_id)
+    if req.persona_hint:
+        await memory.set_persona(req.persona_hint)
+    return {"session_id": session_id, "created_at": datetime.utcnow().isoformat()}
 
 async def run_llm_judge(context: str, response: str, query: str) -> tuple[float, float, float]:
     """LLM-as-a-Judge evaluation of Groundedness, Context Relevance, and Answer Relevance using Groq/Gemini."""

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import type { Locale } from "@/lib/i18n";
 import { getDictionary } from "@/lib/i18n";
 import { db } from "@/lib/db";
@@ -9,6 +10,33 @@ import { notFound } from "next/navigation";
 
 interface ProjectDetailPageProps {
   params: Promise<{ locale: string; slug: string }>;
+}
+
+export async function generateMetadata({ params }: ProjectDetailPageProps): Promise<Metadata> {
+  const { locale, slug } = await params;
+  const project = await db.project.findUnique({ where: { slug } });
+  if (!project) return {};
+
+  const isAr = locale === "ar";
+  const title = isAr ? (project.titleAr || project.titleEn) : project.titleEn;
+  const description = isAr ? (project.descriptionAr || project.descriptionEn) : project.descriptionEn;
+
+  return {
+    title: `${title} — Bashar Almuntaser AI Portfolio`,
+    description: description,
+    openGraph: {
+      title,
+      description,
+      url: `https://bashar.ai/${locale}/projects/${slug}`,
+    },
+    alternates: {
+      canonical: `https://bashar.ai/en/projects/${slug}`,
+      languages: {
+        en: `https://bashar.ai/en/projects/${slug}`,
+        ar: `https://bashar.ai/ar/projects/${slug}`,
+      },
+    },
+  };
 }
 
 interface CaseStudySection {
@@ -40,9 +68,9 @@ const studiesEn: Record<string, CaseStudySection> = {
     ],
     lessons: "Structured output constraints (Pydantic schema validation) prevent downstream pipeline breakdowns.",
     knowledgeGraph: {
-      experience: { title: "GEO Project Lead", url: "/experience/geo-platform" },
-      dashboard: { title: "Telemetry Dashboard", url: "/dashboard" },
-      blog: { title: "How I built this platform", url: "/blog/portfolio-build" }
+      experience: { title: "GEO Project Lead", url: "/en/experience" },
+      dashboard: { title: "Telemetry Dashboard", url: "/en/assistant" },
+      blog: { title: "How I built this platform", url: "/en/blog" }
     }
   },
   sapa: {
@@ -58,9 +86,9 @@ const studiesEn: Record<string, CaseStudySection> = {
     ],
     lessons: "TimescaleDB hypertable setups make scaling pricing data pipelines extremely fast and memory-efficient.",
     knowledgeGraph: {
-      experience: { title: "SAPA ML Engineer", url: "/experience/sapa" },
-      dashboard: { title: "Telemetry Metrics", url: "/dashboard" },
-      blog: { title: "Processing reviews in bulk", url: "/blog/nlp-testing" }
+      experience: { title: "SAPA ML Engineer", url: "/en/experience" },
+      dashboard: { title: "Telemetry Metrics", url: "/en/assistant" },
+      blog: { title: "Processing reviews in bulk", url: "/en/blog" }
     }
   },
   "drowsiness-detection": {
@@ -76,9 +104,9 @@ const studiesEn: Record<string, CaseStudySection> = {
     ],
     lessons: "Multithreading video and audio processing is mandatory to keep real-time inference pipelines fluid.",
     knowledgeGraph: {
-      experience: { title: "CV Safety Engineer", url: "/experience/drowsiness-detection" },
-      dashboard: { title: "Telemetry Dashboard", url: "/dashboard" },
-      blog: { title: "Real-time CV pipelines", url: "/blog/nlp-testing" }
+      experience: { title: "CV Safety Engineer", url: "/en/experience" },
+      dashboard: { title: "Telemetry Dashboard", url: "/en/assistant" },
+      blog: { title: "Real-time CV pipelines", url: "/en/blog" }
     }
   },
   "fraud-detection": {
@@ -94,9 +122,9 @@ const studiesEn: Record<string, CaseStudySection> = {
     ],
     lessons: "Kafka partitioning is crucial to ensure high throughput analytics scalability.",
     knowledgeGraph: {
-      experience: { title: "PySpark Developer", url: "/experience/fraud-detection" },
-      dashboard: { title: "Telemetry Dashboard", url: "/dashboard" },
-      blog: { title: "Big Data Pipelines", url: "/blog/nlp-testing" }
+      experience: { title: "PySpark Developer", url: "/en/experience" },
+      dashboard: { title: "Telemetry Dashboard", url: "/en/assistant" },
+      blog: { title: "Big Data Pipelines", url: "/en/blog" }
     }
   },
   "sentiment-analysis": {
@@ -112,9 +140,9 @@ const studiesEn: Record<string, CaseStudySection> = {
     ],
     lessons: "Pre-processing steps (Arabic normalization, diacritics removal) determine more than 50% of the classification success.",
     knowledgeGraph: {
-      experience: { title: "Arabic NLP Lead", url: "/experience/sentiment-analysis" },
-      dashboard: { title: "Telemetry Dashboard", url: "/dashboard" },
-      blog: { title: "Bilingual NLP pipelines", url: "/blog/portfolio-build" }
+      experience: { title: "Arabic NLP Lead", url: "/en/experience" },
+      dashboard: { title: "Telemetry Dashboard", url: "/en/assistant" },
+      blog: { title: "Bilingual NLP pipelines", url: "/en/blog" }
     }
   }
 };
@@ -125,7 +153,7 @@ const studiesAr: Record<string, CaseStudySection> = {
     problem: "تحليل الفجوات الميزاتية ومراقبة الهلوسة للنماذج اللغوية المتعددة في الوقت الفعلي.",
     architecture: "Next.js (BFF) ➔ NestJS Backend ➔ Python Workers (Celery/BullMQ) ➔ PostgreSQL trigram search.",
     tradeoffs: "استخدام فهرسة pg_trgm لربط ومطابقة الكيانات ثنائية اللغة لأسواق الخليج بدقة 70-80% دون استهلاك موارد المعالجة الدلالية المعقدة.",
-    evaluation: "تفعيل سجل تتبع مراقبة انحراف النماذج واختبارات McNemar الإحصائية (بحد أدنى 50 دورة تشغيل).",
+    evaluation: "تفعيل سجل تتبع مراقبة انحراف النماذج وااختبارات McNemar الإحصائية (بحد أدنى 50 دورة تشغيل).",
     metrics: [
       { label: "مراحل المعالجة", val: "8 مهام" },
       { label: "دقة مطابقة الكيانات", val: "70-80% 🟢" },
@@ -133,9 +161,9 @@ const studiesAr: Record<string, CaseStudySection> = {
     ],
     lessons: "التحقق المسبق من المخرجات عبر مخططات Pydantic يمنع تعطل خطوط المعالجة غير المتزامنة.",
     knowledgeGraph: {
-      experience: { title: "قائد مشروع منصة GEO", url: "/experience/geo-platform" },
-      dashboard: { title: "لوحة تحليلات المراقبة", url: "/dashboard" },
-      blog: { title: "كيف بنيت هذا النظام؟", url: "/blog/portfolio-build" }
+      experience: { title: "قائد مشروع منصة GEO", url: "/ar/experience" },
+      dashboard: { title: "لوحة تحليلات المراقبة", url: "/ar/assistant" },
+      blog: { title: "كيف بنيت هذا النظام؟", url: "/ar/blog" }
     }
   },
   sapa: {
@@ -151,9 +179,9 @@ const studiesAr: Record<string, CaseStudySection> = {
     ],
     lessons: "توزيع جداول TimescaleDB يجعل توسيع وتتبع بيانات الأسعار فعالاً وسريعاً للغاية.",
     knowledgeGraph: {
-      experience: { title: "مهندس تعلم آلي SAPA", url: "/experience/sapa" },
-      dashboard: { title: "تحليلات المراقبة", url: "/dashboard" },
-      blog: { title: "تحليل التعليقات الضخمة", url: "/blog/nlp-testing" }
+      experience: { title: "مهندس تعلم آلي SAPA", url: "/ar/experience" },
+      dashboard: { title: "تحليلات المراقبة", url: "/ar/assistant" },
+      blog: { title: "تحليل التعليقات الضخمة", url: "/ar/blog" }
     }
   },
   "drowsiness-detection": {
@@ -169,9 +197,9 @@ const studiesAr: Record<string, CaseStudySection> = {
     ],
     lessons: "المعالجة المتوازية للفيديو والصوت هي الحل الوحيد للحفاظ على سرعة أنظمة الاستدلال الحية.",
     knowledgeGraph: {
-      experience: { title: "مهندس رؤية حاسوبية", url: "/experience/drowsiness-detection" },
-      dashboard: { title: "لوحة تحليلات المراقبة", url: "/dashboard" },
-      blog: { title: "أنظمة الرؤية اللحظية", url: "/blog/nlp-testing" }
+      experience: { title: "مهندس رؤية حاسوبية", url: "/ar/experience" },
+      dashboard: { title: "لوحة تحليلات المراقبة", url: "/ar/assistant" },
+      blog: { title: "أنظمة الرؤية اللحظية", url: "/ar/blog" }
     }
   },
   "fraud-detection": {
@@ -187,9 +215,9 @@ const studiesAr: Record<string, CaseStudySection> = {
     ],
     lessons: "تقسيم مواضيع Kafka ضروري للحفاظ على موثوقية استيعاب تدفق البيانات الكبيرة.",
     knowledgeGraph: {
-      experience: { title: "مطور أنظمة PySpark", url: "/experience/fraud-detection" },
-      dashboard: { title: "تحليلات المراقبة", url: "/dashboard" },
-      blog: { title: "معالجة البيانات الكبيرة", url: "/blog/nlp-testing" }
+      experience: { title: "مطور أنظمة PySpark", url: "/ar/experience" },
+      dashboard: { title: "تحليلات المراقبة", url: "/ar/assistant" },
+      blog: { title: "معالجة البيانات الكبيرة", url: "/ar/blog" }
     }
   },
   "sentiment-analysis": {
@@ -205,9 +233,9 @@ const studiesAr: Record<string, CaseStudySection> = {
     ],
     lessons: "مرحلة معالجة وتنسيق النصوص العربية (التقطيع والتشكيل والتطهير) تمثل أكثر من 50% من نجاح جودة التصنيف.",
     knowledgeGraph: {
-      experience: { title: "مهندس معالجة لغة طبيعية", url: "/experience/sentiment-analysis" },
-      dashboard: { title: "لوحة تحليلات المراقبة", url: "/dashboard" },
-      blog: { title: "معالجة اللغة الطبيعية", url: "/blog/portfolio-build" }
+      experience: { title: "مهندس معالجة لغة طبيعية", url: "/ar/experience" },
+      dashboard: { title: "لوحة تحليلات المراقبة", url: "/ar/assistant" },
+      blog: { title: "معالجة اللغة الطبيعية", url: "/ar/blog" }
     }
   }
 };

@@ -2,7 +2,7 @@
 
 from fastapi import APIRouter
 
-from app.api.endpoints import health, chat, github, linkedin, resume, career
+from app.api.endpoints import health, chat, github, linkedin, resume, career, projects, embeddings
 
 api_router = APIRouter()
 
@@ -11,6 +11,12 @@ api_router.include_router(health.router, tags=["Health"])
 
 # ── Chat Assistant ────────────────────────────────────────────────
 api_router.include_router(chat.router, tags=["Chat"])
+
+# ── Projects API ──────────────────────────────────────────────────
+api_router.include_router(projects.router, prefix="/projects", tags=["Projects"])
+
+# ── Embeddings Maintenance ────────────────────────────────────────
+api_router.include_router(embeddings.router, prefix="/embeddings", tags=["Embeddings"])
 
 # ── GitHub Integrations ───────────────────────────────────────────
 api_router.include_router(github.router, prefix="/github", tags=["GitHub"])

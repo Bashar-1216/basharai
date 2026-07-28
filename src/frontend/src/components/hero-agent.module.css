@@ -1,0 +1,160 @@
+.agentCard {
+  background: linear-gradient(135deg, hsl(var(--color-bg-card) / 0.85) 0%, hsl(var(--color-bg) / 0.95) 100%);
+  border: 1px solid hsl(var(--color-primary) / 0.3);
+  border-radius: 24px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  backdrop-filter: blur(16px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4),
+              0 0 30px 2px hsl(var(--color-primary) / 0.08);
+  height: 440px;
+  max-width: 100%;
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 0.75rem;
+}
+
+.agentInfo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.agentDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 10px #10b981;
+}
+
+.agentTitle {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: hsl(var(--color-text));
+  letter-spacing: -0.01em;
+}
+
+.modelTag {
+  font-size: 0.7rem;
+  font-family: var(--font-mono);
+  color: hsl(var(--color-primary));
+  background: hsl(var(--color-primary) / 0.1);
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  border: 1px solid hsl(var(--color-primary) / 0.2);
+}
+
+.chatArea {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding-right: 0.25rem;
+}
+
+.msgBubble {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  padding: 0.75rem 1rem;
+  border-radius: 16px;
+  max-width: 90%;
+  word-break: break-word;
+}
+
+.assistantMsg {
+  background: hsl(var(--color-bg-secondary));
+  color: hsl(var(--color-text-body));
+  align-self: flex-start;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.userMsg {
+  background: hsl(var(--color-primary) / 0.15);
+  color: hsl(var(--color-text));
+  align-self: flex-end;
+  border: 1px solid hsl(var(--color-primary) / 0.3);
+}
+
+.loadingMsg {
+  display: flex;
+  gap: 0.25rem;
+  padding: 0.5rem 1rem;
+}
+
+.promptsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+}
+
+.promptBtn {
+  font-size: 0.75rem;
+  font-family: var(--font-sans);
+  text-align: left;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: hsl(var(--color-text-body));
+  padding: 0.5rem 0.75rem;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.promptBtn:hover {
+  background: hsl(var(--color-primary) / 0.1);
+  border-color: hsl(var(--color-primary) / 0.3);
+  color: hsl(var(--color-text));
+}
+
+.inputRow {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.inputRow input {
+  flex: 1;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 0.6rem 0.85rem;
+  color: hsl(var(--color-text));
+  font-size: 0.875rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.inputRow input:focus {
+  border-color: hsl(var(--color-primary));
+}
+
+.inputRow button {
+  background: hsl(var(--color-primary));
+  color: #040d1a;
+  font-weight: 700;
+  font-size: 0.8125rem;
+  border: none;
+  border-radius: 12px;
+  padding: 0 1rem;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.inputRow button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .agentCard {
+    display: none; /* Collapses to floating chat on mobile per PRD */
+  }
+}

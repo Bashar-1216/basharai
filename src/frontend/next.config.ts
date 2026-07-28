@@ -6,6 +6,15 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
   output: "standalone",
+  async redirects() {
+    return [
+      {
+        source: "/dashboard",
+        destination: "/en",
+        permanent: false,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

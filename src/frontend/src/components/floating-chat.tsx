@@ -352,10 +352,10 @@ export function FloatingChat({ locale }: FloatingChatProps) {
                   <div className={styles.emptyState}>
                     <p>👋 {isAr ? "مرحباً! اسألني أي شيء عن خبرات بشار ومشاريعه." : "Hello! Ask me anything about Bashar's experience and projects."}</p>
                     <div className={styles.chips}>
-                      <button type="button" onClick={() => handleSubmit(null, isAr ? "ما هي مشاريع بشار؟" : "What are Bashar's projects?")} className={styles.chip}>
+                      <button type="button" onClick={() => handleSubmit(undefined, isAr ? "ما هي مشاريع بشار؟" : "What are Bashar's projects?")} className={styles.chip}>
                         {isAr ? "المشاريع" : "Projects"}
                       </button>
-                      <button type="button" onClick={() => handleSubmit(null, isAr ? "أخبرني عن خلفية بشار المهنية" : "Tell me about Bashar's background")} className={styles.chip}>
+                      <button type="button" onClick={() => handleSubmit(undefined, isAr ? "أخبرني عن خلفية بشار المهنية" : "Tell me about Bashar's background")} className={styles.chip}>
                         {isAr ? "عن بشار" : "About Me"}
                       </button>
                     </div>

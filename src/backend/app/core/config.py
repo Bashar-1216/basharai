@@ -21,10 +21,10 @@ class Settings(BaseSettings):
     OPENAI_API_KEY: str = ""
 
     # ── Gemini ───────────────────────────────────────────────────
-    GEMINI_API_KEY: str = "AQ.Ab8RN6LNVhLWW1S7CGnavH2kJYjCxNU6fKmv8rU07j4i2KBAaQ"
+    GEMINI_API_KEY: str = ""
 
     # ── Groq ─────────────────────────────────────────────────────
-    GROQ_API_KEY: str = "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"
+    GROQ_API_KEY: str = ""
 
     # ── Security ─────────────────────────────────────────────────
     INTERNAL_API_KEY: str = "dev-internal-key-change-me"

@@ -151,10 +151,145 @@ async function seedProjects() {
   console.log("Projects updated successfully without duplicates.");
 }
 
+async function seedEducation() {
+  const educationList = [
+    {
+      institutionEn: "Sana'a University",
+      institutionAr: "جامعة صنعاء",
+      degreeEn: "Bachelor of Science in Computer Science & Artificial Intelligence",
+      degreeAr: "بكالوريوس علوم الحاسوب والذكاء الاصطناعي",
+      fieldEn: "Artificial Intelligence & Software Engineering",
+      fieldAr: "الذكاء الاصطناعي وهندسة البرمجيات",
+      startYear: 2020,
+      endYear: 2024,
+      gpa: "3.8/4.0",
+      highlightsEn: [
+        "Specialized in Machine Learning, Deep Learning, and Computer Vision",
+        "Graduation Project: Real-Time Drowsiness & Alertness System using Computer Vision (Grade: Excellent)",
+        "Published technical papers on Arabic NLP Dialectal Classification"
+      ],
+      highlightsAr: [
+        "التخصص في التعلم الآلي، التعلم العميق، والرؤية الحاسوبية",
+        "مشروع التخرج: نظام كشف النعاس واليقظة اللحظي باستخدام الرؤية الحاسوبية (تقدير: ممتاز)",
+        "أبحاث تقنية في تصنيف اللهجات العربية باستخدام تقنيات NLP"
+      ],
+      sortOrder: 1,
+    },
+  ];
+
+  for (const edu of educationList) {
+    const existing = await prisma.education.findFirst({
+      where: { institutionEn: edu.institutionEn },
+    });
+    if (existing) {
+      await prisma.education.update({
+        where: { id: existing.id },
+        data: edu,
+      });
+    } else {
+      await prisma.education.create({
+        data: edu,
+      });
+    }
+  }
+  console.log("Education seeded successfully.");
+}
+
+async function seedProjectMetrics() {
+  const metricsData = [
+    {
+      projectSlug: "geo-platform",
+      metrics: [
+        { metricName: "Pipeline Tasks", metricValue: 8, metricUnit: "stages", metricContext: "async BullMQ Python workers", displayOrder: 1 },
+        { metricName: "Trigram Entity Accuracy", metricValue: 78.5, metricUnit: "%", metricContext: "bilingual Gulf Arabic/English entity resolution", displayOrder: 2 },
+        { metricName: "Model Evaluation Runs", metricValue: 50, metricUnit: "runs", metricContext: "canary monitoring & McNemar tests", displayOrder: 3 },
+      ],
+    },
+    {
+      projectSlug: "sapa",
+      metrics: [
+        { metricName: "Demand Forecast MAE", metricValue: 4.2, metricUnit: "%", metricContext: "LightGBM 90-day Amazon product sales prediction", displayOrder: 1 },
+        { metricName: "TimescaleDB Query Speedup", metricValue: 24, metricUnit: "x", metricContext: "compared to standard Postgres table range queries", displayOrder: 2 },
+        { metricName: "Toxicity Detection F1", metricValue: 92.1, metricUnit: "%", metricContext: "LLaMA-3 & BERT hybrid review analysis", displayOrder: 3 },
+      ],
+    },
+    {
+      projectSlug: "arabic-sentiment-analysis",
+      metrics: [
+        { metricName: "F1 Score", metricValue: 91.4, metricUnit: "%", metricContext: "macro-averaged on ASTD Arabic test set", displayOrder: 1 },
+        { metricName: "Inference Latency", metricValue: 38, metricUnit: "ms", metricContext: "p95, FastAPI, batch size 1", displayOrder: 2 },
+        { metricName: "Dataset Size", metricValue: 12400, metricUnit: "docs", metricContext: "5-fold CV labeled Arabic social reviews", displayOrder: 3 },
+      ],
+    },
+    {
+      projectSlug: "real-time-driver-monitoring-system",
+      metrics: [
+        { metricName: "Frame Rate", metricValue: 30, metricUnit: "FPS", metricContext: "multithreaded OpenCV + MediaPipe pipeline", displayOrder: 1 },
+        { metricName: "Inference Latency", metricValue: 28, metricUnit: "ms", metricContext: "real-time EAR calculation per frame", displayOrder: 2 },
+        { metricName: "Classification Accuracy", metricValue: 94.8, metricUnit: "%", metricContext: "eye aspect ratio alertness trigger", displayOrder: 3 },
+      ],
+    },
+    {
+      projectSlug: "financial-fraud-detection",
+      metrics: [
+        { metricName: "Precision", metricValue: 94.2, metricUnit: "%", metricContext: "held-out test set of 284,807 transactions", displayOrder: 1 },
+        { metricName: "Recall", metricValue: 89.7, metricUnit: "%", metricContext: "anomalous financial transaction bursts", displayOrder: 2 },
+        { metricName: "Kafka Throughput", metricValue: 15000, metricUnit: "tx/s", metricContext: "real-time PySpark streaming pipeline", displayOrder: 3 },
+      ],
+    },
+    {
+      projectSlug: "fake-review-detection",
+      metrics: [
+        { metricName: "Cross-Domain Accuracy", metricValue: 88.6, metricUnit: "%", metricContext: "domain-adversarial transformer classifier", displayOrder: 1 },
+        { metricName: "Detection Latency", metricValue: 45, metricUnit: "ms", metricContext: "FastAPI REST API inference endpoint", displayOrder: 2 },
+        { metricName: "Training Corpus", metricValue: 25000, metricUnit: "reviews", metricContext: "multi-category e-commerce reviews", displayOrder: 3 },
+      ],
+    },
+  ];
+
+  for (const item of metricsData) {
+    const project = await prisma.project.findUnique({
+      where: { slug: item.projectSlug },
+    });
+    if (!project) continue;
+
+    for (const m of item.metrics) {
+      const existing = await prisma.projectMetric.findFirst({
+        where: { projectId: project.id, metricName: m.metricName },
+      });
+      if (existing) {
+        await prisma.projectMetric.update({
+          where: { id: existing.id },
+          data: {
+            metricValue: m.metricValue,
+            metricUnit: m.metricUnit,
+            metricContext: m.metricContext,
+            displayOrder: m.displayOrder,
+          },
+        });
+      } else {
+        await prisma.projectMetric.create({
+          data: {
+            projectId: project.id,
+            metricName: m.metricName,
+            metricValue: m.metricValue,
+            metricUnit: m.metricUnit,
+            metricContext: m.metricContext,
+            displayOrder: m.displayOrder,
+          },
+        });
+      }
+    }
+  }
+  console.log("Project metrics seeded successfully.");
+}
+
 async function main() {
-  console.log("Updating database with clean projects and experiences...");
+  console.log("Updating database with clean projects, experiences, education, and metrics...");
   await seedExperiences();
   await seedProjects();
+  await seedEducation();
+  await seedProjectMetrics();
   console.log("Database update completed successfully.");
 }
 
