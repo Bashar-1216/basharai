@@ -20,26 +20,29 @@ export default async function HomePage({ params }: HomePageProps) {
   const { locale } = await params;
   const dict = await getDictionary(locale as Locale);
 
-  // Fetch top 3 projects from DB
-  const projects = await db.project.findMany({
-    orderBy: { publishedAt: "desc" },
-    take: 3,
-  });
+  // Fetch top 3 projects from DB with safe fallback
+  let projects: any[] = [];
+  let experiences: any[] = [];
+  let latestPost: any = null;
+  let githubStats: any[] = [];
 
-  // Fetch top 2 experiences from DB
-  const experiences = await db.experience.findMany({
-    orderBy: { startDate: "desc" },
-    take: 2,
-  });
-
-  // Fetch latest blog post from DB
-  const latestPost = await db.blogPost.findFirst({
-    where: { published: true },
-    orderBy: { publishedAt: "desc" },
-  });
-
-  // Fetch cached GitHub stats from DB
-  const githubStats = await db.githubRepository.findMany();
+  try {
+    projects = await db.project.findMany({
+      orderBy: { publishedAt: "desc" },
+      take: 3,
+    });
+    experiences = await db.experience.findMany({
+      orderBy: { startDate: "desc" },
+      take: 2,
+    });
+    latestPost = await db.blogPost.findFirst({
+      where: { published: true },
+      orderBy: { publishedAt: "desc" },
+    });
+    githubStats = await db.githubRepository.findMany();
+  } catch (err) {
+    console.warn("Homepage DB fetch fallback:", err);
+  }
 
   const getRepoStats = (githubUrl: string | null) => {
     if (!githubUrl) return null;

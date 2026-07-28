@@ -7,6 +7,9 @@ import styles from "./blog-detail.module.css";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 interface BlogPostProps {
   params: Promise<{ locale: string; slug: string }>;
 }
@@ -16,10 +19,15 @@ export default async function BlogPostPage({ params }: BlogPostProps) {
   const dict = await getDictionary(locale as Locale);
   const isAr = locale === "ar";
 
-  // Try DB first
-  const dbPost = await db.blogPost.findUnique({
-    where: { slug },
-  });
+  // Try DB first with safe fallback
+  let dbPost: any = null;
+  try {
+    dbPost = await db.blogPost.findUnique({
+      where: { slug },
+    });
+  } catch (err) {
+    console.warn("Blog detail DB fetch fallback:", err);
+  }
 
   const staticFallback: Record<string, any> = {
     "portfolio-build": {

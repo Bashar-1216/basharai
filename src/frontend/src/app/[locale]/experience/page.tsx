@@ -20,13 +20,21 @@ function getExperienceSlug(companyName: string): string {
   return c.replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
 }
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function ExperienceIndex({ params }: ExperienceIndexProps) {
   const { locale } = await params;
   const dict = await getDictionary(locale as Locale);
 
-  const experiences = await db.experience.findMany({
-    orderBy: { startDate: "desc" },
-  });
+  let experiences: any[] = [];
+  try {
+    experiences = await db.experience.findMany({
+      orderBy: { startDate: "desc" },
+    });
+  } catch (err) {
+    console.warn("Experiences DB fetch fallback:", err);
+  }
 
   const isAr = locale === "ar";
 

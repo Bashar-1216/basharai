@@ -6,6 +6,9 @@ import { Footer } from "@/components/footer";
 import styles from "./blog.module.css";
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 interface BlogIndexProps {
   params: Promise<{ locale: string }>;
 }
@@ -15,11 +18,16 @@ export default async function BlogIndex({ params }: BlogIndexProps) {
   const dict = await getDictionary(locale as Locale);
   const isAr = locale === "ar";
 
-  // Fetch real blog posts from database
-  const dbPosts = await db.blogPost.findMany({
-    where: { published: true },
-    orderBy: { publishedAt: "desc" },
-  });
+  // Fetch real blog posts from database with safe fallback
+  let dbPosts: any[] = [];
+  try {
+    dbPosts = await db.blogPost.findMany({
+      where: { published: true },
+      orderBy: { publishedAt: "desc" },
+    });
+  } catch (err) {
+    console.warn("Blog posts DB fetch fallback:", err);
+  }
 
   const posts = dbPosts.length > 0 ? dbPosts : [
     {
