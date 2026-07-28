@@ -2,6 +2,9 @@
   "name": "basharai-monorepo",
   "version": "0.1.0",
   "private": true,
+  "workspaces": [
+    "src/frontend"
+  ],
   "scripts": {
     "build": "cd src/frontend && npx prisma generate && next build",
     "dev": "cd src/frontend && next dev"
