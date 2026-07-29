@@ -191,21 +191,21 @@
 
 /* ── Responsive ────────────────────────────────────────────── */
 @media (max-width: 960px) {
-  .gridContainer {
-    grid-template-columns: 1fr;
-    gap: 2.5rem;
+  .gridContainer,
+  :global([dir="rtl"]) .gridContainer {
+    grid-template-columns: 1fr !important;
+    gap: 2rem;
     text-align: center;
   }
-  .textContent {
-    align-items: center;
-    text-align: center;
-  }
+  .textContent,
   :global([dir="rtl"]) .textContent {
     align-items: center;
     text-align: center;
+    width: 100%;
   }
   .actions {
     justify-content: center;
+    width: 100%;
   }
   .cardColumn {
     width: 100%;
