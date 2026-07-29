@@ -250,10 +250,14 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
   let project: any = null;
   try {
     project = await db.project.findUnique({
-      where: { slug }
+      where: { slug },
+      include: {
+        caseStudy: true,
+        metrics: true,
+      },
     });
   } catch (err) {
-    console.warn("Project detail DB fetch fallback:", err);
+    console.warn("Project detail DB fetch error:", err);
   }
 
   // Fallback mock project if DB is unreachable during build/offline
