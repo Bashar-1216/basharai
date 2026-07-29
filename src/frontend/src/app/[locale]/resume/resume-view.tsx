@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { ResumeActions } from "./resume-actions";
 import styles from "./resume.module.css";
+import { MarkdownRenderer } from "@/components/markdown-renderer";
 
 interface Experience {
   id: string;
@@ -352,21 +353,27 @@ export function ResumeView({ locale, experiences, projects }: ResumeViewProps) {
           {(aiResponse || isLoading) && (
             <div
               style={{
-                marginTop: "1.25rem",
-                padding: "1rem 1.25rem",
-                background: "rgba(0, 0, 0, 0.35)",
-                borderRadius: "14px",
-                border: "1px solid hsl(var(--color-primary) / 0.25)",
-                fontSize: "0.875rem",
-                lineHeight: 1.65,
+                marginTop: "1.5rem",
+                padding: "1.5rem 1.75rem",
+                background: "rgba(4, 13, 26, 0.75)",
+                borderRadius: "16px",
+                border: "1px solid hsl(var(--color-primary) / 0.4)",
+                boxShadow: "0 10px 30px rgba(0,0,0,0.5), 0 0 20px hsl(var(--color-primary) / 0.1)",
+                fontSize: "0.9375rem",
+                lineHeight: 1.7,
                 color: "hsl(var(--color-text-body))",
-                whiteSpace: "pre-wrap",
               }}
             >
-              <div style={{ fontSize: "0.75rem", fontWeight: 700, color: "hsl(var(--color-primary))", marginBottom: "0.5rem" }}>
-                🤖 Bashar AI Copilot
+              <div style={{ fontSize: "0.8125rem", fontWeight: 800, color: "hsl(var(--color-primary))", marginBottom: "0.75rem", display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                <span>🤖</span> Bashar AI Copilot
               </div>
-              {aiResponse || (isAr ? "جاري صياغة الإجابة من قاعدة البيانات ونموذج الذكاء الاصطناعي..." : "Formulating response from database context and LLM model...")}
+              {aiResponse ? (
+                <MarkdownRenderer content={aiResponse} />
+              ) : (
+                <div style={{ color: "hsl(var(--color-text-muted))" }}>
+                  {isAr ? "جاري صياغة الإجابة من قاعدة البيانات ونموذج الذكاء الاصطناعي..." : "Formulating response from database context and LLM model..."}
+                </div>
+              )}
             </div>
           )}
         </div>
