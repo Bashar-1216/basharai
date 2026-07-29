@@ -152,26 +152,29 @@ async function seedProjects() {
 }
 
 async function seedEducation() {
+  // Clear old education entries first
+  await prisma.education.deleteMany({});
+
   const educationList = [
     {
-      institutionEn: "Sana'a University",
-      institutionAr: "جامعة صنعاء",
+      institutionEn: "Emirates International University",
+      institutionAr: "الجامعة الإماراتية الدولية",
       degreeEn: "Bachelor of Science in Computer Science & Artificial Intelligence",
       degreeAr: "بكالوريوس علوم الحاسوب والذكاء الاصطناعي",
-      fieldEn: "Artificial Intelligence & Software Engineering",
-      fieldAr: "الذكاء الاصطناعي وهندسة البرمجيات",
-      startYear: 2020,
-      endYear: 2024,
-      gpa: "3.8/4.0",
+      fieldEn: "Artificial Intelligence & Computer Science",
+      fieldAr: "الذكاء الاصطناعي وعلوم الحاسوب",
+      startYear: 2022,
+      endYear: 2026,
+      gpa: "87.62% (Very Good / جيد جداً)",
       highlightsEn: [
-        "Specialized in Machine Learning, Deep Learning, and Computer Vision",
-        "Graduation Project: Real-Time Drowsiness & Alertness System using Computer Vision (Grade: Excellent)",
-        "Published technical papers on Arabic NLP Dialectal Classification"
+        "Cumulative Grade: 87.62% (Very Good / جيد جداً)",
+        "Specialized in Artificial Intelligence, LLM Systems, and Computer Vision",
+        "Graduation Project: Real-Time Drowsiness & Driver Safety System"
       ],
       highlightsAr: [
-        "التخصص في التعلم الآلي، التعلم العميق، والرؤية الحاسوبية",
-        "مشروع التخرج: نظام كشف النعاس واليقظة اللحظي باستخدام الرؤية الحاسوبية (تقدير: ممتاز)",
-        "أبحاث تقنية في تصنيف اللهجات العربية باستخدام تقنيات NLP"
+        "المعدل التراكمي النهائي: 87.62% (بتقدير جيد جداً)",
+        "التخصص في الذكاء الاصطناعي، أنظمة النماذج اللغوية الكبيرة، والرؤية الحاسوبية",
+        "مشروع التخرج: نظام مراقبة السلامة والنعاس في الوقت الفعلي"
       ],
       sortOrder: 1,
     },
