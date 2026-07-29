@@ -168,13 +168,13 @@ async function seedEducation() {
       gpa: "87.62% (Very Good / جيد جداً)",
       highlightsEn: [
         "Cumulative Grade: 87.62% (Very Good / جيد جداً)",
-        "Specialized in Artificial Intelligence, LLM Systems, and Computer Vision",
-        "Graduation Project: Real-Time Drowsiness & Driver Safety System"
+        "Specialized in Artificial Intelligence, LLM Systems, and Machine Learning",
+        "Graduation Project: SAPA — Smart Amazon Product Analyzer (AI Demand Forecasting & Review Sentiment Pipeline)"
       ],
       highlightsAr: [
         "المعدل التراكمي النهائي: 87.62% (بتقدير جيد جداً)",
-        "التخصص في الذكاء الاصطناعي، أنظمة النماذج اللغوية الكبيرة، والرؤية الحاسوبية",
-        "مشروع التخرج: نظام مراقبة السلامة والنعاس في الوقت الفعلي"
+        "التخصص في الذكاء الاصطناعي، أنظمة النماذج اللغوية الكبيرة، والتعلم الآلي",
+        "مشروع التخرج: SAPA — المحلل الذكي لمنتجات أمازون (التنبؤ بالطلب وتحليل المشاعر وتصفية المراجعات)"
       ],
       sortOrder: 1,
     },
