@@ -207,6 +207,11 @@
   .actions {
     justify-content: center;
   }
+  .cardColumn {
+    width: 100%;
+    max-width: 580px;
+    margin: 0 auto;
+  }
   .profileCard {
     max-width: 320px;
   }
