@@ -33,67 +33,7 @@ export default async function ExperienceIndex({ params }: ExperienceIndexProps) 
       orderBy: { startDate: "desc" },
     });
   } catch (err) {
-    console.warn("Experiences DB fetch fallback:", err);
-  }
-
-  if (experiences.length === 0) {
-    experiences = [
-      {
-        id: "1",
-        company: "AI Discovery Monitor — GEO Platform",
-        titleEn: "Lead ML Engineer — Generative Engine Optimization",
-        titleAr: "مهندس تعلم آلي رئيسي — منصة تحسين المحركات التوليدية (GEO)",
-        startDate: new Date("2025-01-01"),
-        endDate: null,
-        isCurrent: true,
-        summaryEn: "Architected an 8-stage asynchronous AI analysis pipeline executing structured prompt workflows across GPT-4, Claude, Gemini, and Perplexity using a Python worker architecture with BullMQ/Redis queues and Pydantic validation.",
-        summaryAr: "هندسة خط معالجة تحليلي غير متزامن مكون من 8 مراحل ينفذ موجهات مهيكلة عبر GPT-4 و Claude و Gemini و Perplexity مع فحص Pydantic وزمن استجابة فائق السرعة.",
-      },
-      {
-        id: "2",
-        company: "SAPA Intelligence",
-        titleEn: "Solo Full-Stack ML Engineer — Amazon Market Analytics",
-        titleAr: "مهندس تعلم آلي متكامل — المحلل الذكي لمنتجات أمازون",
-        startDate: new Date("2025-01-01"),
-        endDate: new Date("2026-06-30"),
-        isCurrent: false,
-        summaryEn: "Engineered a five-indicator product scoring engine combining LightGBM demand forecasting with a hybrid BERT and LLaMA-3 NLP pipeline (via Ollama) for review toxicity detection and competitive market analysis using HHI.",
-        summaryAr: "تطوير محرك تقييم منتجات يدمج توقعات الطلب بـ LightGBM مع خط NLP هجين من BERT و LLaMA-3 للتحليل التنافسي واكتشاف سمية المراجعات.",
-      },
-      {
-        id: "3",
-        company: "Driver Safety AI Systems",
-        titleEn: "Computer Vision ML Engineer — Real-Time Alertness Pipeline",
-        titleAr: "مهندس تعلم آلي للرؤية الحاسوبية — نظام كشف السلامة والنعاس",
-        startDate: new Date("2024-01-01"),
-        endDate: new Date("2025-12-31"),
-        isCurrent: false,
-        summaryEn: "Built a real-time drowsiness detection pipeline using OpenCV and MediaPipe FaceMesh to analyze EAR and facial landmark geometry for driver alertness classification with 3D pose estimation.",
-        summaryAr: "بناء نظام رؤية حاسوبية لحظي لكشف نعاس وحركات رأس السائق باستخدام OpenCV و MediaPipe مع تقدير الوضعية ثلاثية الأبعاد.",
-      },
-      {
-        id: "4",
-        company: "Financial Analytics Engine",
-        titleEn: "Big Data ML Engineer — PySpark Transaction Fraud Analytics",
-        titleAr: "مهندس تعلم آلي للبيانات الضخمة — منصة كشف الاحتيال المالي",
-        startDate: new Date("2024-01-01"),
-        endDate: new Date("2024-12-31"),
-        isCurrent: false,
-        summaryEn: "Built an end-to-end fraud detection pipeline using PySpark and ensemble machine learning models to classify anomalous financial transactions with real-time Kafka streaming.",
-        summaryAr: "بناء خط معالجة متكامل لكشف المعاملات المالية الشاذة باستخدام PySpark ونماذج التعلم الآلي مع بث لحظي عبر Apache Kafka.",
-      },
-      {
-        id: "5",
-        company: "Arabic NLP Lab",
-        titleEn: "NLP Research Engineer — Arabic Sentiment & Fake Review Classifier",
-        titleAr: "مهندس أبحاث معالجة اللغات الطبيعية — تصنيف المشاعر والتقييمات العربية",
-        startDate: new Date("2024-01-01"),
-        endDate: new Date("2024-08-31"),
-        isCurrent: false,
-        summaryEn: "Fine-tuned CAMeL-BERT and BiLSTM architectures for domain-specific Arabic sentiment classification with custom text preprocessing for social media dialects.",
-        summaryAr: "ضبط دقة نماذج CAMeL-BERT و BiLSTM لتصنيف المشاعر باللغة العربية وتحديد التقييمات المزيفة مع معالجة اللهجات المحلية.",
-      },
-    ];
+    console.warn("Experiences DB fetch warning:", err);
   }
 
   const isAr = locale === "ar";

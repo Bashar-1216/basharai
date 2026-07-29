@@ -27,73 +27,7 @@ export default async function ProjectsIndex({ params }: ProjectsIndexProps) {
     });
     githubStats = await db.githubRepository.findMany();
   } catch (err) {
-    console.warn("Projects DB fetch fallback:", err);
-  }
-
-  // Safe static fallback projects array if DB is unreachable on Vercel
-  if (projects.length === 0) {
-    projects = [
-      {
-        id: "1",
-        slug: "geo-platform",
-        titleEn: "AI Discovery Monitor — GEO Platform",
-        titleAr: "منصة GEO لمراقبة الاكتشاف الذكي",
-        descriptionEn: "Bilingual entity resolution engine, Wikidata SPARQL, Google Knowledge Graph, hallucination detection layer, and competitor feature gap analysis.",
-        descriptionAr: "محرك مطابقة كيانات ثنائي اللغة، Wikidata SPARQL، واجهة Google Knowledge Graph، طبقة التحقق من الهلوسة، وتحليل الفجوات التنافسية.",
-        githubUrl: "https://github.com/Bashar-1216/basharai",
-        liveUrl: null,
-      },
-      {
-        id: "2",
-        slug: "sapa",
-        titleEn: "SAPA — Smart Amazon Product Analyzer",
-        titleAr: "SAPA — المحلل الذكي لمنتجات أمازون",
-        descriptionEn: "Margin Kill-Switch automation, Herfindahl-Hirschman Index market analysis, LightGBM forecasting, and toxic review NLP pipelines.",
-        descriptionAr: "أتمتة مفتاح إيقاف الأرباح الهامشية، تحليل السوق بمؤشر HHI، توقعات الطلب بـ LightGBM، وتحليل سمية المراجعات.",
-        githubUrl: "https://github.com/Bashar-1216/SAPA",
-        liveUrl: null,
-      },
-      {
-        id: "3",
-        slug: "real-time-driver-monitoring-system",
-        titleEn: "Real Time Driver Monitoring System",
-        titleAr: "نظام مراقبة السائق في الوقت الفعلي",
-        descriptionEn: "EAR alertness classification, 3D pose estimation positional drift detection, and multithreaded non-blocking video/audio pipeline.",
-        descriptionAr: "تصنيف اليقظة بمعدل EAR، كشف الانحراف بتقدير وضعية الرأس ثلاثية الأبعاد، وخط معالجة فيديو وصوت متعدد المسارات.",
-        githubUrl: "https://github.com/Bashar-1216/Real-Time-Driver-Monitoring-System",
-        liveUrl: null,
-      },
-      {
-        id: "4",
-        slug: "financial-fraud-detection",
-        titleEn: "Financial Fraud Detection Platform",
-        titleAr: "منصة الكشف عن الاحتيال المالي",
-        descriptionEn: "Transaction anomaly classification, real-time transaction streaming using PySpark and Apache Kafka, and predictions storage in MongoDB.",
-        descriptionAr: "تصنيف المعاملات الشاذة، بث المعاملات في الوقت الفعلي باستخدام PySpark و Apache Kafka، وتخزين التوقعات في MongoDB.",
-        githubUrl: "https://github.com/Bashar-1216/Financial-Fraud-Detection",
-        liveUrl: null,
-      },
-      {
-        id: "5",
-        slug: "arabic-sentiment-analysis",
-        titleEn: "Arabic Sentiment Analysis",
-        titleAr: "تحليل المشاعر باللغة العربية",
-        descriptionEn: "Fine-tuned CAMeL-BERT and BiLSTM sentiment classifier deployed as a real-time inference service using FastAPI.",
-        descriptionAr: "تصنيف المشاعر المعتمد على ضبط دقة CAMeL-BERT و BiLSTM المنشور كخدمة استدلال فوري باستخدام FastAPI.",
-        githubUrl: "https://github.com/Bashar-1216/Arabic-Sentiment-Analysis",
-        liveUrl: null,
-      },
-      {
-        id: "6",
-        slug: "fake-review-detection",
-        titleEn: "Fake Review Detection",
-        titleAr: "كشف التقييمات المزيفة",
-        descriptionEn: "Domain-adversarial transformer-based NLP system for cross-category fake review detection.",
-        descriptionAr: "نظام معالجة لغات طبيعية لكشف المراجعات المزيفة عبر الفئات المختلفة المنشور كخدمة FastAPI.",
-        githubUrl: "https://github.com/Bashar-1216/Fake-Review-Detection",
-        liveUrl: null,
-      },
-    ];
+    console.warn("Projects DB fetch warning:", err);
   }
 
   // Determine tags dynamically based on actual project slugs
