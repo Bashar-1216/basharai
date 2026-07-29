@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import type { Locale } from "@/lib/i18n";
 import styles from "./floating-chat.module.css";
 import Link from "next/link";
@@ -137,8 +138,6 @@ interface Message {
   timestamp: Date;
 }
 
-import { usePathname } from "next/navigation";
-
 interface FloatingChatProps {
   locale: Locale;
 }
@@ -148,9 +147,10 @@ export function FloatingChat({ locale }: FloatingChatProps) {
 
   // Hide generic floating chat bubble on pages that have dedicated contextual copilot drawers
   const hasDedicatedCopilot =
-    pathname.includes("/projects/") ||
-    pathname.includes("/resume") ||
-    pathname.includes("/experience/");
+    Boolean(pathname) &&
+    (pathname.includes("/projects/") ||
+      pathname.includes("/resume") ||
+      pathname.includes("/experience/"));
 
   const [isOpen, setIsOpen] = useState(false);
   const [isDevView, setIsDevView] = useState(false);
