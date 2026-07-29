@@ -58,8 +58,19 @@ export function Navbar({ dict, locale }: NavbarProps) {
       <nav className={`container ${styles.nav}`}>
         {/* ── Logo ──────────────────────────────────────────── */}
         <Link href={`/${locale}`} className={styles.logo}>
-          <span className="gradient-text">bashar</span>
-          <span className={styles.logoDot}>.ai</span>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ flexShrink: 0 }}>
+            <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z" fill="url(#navLogoSparkle)"/>
+            <defs>
+              <linearGradient id="navLogoSparkle" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+                <stop stopColor="#64FFDA"/>
+                <stop offset="1" stopColor="#00B4D8"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <span className={styles.logoText}>
+            <span className="gradient-text">bashar</span>
+            <span className={styles.logoDot}>.ai</span>
+          </span>
         </Link>
 
         {/* ── Desktop Nav Links ─────────────────────────────── */}

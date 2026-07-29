@@ -73,14 +73,38 @@
 }
 
 .contactInfo {
-  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.45rem;
   font-size: 0.875rem;
-  color: hsl(var(--color-text-muted));
-  line-height: 1.5;
+  color: hsl(var(--color-text-body));
 }
 
-[dir="rtl"] .contactInfo {
-  text-align: left;
+:global([dir="rtl"]) .contactInfo {
+  align-items: flex-start;
+}
+
+.contactItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: hsl(var(--color-text-body));
+}
+
+.contactItem svg {
+  color: hsl(var(--color-primary));
+  flex-shrink: 0;
+}
+
+.contactLink {
+  color: hsl(var(--color-text-body));
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.contactLink:hover {
+  color: hsl(var(--color-primary));
 }
 
 /* ── Sections ──────────────────────────────────────────────── */

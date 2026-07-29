@@ -21,11 +21,25 @@
   font-weight: 800;
   text-decoration: none;
   letter-spacing: -0.02em;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  transition: transform var(--transition-fast);
+}
+
+.logo:hover {
+  transform: translateY(-1px);
+}
+
+.logoText {
+  display: inline-flex;
+  align-items: baseline;
 }
 
 .logoDot {
-  color: hsl(var(--color-text-muted));
-  font-weight: 400;
+  color: hsl(var(--color-primary));
+  font-weight: 800;
+  text-shadow: 0 0 10px hsl(var(--color-primary) / 0.5);
 }
 
 .links {

@@ -82,12 +82,34 @@
 
 /* Details */
 .details {
-  border-top: 1px solid hsl(var(--color-text-muted) / 0.1);
+  border-top: 1px solid hsl(var(--color-text-muted) / 0.15);
   padding-top: 1.5rem;
   display: flex;
-  justify-content: space-between;
-  font-size: 0.8125rem;
-  color: hsl(var(--color-text-muted));
+  flex-direction: column;
+  gap: 0.85rem;
+  font-size: 0.875rem;
+  color: hsl(var(--color-text-body));
+}
+
+.detailItem {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.detailItem svg {
+  color: hsl(var(--color-primary));
+  flex-shrink: 0;
+}
+
+.detailLink {
+  color: hsl(var(--color-text-body));
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.detailLink:hover {
+  color: hsl(var(--color-primary));
 }
 
 @media (max-width: 640px) {
