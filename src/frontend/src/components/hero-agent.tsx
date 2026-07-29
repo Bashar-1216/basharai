@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import type { Locale } from "@/lib/i18n";
 import styles from "./hero-agent.module.css";
+import { MarkdownRenderer } from "./markdown-renderer";
 
 interface HeroAgentProps {
   locale: Locale;
@@ -124,7 +125,7 @@ export function HeroAgent({ locale }: HeroAgentProps) {
             key={i}
             className={`${styles.msgBubble} ${m.role === "user" ? styles.userMsg : styles.assistantMsg}`}
           >
-            {m.content}
+            <MarkdownRenderer content={m.content} />
           </div>
         ))}
         {isLoading && (

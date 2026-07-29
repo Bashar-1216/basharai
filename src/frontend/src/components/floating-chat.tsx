@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import type { Locale } from "@/lib/i18n";
 import styles from "./floating-chat.module.css";
 import Link from "next/link";
+import { MarkdownRenderer } from "./markdown-renderer";
 
 function stripThinkTags(text: string): string {
   let cleaned = text.replace(/<think>[\s\S]*?<\/think>/gi, "");
@@ -54,7 +55,7 @@ function parseFormattedMarkdown(
 
     return (
       <div key={idx} className={styles.markdownText}>
-        {renderMarkdownParagraphs(part)}
+        <MarkdownRenderer content={part} />
       </div>
     );
   });
