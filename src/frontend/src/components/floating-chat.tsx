@@ -137,11 +137,21 @@ interface Message {
   timestamp: Date;
 }
 
+import { usePathname } from "next/navigation";
+
 interface FloatingChatProps {
   locale: Locale;
 }
 
 export function FloatingChat({ locale }: FloatingChatProps) {
+  const pathname = usePathname();
+
+  // Hide generic floating chat bubble on pages that have dedicated contextual copilot drawers
+  const hasDedicatedCopilot =
+    pathname.includes("/projects/") ||
+    pathname.includes("/resume") ||
+    pathname.includes("/experience/");
+
   const [isOpen, setIsOpen] = useState(false);
   const [isDevView, setIsDevView] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -149,6 +159,10 @@ export function FloatingChat({ locale }: FloatingChatProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [userScrolled, setUserScrolled] = useState(false);
+
+  if (hasDedicatedCopilot) {
+    return null;
+  }
 
   const [telemetry, setTelemetry] = useState({
     latency: "120ms",

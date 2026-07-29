@@ -196,8 +196,8 @@ export function ProjectDetailClient({ locale, slug, project }: ProjectDetailClie
             <button type="button" onClick={() => setIsDrawerOpen(true)} className="btn-secondary">
               💬 {isAr ? "اسأل AI عن المشروع" : "Ask Project Copilot"}
             </button>
-            <button type="button" onClick={scrollToInterview} className="btn-secondary" style={{ background: "linear-gradient(135deg, hsl(var(--color-primary) / 0.15) 0%, transparent 100%)", borderColor: "hsl(var(--color-primary) / 0.4)" }}>
-              💡 {isAr ? "المقابلة التقنية المفصلة" : "Interview Deep Dive"} ↓
+            <button type="button" onClick={() => setIsDrawerOpen(true)} className="btn-secondary" style={{ background: "linear-gradient(135deg, hsl(var(--color-primary) / 0.15) 0%, transparent 100%)", borderColor: "hsl(var(--color-primary) / 0.4)" }}>
+              💡 {isAr ? "المقابلة التقنية المفصلة" : "Interview Deep Dive"}
             </button>
           </div>
 
@@ -501,77 +501,6 @@ export function ProjectDetailClient({ locale, slug, project }: ProjectDetailClie
               <h4>Production Release</h4>
               <p>Containerized 8-service Docker stack deployed to production Linux VPS.</p>
             </div>
-          </div>
-        </section>
-
-        {/* ── 09. INTERVIEW DEEP DIVE (ASK BASHAR AI COPILOT) ─────────── */}
-        <section id="interview-deep-dive" className={styles.interviewSection}>
-          <div className={styles.interviewCard}>
-            <div className={styles.interviewHeader}>
-              <div className={styles.interviewIcon}>💡</div>
-              <div>
-                <h3>{isAr ? "المقابلة التقنية المفصلة — اسأل الذكاء الاصطناعي" : "Interview Deep Dive — Ask Bashar AI"}</h3>
-                <p>
-                  {isAr
-                    ? `اختبر قدرات المشروع وسياقه الهندسي. اسأل المساعد الذكي عن دوافع القرارات، بدائل المعمارية، أو كيفية توسيع ${title}.`
-                    : `Interrogate this system's architecture directly. Query framework trade-offs, scaling strategies, or why specific decisions were made for ${title}.`}
-                </p>
-              </div>
-            </div>
-
-            {/* Suggested Interview Questions */}
-            <div className={styles.suggestedPromptsGrid}>
-              {suggestedInterviewQuestions.map((q, idx) => (
-                <button
-                  key={idx}
-                  type="button"
-                  onClick={() => handleAskInterview(q)}
-                  className={styles.interviewPromptBtn}
-                >
-                  💬 {q}
-                </button>
-              ))}
-            </div>
-
-            {/* Input Bar */}
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                handleAskInterview(query);
-              }}
-              className={styles.interviewForm}
-            >
-              <input
-                type="text"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder={
-                  isAr
-                    ? `اسأل المساعد الذكي أي سؤال تقني محدد عن مشروع ${title}...`
-                    : `Ask Bashar AI any technical interview question about ${title}...`
-                }
-                className={styles.interviewInput}
-              />
-              <button type="submit" disabled={isLoading} className={styles.interviewSubmitBtn}>
-                {isLoading ? (isAr ? "جاري التحليل..." : "Analyzing...") : isAr ? "إرسال ➔" : "Ask ➔"}
-              </button>
-            </form>
-
-            {/* AI Streaming Response Box */}
-            {(aiResponse || isLoading) && (
-              <div className={styles.aiOutputBox}>
-                <div className={styles.aiOutputTitle}>
-                  🤖 Technical Interview Copilot — {title}
-                </div>
-                {aiResponse ? (
-                  <MarkdownRenderer content={aiResponse} />
-                ) : (
-                  <div className={styles.aiLoadingText}>
-                    {isAr ? "جاري استحضار السياق الهندسي ونقاط المعمارية لـ LLM..." : "Extracting engineering context & architectural decisions from database..."}
-                  </div>
-                )}
-              </div>
-            )}
           </div>
         </section>
       </div>
