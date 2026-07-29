@@ -75,6 +75,7 @@ async function seedProjects() {
       descriptionAr: "محرك مطابقة كيانات ثنائي اللغة، Wikidata SPARQL، واجهة Google Knowledge Graph، طبقة التحقق من الهلوسة، وتحليل الفجوات التنافسية.",
       githubUrl: "https://github.com/Bashar-1216/basharai",
       featured: true,
+      sortOrder: 1,
     },
     {
       slug: "sapa",
@@ -84,6 +85,7 @@ async function seedProjects() {
       descriptionAr: "أتمتة مفتاح إيقاف الأرباح الهامشية، تحليل السوق بمؤشر HHI، توقعات الطلب بـ LightGBM، وتحليل سمية المراجعات.",
       githubUrl: "https://github.com/Bashar-1216/SAPA",
       featured: true,
+      sortOrder: 2,
     },
     {
       slug: "real-time-driver-monitoring-system",
@@ -93,6 +95,7 @@ async function seedProjects() {
       descriptionAr: "تصنيف اليقظة بمعدل EAR، كشف الانحراف بتقدير وضعية الرأس ثلاثية الأبعاد، وخط معالجة فيديو وصوت متعدد المسارات.",
       githubUrl: "https://github.com/Bashar-1216/Real-Time-Driver-Monitoring-System",
       featured: true,
+      sortOrder: 3,
     },
     {
       slug: "financial-fraud-detection",
@@ -102,6 +105,7 @@ async function seedProjects() {
       descriptionAr: "تصنيف المعاملات الشاذة، بث المعاملات في الوقت الفعلي باستخدام PySpark و Apache Kafka، وتخزين التوقعات في MongoDB.",
       githubUrl: "https://github.com/Bashar-1216/Financial-Fraud-Detection",
       featured: true,
+      sortOrder: 4,
     },
     {
       slug: "arabic-sentiment-analysis",
@@ -111,6 +115,7 @@ async function seedProjects() {
       descriptionAr: "تصنيف المشاعر المعتمد على ضبط دقة CAMeL-BERT و BiLSTM المنشور كخدمة استدلال فوري باستخدام FastAPI.",
       githubUrl: "https://github.com/Bashar-1216/Arabic-Sentiment-Analysis",
       featured: true,
+      sortOrder: 5,
     },
     {
       slug: "fake-review-detection",
@@ -120,6 +125,7 @@ async function seedProjects() {
       descriptionAr: "نظام معالجة لغات طبيعية لكشف المراجعات المزيفة عبر الفئات المختلفة المنشور كخدمة FastAPI.",
       githubUrl: "https://github.com/Bashar-1216/Fake-Review-Detection",
       featured: true,
+      sortOrder: 6,
     },
     {
       slug: "money-tracker",
@@ -129,6 +135,7 @@ async function seedProjects() {
       descriptionAr: "تطبيق تتبع المالية الشخصية وإدارة الميزانيات مع تصورات بيانية تحليليية.",
       githubUrl: "https://github.com/Bashar-1216/Money-Tracker",
       featured: true,
+      sortOrder: 7,
     },
     {
       slug: "air-quality-analysis",
@@ -138,6 +145,7 @@ async function seedProjects() {
       descriptionAr: "مشروع تحليل البيانات البيئية لمعالجة مؤشرات جودة الهواء وتصور اتجاهات التلوث.",
       githubUrl: "https://github.com/Bashar-1216/air-quality-analysis",
       featured: true,
+      sortOrder: 8,
     },
   ];
 

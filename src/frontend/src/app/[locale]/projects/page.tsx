@@ -23,7 +23,7 @@ export default async function ProjectsIndex({ params }: ProjectsIndexProps) {
 
   try {
     projects = await db.project.findMany({
-      orderBy: { publishedAt: "desc" },
+      orderBy: { sortOrder: "asc" },
     });
     githubStats = await db.githubRepository.findMany();
   } catch (err) {

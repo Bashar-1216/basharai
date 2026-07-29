@@ -28,7 +28,7 @@ export default async function HomePage({ params }: HomePageProps) {
 
   try {
     projects = await db.project.findMany({
-      orderBy: { publishedAt: "desc" },
+      orderBy: { sortOrder: "asc" },
       take: 3,
     });
     experiences = await db.experience.findMany({
