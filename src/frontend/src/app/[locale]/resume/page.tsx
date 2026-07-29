@@ -1,6 +1,8 @@
 import type { Locale } from "@/lib/i18n";
 import { getDictionary } from "@/lib/i18n";
 import { db } from "@/lib/db";
+import { Navbar } from "@/components/navbar";
+import { Footer } from "@/components/footer";
 import { ResumeView } from "./resume-view";
 
 export const dynamic = "force-dynamic";
@@ -12,7 +14,7 @@ interface ResumePageProps {
 
 export default async function ResumePage({ params }: ResumePageProps) {
   const { locale } = await params;
-  await getDictionary(locale as Locale);
+  const dict = await getDictionary(locale as Locale);
 
   // Fetch experiences and projects from the database
   let experiences: any[] = [];
@@ -30,10 +32,14 @@ export default async function ResumePage({ params }: ResumePageProps) {
   }
 
   return (
-    <ResumeView
-      locale={locale}
-      experiences={experiences}
-      projects={projects}
-    />
+    <>
+      <Navbar dict={dict} locale={locale as Locale} />
+      <ResumeView
+        locale={locale}
+        experiences={experiences}
+        projects={projects}
+      />
+      <Footer dict={dict} />
+    </>
   );
 }
