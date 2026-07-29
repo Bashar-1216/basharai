@@ -172,7 +172,7 @@ export function ResumeCopilotDrawer({ locale, isOpen, onClose, onOpen }: ResumeC
                 padding: "1.25rem 1.5rem",
                 borderBottom: "1px solid rgba(255, 255, 255, 0.1)",
                 display: "flex",
-                justify-content: "space-between",
+                justifyContent: "space-between",
                 alignItems: "center",
                 background: "rgba(255, 255, 255, 0.03)",
               }}
