@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { MarkdownRenderer } from "@/components/markdown-renderer";
+import { ProjectCopilotDrawer } from "./project-copilot-drawer";
 import styles from "./project-detail.module.css";
 
 interface ProjectDetailClientProps {
@@ -17,9 +18,21 @@ export function ProjectDetailClient({ locale, slug, project }: ProjectDetailClie
   const [query, setQuery] = useState("");
   const [aiResponse, setAiResponse] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const title = isAr ? (project.titleAr || project.titleEn) : project.titleEn;
   const description = isAr ? (project.descriptionAr || project.descriptionEn) : project.descriptionEn;
+
+  // Tech stack chips per project
+  const techStackChips = isAr
+    ? ["Python", "FastAPI", "LangGraph", "PostgreSQL", "pgvector", "Redis", "Docker"]
+    : ["Python", "FastAPI", "LangGraph", "PostgreSQL", "pgvector", "Redis", "Docker"];
+
+  const projectMetadataChips = [
+    { label: isAr ? "الحالة" : "Status", val: "Completed 🚀" },
+    { label: isAr ? "المدة" : "Duration", val: "3 Weeks" },
+    { label: isAr ? "الدور" : "Role", val: "AI & ML Engineer" },
+  ];
 
   // Custom project specific data mapping
   const isGeo = slug.includes("geo");
@@ -160,17 +173,29 @@ export function ProjectDetailClient({ locale, slug, project }: ProjectDetailClie
           <h1 className={styles.heroTitle}>{title}</h1>
           <p className={styles.heroSubtitle}>{description}</p>
 
+          {/* Top Quick Tech & Metadata Chips Bar */}
+          <div className={styles.techChipsRow}>
+            {techStackChips.map((tech, idx) => (
+              <span key={idx} className={styles.techChip}>
+                {tech}
+              </span>
+            ))}
+            {projectMetadataChips.map((meta, idx) => (
+              <span key={`meta-${idx}`} className={styles.metaChip}>
+                <strong>{meta.label}:</strong> {meta.val}
+              </span>
+            ))}
+          </div>
+
           <div className={styles.heroActions}>
             {project.githubUrl && (
               <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="btn-primary">
-                💻 {isAr ? "مستودع GitHub" : "GitHub Repository"} ↗
+                💻 {isAr ? "المستودع الكودي GitHub" : "GitHub Repository"} ↗
               </a>
             )}
-            {project.liveUrl && (
-              <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" className="btn-secondary">
-                🌐 {isAr ? "معاينة النظام الحي" : "Live Platform Demo"} ↗
-              </a>
-            )}
+            <button type="button" onClick={() => setIsDrawerOpen(true)} className="btn-secondary">
+              💬 {isAr ? "اسأل AI عن المشروع" : "Ask Project Copilot"}
+            </button>
             <button type="button" onClick={scrollToInterview} className="btn-secondary" style={{ background: "linear-gradient(135deg, hsl(var(--color-primary) / 0.15) 0%, transparent 100%)", borderColor: "hsl(var(--color-primary) / 0.4)" }}>
               💡 {isAr ? "المقابلة التقنية المفصلة" : "Interview Deep Dive"} ↓
             </button>
@@ -406,11 +431,53 @@ export function ProjectDetailClient({ locale, slug, project }: ProjectDetailClie
           </div>
         </section>
 
-        {/* ── 07. LESSONS LEARNED & DEVELOPMENT TIMELINE ──────────────── */}
+        {/* ── 07. ENGINEERING ARTIFACTS & LINKS ──────────────────────── */}
         <section className={styles.caseSection}>
           <div className={styles.sectionHeader}>
-            <span className={styles.sectionTag}>06 // DEVELOPMENT TIMELINE</span>
-            <h2>{isAr ? "6. خط الزمني والدروس المستفادة" : "6. Lessons Learned & Timeline"}</h2>
+            <span className={styles.sectionTag}>06 // ENGINEERING ARTIFACTS</span>
+            <h2>{isAr ? "6. الأصول الهندسية والروابط المباشرة" : "6. Engineering Artifacts & Links"}</h2>
+          </div>
+
+          <div className={styles.artifactsGrid}>
+            <a href={project.githubUrl || "#"} target="_blank" rel="noopener noreferrer" className={styles.artifactCard}>
+              <div className={styles.artifactIcon}>💻</div>
+              <div>
+                <div className={styles.artifactTitle}>Source Code Repository</div>
+                <div className={styles.artifactDesc}>Explore full Python / Next.js implementation on GitHub ↗</div>
+              </div>
+            </a>
+
+            <div className={styles.artifactCard}>
+              <div className={styles.artifactIcon}>📄</div>
+              <div>
+                <div className={styles.artifactTitle}>Architecture Specification</div>
+                <div className={styles.artifactDesc}>Verified system data flow & Pydantic schema validation docs</div>
+              </div>
+            </div>
+
+            <div className={styles.artifactCard}>
+              <div className={styles.artifactIcon}>📊</div>
+              <div>
+                <div className={styles.artifactTitle}>Evaluation Benchmark Suite</div>
+                <div className={styles.artifactDesc}>Langfuse telemetry metrics & McNemar statistical test runs</div>
+              </div>
+            </div>
+
+            <div className={styles.artifactCard}>
+              <div className={styles.artifactIcon}>🔬</div>
+              <div>
+                <div className={styles.artifactTitle}>Model Card & Rationale</div>
+                <div className={styles.artifactDesc}>Model selection benchmark specs & token cost analysis</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── 08. LESSONS LEARNED & DEVELOPMENT TIMELINE ──────────────── */}
+        <section className={styles.caseSection}>
+          <div className={styles.sectionHeader}>
+            <span className={styles.sectionTag}>07 // DEVELOPMENT TIMELINE</span>
+            <h2>{isAr ? "7. خط الزمني والدروس المستفادة" : "7. Lessons Learned & Timeline"}</h2>
           </div>
 
           <div className={styles.timelineGrid}>
@@ -437,7 +504,7 @@ export function ProjectDetailClient({ locale, slug, project }: ProjectDetailClie
           </div>
         </section>
 
-        {/* ── 08. INTERVIEW DEEP DIVE (ASK BASHAR AI COPILOT) ─────────── */}
+        {/* ── 09. INTERVIEW DEEP DIVE (ASK BASHAR AI COPILOT) ─────────── */}
         <section id="interview-deep-dive" className={styles.interviewSection}>
           <div className={styles.interviewCard}>
             <div className={styles.interviewHeader}>
@@ -508,6 +575,16 @@ export function ProjectDetailClient({ locale, slug, project }: ProjectDetailClie
           </div>
         </section>
       </div>
+
+      {/* ── Project-Scoped Side Drawer ─────────────────────────────── */}
+      <ProjectCopilotDrawer
+        locale={locale}
+        projectTitle={title}
+        projectSlug={slug}
+        isOpen={isDrawerOpen}
+        onClose={() => setIsDrawerOpen(false)}
+        onOpen={() => setIsDrawerOpen(true)}
+      />
     </main>
   );
 }

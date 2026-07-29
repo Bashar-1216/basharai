@@ -76,7 +76,39 @@
   color: hsl(var(--color-text-body));
   line-height: 1.7;
   max-width: 850px;
-  margin: 0 0 2rem 0;
+  margin: 0 0 1.25rem 0;
+}
+
+.techChipsRow {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 1.75rem;
+}
+
+.techChip {
+  background: rgba(100, 255, 218, 0.08);
+  color: hsl(var(--color-primary));
+  border: 1px solid rgba(100, 255, 218, 0.2);
+  border-radius: 6px;
+  padding: 0.25rem 0.65rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+}
+
+.metaChip {
+  background: rgba(255, 255, 255, 0.04);
+  color: hsl(var(--color-text-body));
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  padding: 0.25rem 0.65rem;
+  font-size: 0.75rem;
+}
+
+.metaChip strong {
+  color: hsl(var(--color-text));
 }
 
 .heroActions {
@@ -392,6 +424,57 @@
   padding: 0.25rem 0.65rem;
   border-radius: 12px;
   font-size: 0.75rem;
+}
+
+/* ── 07. Engineering Artifacts ──────────────────────────────────── */
+.artifactsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+}
+
+.artifactCard {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  text-decoration: none;
+  color: inherit;
+  transition: all var(--transition-fast);
+}
+
+.artifactCard:hover {
+  border-color: hsl(var(--color-primary) / 0.4);
+  background: rgba(100, 255, 218, 0.03);
+  transform: translateY(-2px);
+}
+
+.artifactIcon {
+  font-size: 1.75rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.artifactTitle {
+  font-weight: 800;
+  font-size: 1rem;
+  color: hsl(var(--color-text));
+  margin-bottom: 0.35rem;
+}
+
+.artifactDesc {
+  font-size: 0.8125rem;
+  color: hsl(var(--color-text-body));
+  line-height: 1.5;
 }
 
 /* ── 07. Timeline & Lessons Section ─────────────────────────── */
