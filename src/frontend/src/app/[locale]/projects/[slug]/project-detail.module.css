@@ -246,7 +246,6 @@
 }
 
 .diagramNodeActive {
-  composes: diagramNode;
   background: hsl(var(--color-primary) / 0.12);
   border-color: hsl(var(--color-primary) / 0.4);
 }
@@ -372,7 +371,6 @@
 }
 
 .flowStepResult {
-  composes: flowStep;
   background: rgba(100, 255, 218, 0.06);
   border: 1px solid rgba(100, 255, 218, 0.2);
   color: hsl(var(--color-primary));

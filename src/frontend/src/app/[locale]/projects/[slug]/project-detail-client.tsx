@@ -252,7 +252,7 @@ export function ProjectDetailClient({ locale, slug, project }: ProjectDetailClie
               <small>Redis / BullMQ</small>
             </div>
             <div className={styles.diagramArrow}>➔</div>
-            <div className={styles.diagramNodeActive}>
+            <div className={`${styles.diagramNode} ${styles.diagramNodeActive}`}>
               <span>🧠 AI Engine</span>
               <small>Prompt Orchestrator</small>
             </div>
@@ -353,7 +353,7 @@ export function ProjectDetailClient({ locale, slug, project }: ProjectDetailClie
                 <div className={styles.flowStep}>
                   <strong>Solution:</strong> Knowledge Graph SPARQL verification with McNemar canary statistical tests (50 runs).
                 </div>
-                <div className={styles.flowStepResult}>
+                <div className={`${styles.flowStep} ${styles.flowStepResult}`}>
                   <strong>Result:</strong> Reduced hallucination occurrence rate by 82%.
                 </div>
               </div>
@@ -371,7 +371,7 @@ export function ProjectDetailClient({ locale, slug, project }: ProjectDetailClie
                 <div className={styles.flowStep}>
                   <strong>Solution:</strong> Exponential backoff retry logic, Redis connection pooling, and batch ingestion pipelines.
                 </div>
-                <div className={styles.flowStepResult}>
+                <div className={`${styles.flowStep} ${styles.flowStepResult}`}>
                   <strong>Result:</strong> Sustained 99.9% pipeline completion SLA under peak load.
                 </div>
               </div>
