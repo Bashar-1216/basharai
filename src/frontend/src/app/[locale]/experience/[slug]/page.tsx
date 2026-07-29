@@ -148,6 +148,9 @@ const detailsAr: Record<string, DetailSection> = {
   }
 };
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function ExperienceDetailPage({ params }: ExperienceDetailPageProps) {
   const { locale, slug } = await params;
   const dict = await getDictionary(locale as Locale);
@@ -176,6 +179,22 @@ export default async function ExperienceDetailPage({ params }: ExperienceDetailP
     notFound();
   }
 
+  // Query dynamic project and case study from Prisma DB
+  const project = await db.project.findFirst({
+    where: {
+      OR: [
+        { slug: decodedSlug },
+        { titleEn: { contains: experience.company, mode: "insensitive" } },
+      ],
+    },
+    include: {
+      caseStudy: true,
+      metrics: true,
+    },
+  });
+
+  const cs = project?.caseStudy;
+
   let matchedKey = "geo-platform";
   const compLower = experience.company.toLowerCase();
   if (compLower.includes("sapa")) matchedKey = "sapa";
@@ -183,33 +202,18 @@ export default async function ExperienceDetailPage({ params }: ExperienceDetailP
   else if (compLower.includes("fraud")) matchedKey = "fraud-detection";
   else if (compLower.includes("sentiment")) matchedKey = "sentiment-analysis";
 
-  const defaultDetailEn: DetailSection = {
-    overview: experience.summaryEn || "Engineered scalable production software systems and data pipelines.",
-    problem: "Optimizing runtime throughput, architectural component isolation, and resource management.",
-    role: experience.titleEn,
-    challenges: "Building resilient microservices and distributed data processing modules.",
-    impact: "Delivered measurable performance and architectural scalability improvements.",
-    technologies: "Python, Next.js, PostgreSQL, Docker, Redis.",
-    learned: "Modular system design and clean codebase architecture ensure long-term engineering scalability.",
-    faq: [
-      { q: "What was the key engineering takeaway?", a: "Component decoupling and clean schema design are vital for production reliability." }
-    ]
-  };
+  const staticFallback = (isAr ? detailsAr[matchedKey] : detailsEn[matchedKey]);
 
-  const defaultDetailAr: DetailSection = {
-    overview: experience.summaryAr || "بناء أنظمة برمجية وإنتاجية متكاملة وخطوط معالجة بيانات سريعة ومستقرة.",
-    problem: "تحسين سرعة الاستجابة وعزل المكونات البرمجية وإدارة الموارد بفاعلية.",
-    role: experience.titleAr,
-    challenges: "تطوير خدمات مصغرة وتطبيقات موثوقة لمعالجة البيانات الضخمة.",
-    impact: "تحقيق تحسينات ملموسة في أداء وكفاءة الأنظمة الهندسية.",
-    technologies: "Python, Next.js, PostgreSQL, Docker, Redis.",
-    learned: "التصميم النمطي وإدارة الحالة بشكل نظيف هما أساس نجاح المشاريع الهندسية التنافسية.",
-    faq: [
-      { q: "ما هي الدرس الهندسي الأبرز؟", a: "فصل المكونات وتصميم قواعد البيانات النظيفة يضمن القابلية للتوسع والتطوير المستقبلي." }
-    ]
+  const detail: DetailSection = {
+    overview: cs ? (isAr ? (cs.architectureDescAr || cs.architectureDescEn || staticFallback?.overview) : (cs.architectureDescEn || staticFallback?.overview)) : (isAr ? experience.summaryAr : experience.summaryEn),
+    problem: cs ? (isAr ? (cs.problemAr || cs.problemEn || staticFallback?.problem) : (cs.problemEn || staticFallback?.problem)) : staticFallback?.problem || "High-performance enterprise AI system delivery.",
+    role: isAr ? experience.titleAr : experience.titleEn,
+    challenges: cs ? (isAr ? (cs.challengesAr || cs.challengesEn || staticFallback?.challenges) : (cs.challengesEn || staticFallback?.challenges)) : staticFallback?.challenges || "Microservices containerization and real-time execution optimization.",
+    impact: cs ? (isAr ? (cs.resultsAr || cs.resultsEn || staticFallback?.impact) : (cs.resultsEn || staticFallback?.impact)) : staticFallback?.impact || "Production release under strict latency SLA constraints.",
+    technologies: staticFallback?.technologies || "Python, Next.js, PostgreSQL, Docker, Redis",
+    learned: cs ? (isAr ? (cs.lessonsAr || cs.lessonsEn || staticFallback?.learned) : (cs.lessonsEn || staticFallback?.learned)) : staticFallback?.learned || "Component isolation and clean architecture.",
+    faq: staticFallback?.faq || [{ q: "What was the key engineering takeaway?", a: "Production isolation and clean schema design." }]
   };
-
-  const detail = (isAr ? detailsAr[matchedKey] : detailsEn[matchedKey]) || (isAr ? defaultDetailAr : defaultDetailEn);
 
 
   return (
