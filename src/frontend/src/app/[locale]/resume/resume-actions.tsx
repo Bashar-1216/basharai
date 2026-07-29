@@ -4,10 +4,10 @@ interface ResumeActionsProps {
   isAr: boolean;
   activeView: "sheet" | "pdf";
   onToggleView: (view: "sheet" | "pdf") => void;
-  onOpenAiPrompt?: (prompt: string) => void;
+  onToggleCopilot: () => void;
 }
 
-export function ResumeActions({ isAr, activeView, onToggleView }: ResumeActionsProps) {
+export function ResumeActions({ isAr, activeView, onToggleView, onToggleCopilot }: ResumeActionsProps) {
   const handlePrint = () => {
     if (typeof window !== "undefined") {
       window.print();
@@ -122,6 +122,29 @@ export function ResumeActions({ isAr, activeView, onToggleView }: ResumeActionsP
       >
         🔍 {isAr ? "شاشة كاملة" : "Fullscreen"}
       </a>
+
+      {/* Resume Copilot Drawer Trigger Button */}
+      <button
+        type="button"
+        onClick={onToggleCopilot}
+        style={{
+          padding: "0.45rem 0.95rem",
+          background: "linear-gradient(135deg, hsl(var(--color-primary)) 0%, #00B4D8 100%)",
+          color: "#040D1A",
+          border: "none",
+          borderRadius: "var(--radius-sm)",
+          fontSize: "0.8125rem",
+          fontWeight: "800",
+          cursor: "pointer",
+          display: "inline-flex",
+          alignItems: "center",
+          gap: "0.4rem",
+          boxShadow: "0 0 15px hsl(var(--color-primary) / 0.3)",
+          transition: "all var(--transition-fast)",
+        }}
+      >
+        ✨ {isAr ? "مساعد السيرة الذاتية (Resume Copilot)" : "Resume Copilot"}
+      </button>
     </div>
   );
 }
