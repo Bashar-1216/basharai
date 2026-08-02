@@ -10,31 +10,79 @@ interface ExperienceDetailPageProps {
   params: Promise<{ locale: string; slug: string }>;
 }
 
+interface ExperienceViewModel {
+  company: string;
+  titleEn: string;
+  titleAr: string;
+  summaryEn: string;
+  summaryAr: string;
+}
+
+function safeDecodeSlug(slug: string): string {
+  try {
+    return decodeURIComponent(slug);
+  } catch (error) {
+    console.warn("Malformed experience slug; using the original value:", error);
+    return slug;
+  }
+}
+
+function normalizeCompanySlug(company: string): string {
+  return company
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+function findExperience(experiences: ExperienceViewModel[], decodedSlug: string) {
+  const normalizedSlug = decodedSlug.toLowerCase();
+
+  return experiences.find((experience) => {
+    const company = experience.company.toLowerCase();
+    if (company.includes("geo") && normalizedSlug.includes("geo")) return true;
+    if (company.includes("sapa") && normalizedSlug.includes("sapa")) return true;
+    if (company.includes("drowsiness") && normalizedSlug.includes("drowsiness")) return true;
+    if (company.includes("fraud") && normalizedSlug.includes("fraud")) return true;
+    if (company.includes("sentiment") && normalizedSlug.includes("sentiment")) return true;
+    return normalizeCompanySlug(company) === normalizedSlug;
+  });
+}
+
+function fallbackExperience(decodedSlug: string): ExperienceViewModel {
+  const company = decodedSlug.replace(/-/g, " ").toUpperCase();
+
+  return {
+    company,
+    titleEn: "AI & ML Application Engineer",
+    titleAr: "مهندس ذكاء اصطناعي ونماذج لغة",
+    summaryEn: `Engineering experience and production delivery for ${decodedSlug}.`,
+    summaryAr: `خبرة هندسية وتطوير أنظمة إنتاجية لـ ${decodedSlug}.`,
+  };
+}
+
 export async function generateMetadata({ params }: ExperienceDetailPageProps): Promise<Metadata> {
   const { locale, slug } = await params;
-  const decodedSlug = decodeURIComponent(slug);
+  const decodedSlug = safeDecodeSlug(slug);
+  let experiences: ExperienceViewModel[] = [];
 
-  let experiences: any[] = [];
   try {
-    experiences = await db.experience.findMany();
-  } catch (e) {
-    console.warn("Experience metadata fetch warning:", e);
+    experiences = await db.experience.findMany({
+      select: {
+        company: true,
+        titleEn: true,
+        titleAr: true,
+        summaryEn: true,
+        summaryAr: true,
+      },
+    });
+  } catch (error) {
+    console.warn("Experience metadata fetch warning:", error);
   }
 
-  const experience = experiences.find((e) => {
-    const c = e.company.toLowerCase();
-    if (c.includes("geo") && decodedSlug.includes("geo")) return true;
-    if (c.includes("sapa") && decodedSlug.includes("sapa")) return true;
-    if (c.includes("drowsiness") && decodedSlug.includes("drowsiness")) return true;
-    if (c.includes("fraud") && decodedSlug.includes("fraud")) return true;
-    if (c.includes("sentiment") && decodedSlug.includes("sentiment")) return true;
-    return c.replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") === decodedSlug;
-  });
-
+  const experience = findExperience(experiences, decodedSlug) ?? fallbackExperience(decodedSlug);
   const isAr = locale === "ar";
-  const comp = experience ? experience.company : decodedSlug.toUpperCase().replace("-", " ");
-  const title = `${comp} — Bashar Almuntaser AI Portfolio`;
-  const description = experience ? (isAr ? experience.summaryAr : experience.summaryEn) : `Engineering case study for ${comp}`;
+  const title = `${experience.company} — Bashar Almuntaser AI Portfolio`;
+  const description = isAr ? experience.summaryAr : experience.summaryEn;
 
   return {
     title: `${title} | Engineering Experience Case Study`,
@@ -44,68 +92,88 @@ export async function generateMetadata({ params }: ExperienceDetailPageProps): P
 
 export default async function ExperienceDetailPage({ params }: ExperienceDetailPageProps) {
   const { locale, slug } = await params;
-  const decodedSlug = decodeURIComponent(slug);
+  const decodedSlug = safeDecodeSlug(slug);
   const dict = await getDictionary(locale as Locale);
   const isAr = locale === "ar";
+  let experiences: ExperienceViewModel[] = [];
 
-  let experiences: any[] = [];
   try {
     experiences = await db.experience.findMany({
       orderBy: { startDate: "desc" },
+      select: {
+        company: true,
+        titleEn: true,
+        titleAr: true,
+        summaryEn: true,
+        summaryAr: true,
+      },
     });
-  } catch (err) {
-    console.warn("Experience detail DB fetch warning:", err);
+  } catch (error) {
+    console.warn("Experience detail DB fetch warning:", error);
   }
 
-  let experience = experiences.find((e) => {
-    const c = e.company.toLowerCase();
-    if (c.includes("geo") && decodedSlug.includes("geo")) return true;
-    if (c.includes("sapa") && decodedSlug.includes("sapa")) return true;
-    if (c.includes("drowsiness") && decodedSlug.includes("drowsiness")) return true;
-    if (c.includes("fraud") && decodedSlug.includes("fraud")) return true;
-    if (c.includes("sentiment") && decodedSlug.includes("sentiment")) return true;
-    return c.replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") === decodedSlug;
-  });
+  const experience = findExperience(experiences, decodedSlug) ?? fallbackExperience(decodedSlug);
+  let caseStudy: {
+    architectureDescEn: string | null;
+    architectureDescAr: string | null;
+    problemEn: string | null;
+    problemAr: string | null;
+    challengesEn: string | null;
+    challengesAr: string | null;
+    experimentsEn: string | null;
+    experimentsAr: string | null;
+    lessonsLearnedEn: string | null;
+    lessonsLearnedAr: string | null;
+  } | null = null;
 
-  if (!experience) {
-    experience = {
-      company: decodedSlug.toUpperCase().replace("-", " "),
-      titleEn: "AI & ML Application Engineer",
-      titleAr: "مهندس ذكاء اصطناعي ونماذج لغة",
-      summaryEn: `Engineering experience and production delivery for ${decodedSlug}.`,
-      summaryAr: `خبرة هندسية وتطوير أنظمة إنتاجية لـ ${decodedSlug}.`,
-    };
-  }
-
-  // Query dynamic project and case study from Prisma DB
-  let project: any = null;
   try {
-    project = await db.project.findFirst({
+    const project = await db.project.findFirst({
       where: {
         OR: [
           { slug: decodedSlug },
           { titleEn: { contains: experience.company, mode: "insensitive" } },
         ],
       },
-      include: {
-        caseStudy: true,
-        metrics: true,
+      select: {
+        caseStudy: {
+          select: {
+            architectureDescEn: true,
+            architectureDescAr: true,
+            problemEn: true,
+            problemAr: true,
+            challengesEn: true,
+            challengesAr: true,
+            experimentsEn: true,
+            experimentsAr: true,
+            lessonsLearnedEn: true,
+            lessonsLearnedAr: true,
+          },
+        },
       },
     });
-  } catch (e) {
-    console.warn("Project fetch in experience detail warning:", e);
+    caseStudy = project?.caseStudy ?? null;
+  } catch (error) {
+    console.warn("Project fetch in experience detail warning:", error);
   }
 
-  const cs = project?.caseStudy;
-
   const detail = {
-    overview: cs ? (isAr ? (cs.architectureDescAr || cs.architectureDescEn || experience.summaryAr) : (cs.architectureDescEn || experience.summaryEn)) : (isAr ? experience.summaryAr : experience.summaryEn),
-    problem: cs ? (isAr ? (cs.problemAr || cs.problemEn) : (cs.problemEn)) || "High-performance enterprise AI system delivery." : "High-performance enterprise AI system delivery.",
-    role: isAr ? (experience.titleAr || experience.titleEn) : (experience.titleEn || experience.titleAr),
-    challenges: cs ? (isAr ? (cs.challengesAr || cs.challengesEn) : (cs.challengesEn)) || "Microservices containerization and real-time execution optimization." : "Microservices containerization and real-time execution optimization.",
-    impact: cs ? (isAr ? (cs.resultsAr || cs.resultsEn) : (cs.resultsEn)) || "Production release under strict latency SLA constraints." : "Production release under strict latency SLA constraints.",
+    overview: isAr
+      ? caseStudy?.architectureDescAr || caseStudy?.architectureDescEn || experience.summaryAr
+      : caseStudy?.architectureDescEn || experience.summaryEn,
+    problem: isAr
+      ? caseStudy?.problemAr || caseStudy?.problemEn || "تسليم نظام ذكاء اصطناعي مؤسسي عالي الأداء."
+      : caseStudy?.problemEn || "High-performance enterprise AI system delivery.",
+    role: isAr ? experience.titleAr || experience.titleEn : experience.titleEn || experience.titleAr,
+    challenges: isAr
+      ? caseStudy?.challengesAr || caseStudy?.challengesEn || "تحسين الحاويات والخدمات المصغرة والتنفيذ اللحظي."
+      : caseStudy?.challengesEn || "Microservices containerization and real-time execution optimization.",
+    impact: isAr
+      ? caseStudy?.experimentsAr || caseStudy?.experimentsEn || "إطلاق إنتاجي ضمن قيود صارمة لزمن الاستجابة."
+      : caseStudy?.experimentsEn || "Production release under strict latency SLA constraints.",
     technologies: "Python, FastAPI, Next.js, PostgreSQL, Redis, Docker, Langfuse",
-    learned: cs ? (isAr ? (cs.lessonsAr || cs.lessonsEn) : (cs.lessonsEn)) || "Component isolation and clean architecture." : "Component isolation and clean architecture.",
+    learned: isAr
+      ? caseStudy?.lessonsLearnedAr || caseStudy?.lessonsLearnedEn || "عزل المكونات والمعمارية النظيفة."
+      : caseStudy?.lessonsLearnedEn || "Component isolation and clean architecture.",
   };
 
   return (
@@ -115,7 +183,7 @@ export default async function ExperienceDetailPage({ params }: ExperienceDetailP
         locale={locale}
         slug={decodedSlug}
         companyName={experience.company}
-        roleTitle={isAr ? (experience.titleAr || experience.titleEn) : (experience.titleEn || experience.titleAr)}
+        roleTitle={isAr ? experience.titleAr || experience.titleEn : experience.titleEn || experience.titleAr}
         detail={detail}
       />
       <Footer dict={dict} />

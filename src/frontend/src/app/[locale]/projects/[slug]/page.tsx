@@ -10,23 +10,80 @@ interface ProjectDetailPageProps {
   params: Promise<{ locale: string; slug: string }>;
 }
 
+interface ProjectDetailViewModel {
+  slug: string;
+  titleEn: string;
+  titleAr: string;
+  descriptionEn: string;
+  descriptionAr: string;
+  githubUrl: string | null;
+  liveUrl: string | null;
+  status: string;
+  isFeatured: boolean;
+  featured: boolean;
+  caseStudy: null;
+  metrics: never[];
+}
+
+const projectSelect = {
+  slug: true,
+  titleEn: true,
+  titleAr: true,
+  descriptionEn: true,
+  descriptionAr: true,
+  githubUrl: true,
+  liveUrl: true,
+  status: true,
+  isFeatured: true,
+  featured: true,
+} as const;
+
+function fallbackProject(slug: string): ProjectDetailViewModel {
+  const readableSlug = slug.replace(/-/g, " ");
+
+  return {
+    slug,
+    titleEn: readableSlug.toUpperCase(),
+    titleAr: readableSlug,
+    descriptionEn: `Engineering implementation and case study for ${slug}.`,
+    descriptionAr: `تفاصيل المعمارية الهندسية لمشروع ${slug}.`,
+    githubUrl: `https://github.com/Bashar-1216/${encodeURIComponent(slug)}`,
+    liveUrl: null,
+    status: "unavailable",
+    isFeatured: false,
+    featured: false,
+    caseStudy: null,
+    metrics: [],
+  };
+}
+
 export async function generateMetadata({ params }: ProjectDetailPageProps): Promise<Metadata> {
   const { locale, slug } = await params;
-  
-  let project: any = null;
+  const fallback = fallbackProject(slug);
+  let project: Pick<
+    ProjectDetailViewModel,
+    "slug" | "titleEn" | "titleAr" | "descriptionEn" | "descriptionAr" | "githubUrl" | "liveUrl" | "status" | "isFeatured" | "featured"
+  > | null = null;
+
   try {
-    project = await db.project.findUnique({ where: { slug } });
-  } catch (e) {
-    console.warn("Project metadata fetch warning:", e);
+    project = await db.project.findUnique({
+      where: { slug },
+      select: projectSelect,
+    });
+  } catch (error) {
+    console.warn("Project metadata fetch warning:", error);
   }
 
+  const safeProject = project ?? fallback;
   const isAr = locale === "ar";
-  const title = project ? (isAr ? (project.titleAr || project.titleEn) : project.titleEn) : slug.replace(/-/g, " ").toUpperCase();
-  const description = project ? (isAr ? (project.descriptionAr || project.descriptionEn) : project.descriptionEn) : `Case study for ${title}`;
+  const title = isAr ? safeProject.titleAr || safeProject.titleEn : safeProject.titleEn;
+  const description = isAr
+    ? safeProject.descriptionAr || safeProject.descriptionEn
+    : safeProject.descriptionEn;
 
   return {
     title: `${title} — Bashar Almuntaser AI Case Study`,
-    description: description,
+    description,
     openGraph: {
       title,
       description,
@@ -45,31 +102,20 @@ export async function generateMetadata({ params }: ProjectDetailPageProps): Prom
 export default async function ProjectDetailPage({ params }: ProjectDetailPageProps) {
   const { locale, slug } = await params;
   const dict = await getDictionary(locale as Locale);
+  let project: Omit<ProjectDetailViewModel, "caseStudy" | "metrics"> | null = null;
 
-  let project: any = null;
   try {
     project = await db.project.findUnique({
       where: { slug },
-      include: {
-        caseStudy: true,
-        metrics: true,
-      },
+      select: projectSelect,
     });
-  } catch (err) {
-    console.warn("Project detail DB fetch error:", err);
+  } catch (error) {
+    console.warn("Project detail DB fetch error:", error);
   }
 
-  // Fallback mock project if DB is unreachable during build/offline
-  if (!project) {
-    project = {
-      slug,
-      titleEn: slug.replace(/-/g, " ").toUpperCase(),
-      titleAr: slug.replace(/-/g, " "),
-      descriptionEn: `Engineering implementation and case study for ${slug}.`,
-      descriptionAr: `تفاصيل المعمارية الهندسية لمشروع ${slug}.`,
-      githubUrl: `https://github.com/Bashar-1216/${slug}`,
-    };
-  }
+  const safeProject: ProjectDetailViewModel = project
+    ? { ...project, caseStudy: null, metrics: [] }
+    : fallbackProject(slug);
 
   return (
     <>
@@ -77,7 +123,7 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
       <ProjectDetailClient
         locale={locale}
         slug={slug}
-        project={project}
+        project={safeProject}
         dict={dict}
       />
       <Footer dict={dict} />

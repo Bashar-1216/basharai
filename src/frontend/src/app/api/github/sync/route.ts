@@ -1,111 +1,103 @@
 import { NextResponse } from "next/server";
-import { db } from "@/lib/db";
+import {
+  errorMessage,
+  fetchGitHubRepositories,
+  GITHUB_OWNER,
+  syncGitHubRepository,
+  type RepositorySyncResult,
+} from "@/lib/github-sync";
 
-export async function GET() {
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
+interface SyncFailure {
+  repo: string;
+  error: string;
+}
+
+export async function GET(request: Request) {
+  const authorizationError = validateCronAuthorization(request);
+  if (authorizationError) return authorizationError;
+
   return handleSync();
 }
 
-export async function POST() {
-  return handleSync();
+function validateCronAuthorization(request: Request): NextResponse | null {
+  const cronSecret = process.env.CRON_SECRET;
+
+  if (!cronSecret) {
+    if (process.env.NODE_ENV === "production") {
+      console.error("GitHub sync blocked: CRON_SECRET is not configured.");
+      return NextResponse.json(
+        { error: "GitHub sync is unavailable because CRON_SECRET is not configured." },
+        { status: 503 },
+      );
+    }
+
+    return null;
+  }
+
+  if (request.headers.get("authorization") !== `Bearer ${cronSecret}`) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  return null;
 }
 
 async function handleSync() {
   try {
-    const headers: Record<string, string> = {
-      "User-Agent": "bashar-ai-platform",
-      "Accept": "application/vnd.github.v3+json",
-    };
+    const repositories = await fetchGitHubRepositories();
+    const results: RepositorySyncResult[] = [];
+    const failures: SyncFailure[] = [];
 
-    if (process.env.GITHUB_TOKEN) {
-      headers["Authorization"] = `token ${process.env.GITHUB_TOKEN}`;
-    }
+    for (const repository of repositories) {
+      const repositoryName = repository.full_name || repository.name || "unknown";
 
-    const res = await fetch("https://api.github.com/users/Bashar-1216/repos?sort=updated&per_page=100", {
-      headers,
-      cache: "no-store",
-    });
+      try {
+        const result = await syncGitHubRepository(repository, {
+          deactivateWhenIneligible: true,
+        });
 
-    if (!res.ok) {
-      return NextResponse.json({ error: `GitHub API error: ${res.statusText}` }, { status: res.status });
-    }
-
-    const repos = await res.json();
-    const synced = [];
-
-    for (const repo of repos) {
-      const name = repo.name;
-      if (!name || name === "Bashar-1216" || repo.fork) continue; // Skip profile repo & forks
-
-      const topics: string[] = repo.topics || [];
-      const hasPortfolioTag = topics.includes("portfolio") || topics.includes("portfolio-project") || topics.includes("featured");
-
-      // ONLY sync repositories that the user explicitly tagged with "portfolio" or "featured"
-      if (!hasPortfolioTag) {
-        continue;
+        if (result.status !== "ignored") {
+          results.push(result);
+        }
+      } catch (error) {
+        console.error(`GitHub sync failed for ${repositoryName}:`, error);
+        failures.push({ repo: repositoryName, error: errorMessage(error) });
       }
+    }
 
-      const slug = name.toLowerCase().replace(/_/g, "-");
-      const githubUrl = repo.html_url || `https://github.com/Bashar-1216/${name}`;
-      const title = name.replace(/[-_]/g, " ").replace(/\b\w/g, (l: string) => l.toUpperCase());
-      const description = repo.description || `Production AI engineering project repository for ${title}.`;
-      const stars = repo.stargazers_count || 0;
-      const forks = repo.forks_count || 0;
-      const language = repo.language || "Python";
-      const openIssues = repo.open_issues_count || 0;
-      const homepage = repo.homepage || null;
-      const repoPath = `Bashar-1216/${name}`;
-      const lastCommit = repo.pushed_at ? new Date(repo.pushed_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "Recently";
+    const synced = results.filter((result) => result.status === "synced");
+    const deactivated = results.filter((result) => result.status === "deactivated");
 
-      // 1. Upsert Project table
-      await db.project.upsert({
-        where: { slug },
-        update: {
-          githubUrl,
-          liveUrl: homepage && homepage.startsWith("http") ? homepage : undefined,
-          featured: true,
+    if (synced.length === 0 && failures.length > 0) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "No repository could be synchronized.",
+          owner: GITHUB_OWNER,
+          synced,
+          deactivated,
+          failures,
         },
-        create: {
-          slug,
-          titleEn: title,
-          titleAr: title,
-          descriptionEn: description,
-          descriptionAr: description,
-          githubUrl,
-          liveUrl: homepage && homepage.startsWith("http") ? homepage : null,
-          featured: true,
-        },
-      });
-
-      // 2. Upsert GithubRepository cache table
-      await db.githubRepository.upsert({
-        where: { repoName: repoPath },
-        update: {
-          stars,
-          forks,
-          language,
-          lastCommit,
-          openIssues,
-        },
-        create: {
-          repoName: repoPath,
-          stars,
-          forks,
-          language,
-          lastCommit,
-          openIssues,
-        },
-      });
-
-      synced.push({ repo: repoPath, title, topics });
+        { status: 500 },
+      );
     }
 
     return NextResponse.json({
-      success: true,
-      message: `Successfully synced ${synced.length} portfolio-tagged repositories for Bashar-1216 from GitHub!`,
+      success: failures.length === 0,
+      partial: failures.length > 0,
+      owner: GITHUB_OWNER,
+      message: `Synchronized ${synced.length} and deactivated ${deactivated.length} repositories for ${GITHUB_OWNER}.`,
       synced,
+      deactivated,
+      failures,
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error("GitHub Sync error:", error);
-    return NextResponse.json({ error: error.message || "Failed to sync GitHub repositories" }, { status: 500 });
+    return NextResponse.json(
+      { success: false, error: errorMessage(error) },
+      { status: 500 },
+    );
   }
 }
