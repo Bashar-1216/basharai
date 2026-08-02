@@ -12,12 +12,17 @@ interface ProjectDetailPageProps {
 
 export async function generateMetadata({ params }: ProjectDetailPageProps): Promise<Metadata> {
   const { locale, slug } = await params;
-  const project = await db.project.findUnique({ where: { slug } });
-  if (!project) return {};
+  
+  let project: any = null;
+  try {
+    project = await db.project.findUnique({ where: { slug } });
+  } catch (e) {
+    console.warn("Project metadata fetch warning:", e);
+  }
 
   const isAr = locale === "ar";
-  const title = isAr ? (project.titleAr || project.titleEn) : project.titleEn;
-  const description = isAr ? (project.descriptionAr || project.descriptionEn) : project.descriptionEn;
+  const title = project ? (isAr ? (project.titleAr || project.titleEn) : project.titleEn) : slug.replace(/-/g, " ").toUpperCase();
+  const description = project ? (isAr ? (project.descriptionAr || project.descriptionEn) : project.descriptionEn) : `Case study for ${title}`;
 
   return {
     title: `${title} — Bashar Almuntaser AI Case Study`,
@@ -25,13 +30,13 @@ export async function generateMetadata({ params }: ProjectDetailPageProps): Prom
     openGraph: {
       title,
       description,
-      url: `https://bashar.ai/${locale}/projects/${slug}`,
+      url: `https://basharai.vercel.app/${locale}/projects/${slug}`,
     },
     alternates: {
-      canonical: `https://bashar.ai/en/projects/${slug}`,
+      canonical: `https://basharai.vercel.app/en/projects/${slug}`,
       languages: {
-        en: `https://bashar.ai/en/projects/${slug}`,
-        ar: `https://bashar.ai/ar/projects/${slug}`,
+        en: `https://basharai.vercel.app/en/projects/${slug}`,
+        ar: `https://basharai.vercel.app/ar/projects/${slug}`,
       },
     },
   };
