@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { Locale } from "@/lib/i18n";
 import styles from "./navbar.module.css";
@@ -57,7 +56,7 @@ export function Navbar({ dict, locale }: NavbarProps) {
     <header className={`${styles.header} no-print`}>
       <nav className={`container ${styles.nav}`}>
         {/* ── Logo ──────────────────────────────────────────── */}
-        <Link href={`/${locale}`} className={styles.logo}>
+        <a href={`/${locale}`} className={styles.logo}>
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ flexShrink: 0 }}>
             <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z" fill="url(#navLogoSparkle)"/>
             <defs>
@@ -71,18 +70,18 @@ export function Navbar({ dict, locale }: NavbarProps) {
             <span className="gradient-text">bashar</span>
             <span className={styles.logoDot}>.ai</span>
           </span>
-        </Link>
+        </a>
 
         {/* ── Desktop Nav Links ─────────────────────────────── */}
         <ul className={styles.links}>
           {navItems.map((item) => (
             <li key={item.key}>
-              <Link
-                href={`/${locale}/${item.path}`}
+              <a
+                href={item.path ? `/${locale}/${item.path}` : `/${locale}`}
                 className={`${styles.link} ${isActive(item.path) ? styles.activeLink : ""}`}
               >
                 {item.label}
-              </Link>
+              </a>
             </li>
           ))}
         </ul>
@@ -99,13 +98,13 @@ export function Navbar({ dict, locale }: NavbarProps) {
             🔍
           </button>
 
-          <Link
+          <a
             href={`/${oppositeLocale}`}
             className={styles.langToggle}
             aria-label={`Switch to ${dict.nav.language}`}
           >
             {dict.nav.language}
-          </Link>
+          </a>
 
           <button
             type="button"
@@ -135,12 +134,12 @@ export function Navbar({ dict, locale }: NavbarProps) {
             <ul className={styles.drawerLinks}>
               {navItems.map((item) => (
                 <li key={item.key}>
-                  <Link
-                    href={`/${locale}/${item.path}`}
+                  <a
+                    href={item.path ? `/${locale}/${item.path}` : `/${locale}`}
                     className={`${styles.drawerLink} ${isActive(item.path) ? styles.activeDrawerLink : ""}`}
                   >
                     {item.label}
-                  </Link>
+                  </a>
                 </li>
               ))}
             </ul>
@@ -148,11 +147,12 @@ export function Navbar({ dict, locale }: NavbarProps) {
         </div>
       )}
 
-      {/* Global Command Search Modal */}
+      {/* ── Search Modal ────────────────────────────────────── */}
       <SearchModal
-        locale={locale}
         isOpen={isSearchOpen}
         onClose={() => setIsSearchOpen(false)}
+        locale={locale}
+        dict={dict}
       />
     </header>
   );

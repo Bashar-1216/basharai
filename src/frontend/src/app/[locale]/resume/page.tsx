@@ -7,38 +7,109 @@ import { ResumeView } from "./resume-view";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
+export const runtime = "nodejs";
 
 interface ResumePageProps {
-  params: Promise<{ locale: string }>;
+  params: Promise<{
+    locale: string;
+  }>;
 }
 
-export default async function ResumePage({ params }: ResumePageProps) {
-  const { locale } = await params;
-  const dict = await getDictionary(locale as Locale);
+interface ResumeExperience {
+  id: string;
+  company: string;
+  titleEn: string;
+  titleAr: string;
+  summaryEn: string;
+  summaryAr: string;
+  startDate: string;
+  endDate: string | null;
+  isCurrent: boolean;
+}
 
-  // Fetch experiences and projects from the database
-  let experiences: any[] = [];
-  let projects: any[] = [];
+interface ResumeProject {
+  id: string;
+  titleEn: string;
+  titleAr: string;
+  descriptionEn: string;
+  descriptionAr: string;
+  githubUrl: string | null;
+}
+
+export default async function ResumePage({
+  params,
+}: ResumePageProps) {
+  const { locale } = await params;
+
+  const safeLocale: Locale = locale === "ar" ? "ar" : "en";
+  const dict = await getDictionary(safeLocale);
+
+  let experiences: ResumeExperience[] = [];
+  let projects: ResumeProject[] = [];
+
   try {
-    experiences = await db.experience.findMany({
-      orderBy: { startDate: "desc" },
-    });
-    projects = await db.project.findMany({
-      where: { featured: true },
-      orderBy: { publishedAt: "desc" },
-    });
-  } catch (err) {
-    console.warn("Resume page DB fetch warning:", err);
+    const [experienceRows, projectRows] = await Promise.all([
+      db.experience.findMany({
+        select: {
+          id: true,
+          company: true,
+          titleEn: true,
+          titleAr: true,
+          summaryEn: true,
+          summaryAr: true,
+          startDate: true,
+          endDate: true,
+          isCurrent: true,
+        },
+        orderBy: {
+          startDate: "desc",
+        },
+      }),
+
+      db.project.findMany({
+        where: {
+          featured: true,
+        },
+        select: {
+          id: true,
+          titleEn: true,
+          titleAr: true,
+          descriptionEn: true,
+          descriptionAr: true,
+          githubUrl: true,
+        },
+        orderBy: {
+          publishedAt: "desc",
+        },
+      }),
+    ]);
+
+    experiences = experienceRows.map((experience) => ({
+      ...experience,
+      startDate: experience.startDate.toISOString(),
+      endDate: experience.endDate
+        ? experience.endDate.toISOString()
+        : null,
+    }));
+
+    projects = projectRows;
+  } catch (error) {
+    console.error("Resume page database error:", error);
+
+    experiences = [];
+    projects = [];
   }
 
   return (
     <>
-      <Navbar dict={dict} locale={locale as Locale} />
+      <Navbar dict={dict} locale={safeLocale} />
+
       <ResumeView
-        locale={locale}
+        locale={safeLocale}
         experiences={experiences}
         projects={projects}
       />
+
       <Footer dict={dict} />
     </>
   );
