@@ -5,12 +5,10 @@ import { Navbar } from "@/components/navbar";
 import { Hero } from "@/components/hero";
 import { Footer } from "@/components/footer";
 import { AssistantTrigger } from "@/components/assistant-trigger";
-import Link from "next/link";
 import styles from "./home.module.css";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
-
 
 interface HomePageProps {
   params: Promise<{ locale: string }>;
@@ -52,7 +50,6 @@ export default async function HomePage({ params }: HomePageProps) {
 
   // Helper to determine automated status badge based on live project metadata
   const getProjectStatus = (project: any, stats: any) => {
-    // 1. In Production: Has explicit liveUrl
     if (project.liveUrl) {
       return {
         labelEn: "In Production 🚀",
@@ -60,7 +57,6 @@ export default async function HomePage({ params }: HomePageProps) {
         type: "inProduction",
       };
     }
-    // 2. Active Build: Last commit within the last 30 days
     if (stats && stats.lastCommit) {
       const commitDate = new Date(stats.lastCommit);
       const now = new Date();
@@ -73,7 +69,6 @@ export default async function HomePage({ params }: HomePageProps) {
         };
       }
     }
-    // 3. Default: Completed stable build
     return {
       labelEn: "Completed ✅",
       labelAr: "مكتمل ✅",
@@ -93,16 +88,15 @@ export default async function HomePage({ params }: HomePageProps) {
         {/* 2. Featured Projects Preview */}
         {projects.length > 0 && (
           <section className={styles.section}>
-            {/* Ambient background glows */}
             <div className={styles.goldGlow} />
             <div className={styles.blueGlow} />
 
             <div className="container" style={{ position: "relative", zIndex: 2 }}>
               <div className={styles.sectionHeader}>
                 <h2 className={styles.sectionTitle}>{dict.sections.featured_projects}</h2>
-                <Link href={`/${locale}/projects`} className={styles.viewAll}>
+                <a href={`/${locale}/projects`} className={styles.viewAll}>
                   {dict.sections.view_all_projects} ➔
-                </Link>
+                </a>
               </div>
               <div className={styles.projectsGrid}>
                 {projects.map((project) => {
@@ -137,9 +131,9 @@ export default async function HomePage({ params }: HomePageProps) {
                         </div>
                       )}
                       
-                      <Link href={`/${locale}/projects/${project.slug}`} className={styles.readCase}>
+                      <a href={`/${locale}/projects/${encodeURIComponent(project.slug)}`} className={styles.readCase}>
                         {dict.sections.read_case_study} ➔
-                      </Link>
+                      </a>
                     </div>
                   );
                 })}
@@ -154,9 +148,9 @@ export default async function HomePage({ params }: HomePageProps) {
             <div className="container">
               <div className={styles.sectionHeader}>
                 <h2 className={styles.sectionTitle}>{dict.sections.experience_timeline}</h2>
-                <Link href={`/${locale}/experience`} className={styles.viewAll}>
+                <a href={`/${locale}/experience`} className={styles.viewAll}>
                   {dict.sections.view_full_timeline} ➔
-                </Link>
+                </a>
               </div>
               <div className={styles.experienceList}>
                 {experiences.map((exp) => (
@@ -173,9 +167,9 @@ export default async function HomePage({ params }: HomePageProps) {
                     <div className={styles.expContent}>
                       <h4 className={styles.expTitle}>{isAr ? exp.titleAr : exp.titleEn}</h4>
                       <p className={styles.expSummary}>{isAr ? exp.summaryAr : exp.summaryEn}</p>
-                      <Link href={`/${locale}/experience`} className={styles.readCase}>
+                      <a href={`/${locale}/experience`} className={styles.readCase}>
                         {dict.sections.read_case_study} ←
-                      </Link>
+                      </a>
                     </div>
                   </div>
                 ))}
@@ -191,9 +185,9 @@ export default async function HomePage({ params }: HomePageProps) {
             <div className="container" style={{ position: "relative", zIndex: 2 }}>
               <div className={styles.sectionHeader}>
                 <h2 className={styles.sectionTitle}>{dict.sections.latest_articles}</h2>
-                <Link href={`/${locale}/blog`} className={styles.viewAll}>
+                <a href={`/${locale}/blog`} className={styles.viewAll}>
                   {dict.sections.read_all} ➔
-                </Link>
+                </a>
               </div>
               <div className={styles.blogTeaser}>
                 <span className={styles.blogDate}>
@@ -209,9 +203,9 @@ export default async function HomePage({ params }: HomePageProps) {
                 <p className={styles.blogSummary}>
                   {isAr ? latestPost.contentAr.slice(0, 160) + "..." : latestPost.contentEn.slice(0, 160) + "..."}
                 </p>
-                <Link href={`/${locale}/blog`} className={styles.readBlogBtn}>
+                <a href={`/${locale}/blog`} className={styles.readBlogBtn}>
                   {dict.sections.read_all} ➔
-                </Link>
+                </a>
               </div>
             </div>
           </section>
@@ -221,9 +215,9 @@ export default async function HomePage({ params }: HomePageProps) {
             <div className="container" style={{ position: "relative", zIndex: 2 }}>
               <div className={styles.sectionHeader}>
                 <h2 className={styles.sectionTitle}>{dict.sections.latest_articles}</h2>
-                <Link href={`/${locale}/blog`} className={styles.viewAll}>
+                <a href={`/${locale}/blog`} className={styles.viewAll}>
                   {dict.sections.read_all} ➔
-                </Link>
+                </a>
               </div>
               <div className={styles.blogTeaser}>
                 <span className={styles.blogDate}>July 12, 2026</span>
@@ -237,9 +231,9 @@ export default async function HomePage({ params }: HomePageProps) {
                     ? "نظرة متعمقة في كيفية تصميم خطوط استرجاع دلالية (RAG) تدعم العربية والإنجليزية بالتوازي وبسرعات قياسية."
                     : "An architectural review of serving hybrid bilingual embeddings, scaling vector lookups, and monitoring RAG telemetry under strict latency constraints."}
                 </p>
-                <Link href={`/${locale}/blog`} className={styles.readBlogBtn}>
+                <a href={`/${locale}/blog`} className={styles.readBlogBtn}>
                   {dict.sections.read_all} ➔
-                </Link>
+                </a>
               </div>
             </div>
           </section>
