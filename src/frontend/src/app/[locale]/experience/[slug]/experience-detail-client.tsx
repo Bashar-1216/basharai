@@ -141,8 +141,8 @@ export function ExperienceDetailClient({
             <button type="button" onClick={() => setIsDrawerOpen(true)} className="btn-primary">
               💬 {isAr ? "اسأل AI عن الخبرة" : "Ask Role Copilot"}
             </button>
-            <button type="button" onClick={scrollToInterview} className="btn-secondary" style={{ background: "linear-gradient(135deg, hsl(var(--color-primary) / 0.15) 0%, transparent 100%)", borderColor: "hsl(var(--color-primary) / 0.4)" }}>
-              💡 {isAr ? "المقابلة التقنية للخبرة" : "Interview Deep Dive"} ↓
+            <button type="button" onClick={() => setIsDrawerOpen(true)} className="btn-secondary" style={{ background: "linear-gradient(135deg, hsl(var(--color-primary) / 0.15) 0%, transparent 100%)", borderColor: "hsl(var(--color-primary) / 0.4)" }}>
+              💡 {isAr ? "المقابلة التقنية للخبرة" : "Interview Deep Dive"}
             </button>
           </div>
         </header>
@@ -193,77 +193,6 @@ export function ExperienceDetailClient({
           </div>
           <div className={styles.lessonsCard}>
             <p>💡 {detail.learned}</p>
-          </div>
-        </section>
-
-        {/* ── 05. INTERVIEW DEEP DIVE SECTION ───────────────────────────── */}
-        <section id="experience-interview-deep-dive" className={styles.interviewSection}>
-          <div className={styles.interviewCard}>
-            <div className={styles.interviewHeader}>
-              <div className={styles.interviewIcon}>💡</div>
-              <div>
-                <h3>{isAr ? `المقابلة التقنية — خبرة ${companyName}` : `Interview Deep Dive — ${companyName}`}</h3>
-                <p>
-                  {isAr
-                    ? `استجوب المساعد الذكي عن تفاصيل المسيرة الهندسية، القرارات البرمجية، والأثر التشغيلي لبشار في ${companyName}.`
-                    : `Interrogate Bashar's engineering execution, framework choices, and business impact at ${companyName}.`}
-                </p>
-              </div>
-            </div>
-
-            {/* Suggested Interview Questions */}
-            <div className={styles.suggestedPromptsGrid}>
-              {suggestedInterviewQuestions.map((q, idx) => (
-                <button
-                  key={idx}
-                  type="button"
-                  onClick={() => handleAskInterview(q)}
-                  className={styles.interviewPromptBtn}
-                >
-                  💬 {q}
-                </button>
-              ))}
-            </div>
-
-            {/* Input Bar */}
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                handleAskInterview(query);
-              }}
-              className={styles.interviewForm}
-            >
-              <input
-                type="text"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder={
-                  isAr
-                    ? `اسأل المساعد الذكي أي سؤال محدد عن خبرتك في ${companyName}...`
-                    : `Ask Bashar AI any technical question about role at ${companyName}...`
-                }
-                className={styles.interviewInput}
-              />
-              <button type="submit" disabled={isLoading} className={styles.interviewSubmitBtn}>
-                {isLoading ? (isAr ? "جاري التحليل..." : "Analyzing...") : isAr ? "إرسال ➔" : "Ask ➔"}
-              </button>
-            </form>
-
-            {/* AI Streaming Response */}
-            {(aiResponse || isLoading) && (
-              <div className={styles.aiOutputBox}>
-                <div className={styles.aiOutputTitle}>
-                  🤖 Role Interview Copilot — {companyName}
-                </div>
-                {aiResponse ? (
-                  <MarkdownRenderer content={aiResponse} />
-                ) : (
-                  <div className={styles.aiLoadingText}>
-                    {isAr ? "جاري استحضار سجل الخبرة والتقنيات لـ LLM..." : "Retrieving role history & engineering context..."}
-                  </div>
-                )}
-              </div>
-            )}
           </div>
         </section>
       </div>
