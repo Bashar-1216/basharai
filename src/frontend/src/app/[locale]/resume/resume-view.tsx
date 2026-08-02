@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { ResumeActions } from "./resume-actions";
 import { ResumeCopilotDrawer } from "./resume-copilot-drawer";
 import styles from "./resume.module.css";
@@ -44,9 +43,9 @@ export function ResumeView({ locale, experiences, projects }: ResumeViewProps) {
       <div className={`${styles.actionHeader} no-print`}>
         <div className="container">
           <div className={styles.headerWrapper}>
-            <Link href={`/${locale}`} className={styles.backLink}>
+            <a href={`/${locale}`} className={styles.backLink}>
               ← {isAr ? "العودة للرئيسية" : "Back to Home"}
-            </Link>
+            </a>
             <ResumeActions
               isAr={isAr}
               activeView={activeView}

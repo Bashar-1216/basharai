@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { MarkdownRenderer } from "@/components/markdown-renderer";
 import { ExperienceCopilotDrawer } from "./experience-copilot-drawer";
 import styles from "./experience-detail.module.css";
@@ -111,9 +110,9 @@ export function ExperienceDetailClient({
     <main className={styles.main}>
       <div className="container">
         {/* Navigation Back Link */}
-        <Link href={`/${locale}/experience`} className={styles.backBtn}>
+        <a href={`/${locale}/experience`} className={styles.backBtn}>
           ← {isAr ? "العودة لقائمة الخبرات" : "Back to Experiences"}
-        </Link>
+        </a>
 
         {/* ── HERO HEADER ──────────────────────────────────────────────── */}
         <header className={styles.heroHeader}>

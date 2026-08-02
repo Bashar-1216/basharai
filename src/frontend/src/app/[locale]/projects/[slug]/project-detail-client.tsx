@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { MarkdownRenderer } from "@/components/markdown-renderer";
 import { ProjectCopilotDrawer } from "./project-copilot-drawer";
 import styles from "./project-detail.module.css";
@@ -159,9 +158,9 @@ export function ProjectDetailClient({ locale, slug, project }: ProjectDetailClie
     <main className={styles.main}>
       <div className="container">
         {/* Navigation Back Link */}
-        <Link href={`/${locale}/projects`} className={styles.backBtn}>
+        <a href={`/${locale}/projects`} className={styles.backBtn}>
           ← {isAr ? "العودة لقائمة المشاريع" : "Back to Projects"}
-        </Link>
+        </a>
 
         {/* ── 01. HERO SECTION ────────────────────────────────────────── */}
         <header className={styles.heroHeader}>
