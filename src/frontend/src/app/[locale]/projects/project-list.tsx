@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import type { Locale } from "@/lib/i18n";
-import Link from "next/link";
 import styles from "./project-list.module.css";
 
 interface Project {
@@ -164,9 +163,9 @@ export function ProjectList({ initialProjects, githubStats, locale }: ProjectLis
                   </div>
                 )}
 
-                <Link href={`/${locale}/projects/${proj.slug}`} className={styles.readBtn}>
+                <a href={`/${locale}/projects/${encodeURIComponent(proj.slug)}`} className={styles.readBtn}>
                   {isAr ? "قراءة دراسة الحالة كاملة ➔" : "Read Full Case Study ➔"}
-                </Link>
+                </a>
               </article>
             );
           })}

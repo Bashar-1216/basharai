@@ -1,0 +1,41 @@
+diff --git a/src/frontend/src/app/[locale]/projects/project-list.tsx b/src/frontend/src/app/[locale]/projects/project-list.tsx
+--- a/src/frontend/src/app/[locale]/projects/project-list.tsx
++++ b/src/frontend/src/app/[locale]/projects/project-list.tsx
+@@ -1,7 +1,6 @@
+ "use client";
+
+ import { useState } from "react";
+ import type { Locale } from "@/lib/i18n";
+-import Link from "next/link";
+ import styles from "./project-list.module.css";
+
+@@ -153,9 +152,12 @@ export function ProjectList({ initialProjects, githubStats, locale }: ProjectListProps) {
+                     </span>
+                   </div>
+                 )}
+-                <Link href={`/${locale}/projects/${proj.slug}`} className={styles.readBtn}>
++                <a
++                  href={`/${locale}/projects/${encodeURIComponent(proj.slug)}`}
++                  className={styles.readBtn}
++                >
+                   {isAr ? "قراءة دراسة الحالة كاملة ➔" : "Read Full Case Study ➔"}
+-                </Link>
++                </a>
+               </article>
+             );
+           })}
+diff --git a/src/frontend/src/app/[locale]/projects/[slug]/page.tsx b/src/frontend/src/app/[locale]/projects/[slug]/page.tsx
+--- a/src/frontend/src/app/[locale]/projects/[slug]/page.tsx
++++ b/src/frontend/src/app/[locale]/projects/[slug]/page.tsx
+@@ -5,6 +5,11 @@ import { Navbar } from "@/components/navbar";
+ import { Footer } from "@/components/footer";
+ import { ProjectDetailClient } from "./project-detail-client";
+
++// Prevent stale/static RSC payloads for DB-backed project pages.
++export const dynamic = "force-dynamic";
++export const revalidate = 0;
++export const runtime = "nodejs";
++
+ interface ProjectDetailPageProps {
+   params: Promise<{ locale: string; slug: string }>;
+ }

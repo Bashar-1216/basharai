@@ -6,6 +6,10 @@ import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { ExperienceDetailClient } from "./experience-detail-client";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+export const runtime = "nodejs";
+
 interface ExperienceDetailPageProps {
   params: Promise<{ locale: string; slug: string }>;
 }

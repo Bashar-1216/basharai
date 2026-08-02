@@ -83,9 +83,9 @@ export default async function ExperienceIndex({ params }: ExperienceIndexProps) 
                       {isAr ? exp.summaryAr : exp.summaryEn}
                     </p>
 
-                    <Link href={`/${locale}/experience/${slug}`} className={styles.readCase}>
+                    <a href={`/${locale}/experience/${encodeURIComponent(slug)}`} className={styles.readCase}>
                       {isAr ? "اقرأ ورقة العمل الكاملة ←" : "Read Full Case Study ←"}
-                    </Link>
+                    </a>
                   </div>
                 </div>
               );
